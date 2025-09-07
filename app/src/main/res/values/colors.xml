@@ -33,5 +33,10 @@
     <!-- Colores heredados -->
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
-
+    <color name="fondoResidencial">#F2F6F9</color>
+    <color name="colorTextoPrincipal">#333333</color>
+    <color name="colorInput">#FFFFFF</color> <!-- Fondo blanco para campos de entrada -->
+    <color name="colorTextoInput">#212121</color> <!-- Gris oscuro para texto en campos -->
+    <color name="colorBotonPrincipal">#4CAF50</color> <!-- Verde colaborativo -->
+    <color name="colorTextoSecundario">#757575</color> <!-- Gris medio, ideal para textos secundarios -->
 </resources>

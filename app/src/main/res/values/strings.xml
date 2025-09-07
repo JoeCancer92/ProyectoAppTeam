@@ -4,4 +4,14 @@
     <string name="buscar_clinicas">Busca tu Clinica Dental Cercana</string>
     <string name="calendario_visitas">Organiza tus citas</string>
     <string name="mi_perfil">Quien Soy</string>
+    <string name="contrase_a">Contraseña</string>
+    <string name="correo_electr_nico">Correo electrónico</string>
+    <string name="ingresar">Ingresar</string>
+    <string name="no_tienes_cuenta_reg_strate">¿No tienes cuenta? Regístrate</string>
+    <string name="bienvenido_a_tu_comunidad">Bienvenido a Tu Comunidad</string>
+    <string name="no_tienes_cuenta_registrate">No tienes una cuenta? Registrate</string>
+    <string name="logo_app">icono_app</string>
+    <string name="correo_electronico">Correo electrónico</string>
+    <string name="contraseña">Contraseña</string>
+    <string name="recordar_cuenta">Recordar cuenta</string>
 </resources>
