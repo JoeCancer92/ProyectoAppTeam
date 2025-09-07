@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">ProyectoAppTeam</string>
+    <string name="menu_principal">Menu Principal - DentConnect</string>
+    <string name="buscar_clinicas">Busca tu Clinica Dental Cercana</string>
+    <string name="calendario_visitas">Organiza tus citas</string>
+    <string name="mi_perfil">Quien Soy</string>
+</resources>

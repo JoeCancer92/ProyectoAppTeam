@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Paleta institucional -->
+    <color name="colorPrimary">#1976D2</color>         <!-- Azul institucional -->
+    <color name="colorPrimaryDark">#115293</color>     <!-- Azul profundo -->
+    <color name="colorAccent">#00BCD4</color>          <!-- Detalles interactivos -->
+
+    <!-- Fondo y superficies -->
+    <color name="colorBackground">#F4F6F8</color>       <!-- Fondo general -->
+    <color name="colorSurface">#FFFFFF</color>          <!-- Superficies blancas -->
+
+    <!-- Texto -->
+    <color name="colorTextPrimary">#212121</color>      <!-- Texto principal -->
+    <color name="colorTextSecondary">#757575</color>    <!-- Texto secundario -->
+
+    <!-- Estados -->
+    <color name="colorError">#D32F2F</color>            <!-- Mensajes de error -->
+    <color name="colorSuccess">#388E3C</color>          <!-- Confirmaciones -->
+
+    <!-- Botones -->
+    <color name="colorButton">#42A5F5</color>           <!-- Fondo de botón -->
+    <color name="colorButtonPressed">#1976D2</color>    <!-- Ripple o estado activo -->
+    <color name="colorButtonText">#FFFFFF</color>       <!-- Texto de botón -->
+
+    <!-- Compatibilidad con Material Theme -->
+    <color name="purple_200">#BB86FC</color>
+    <color name="purple_500">#6200EE</color>
+    <color name="purple_700">#3700B3</color>
+    <color name="teal_200">#03DAC5</color>
+    <color name="teal_700">#018786</color>
+
+    <!-- Colores heredados -->
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+
+</resources>

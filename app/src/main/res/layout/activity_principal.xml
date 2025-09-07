@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <!-- Navbar superior -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/navbar"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:background="@color/colorPrimary"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Icono a la izquierda -->
+        <ImageView
+            android:id="@+id/iconoNavbar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/icono3"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="16dp" />
+
+        <!-- Título a la derecha -->
+        <TextView
+            android:id="@+id/tituloNavbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/menu_principal"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginEnd="16dp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Botón: Buscar Clínicas Cercanas -->
+    <Button
+        android:id="@+id/btnBuscarClinicas"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/buscar_clinicas"
+        android:textColor="@color/colorButtonText"
+        android:backgroundTint="@color/colorButton"
+        app:layout_constraintTop_toBottomOf="@id/navbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="32dp" />
+
+    <!-- Botón: Mi Calendario de Visitas -->
+    <Button
+        android:id="@+id/btnCalendarioVisitas"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/calendario_visitas"
+        android:textColor="@color/colorButtonText"
+        android:backgroundTint="@color/colorButton"
+        app:layout_constraintTop_toBottomOf="@id/btnBuscarClinicas"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="16dp" />
+
+    <!-- Botón: Mi Perfil -->
+    <Button
+        android:id="@+id/btnMiPerfil"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/mi_perfil"
+        android:textColor="@color/colorButtonText"
+        android:backgroundTint="@color/colorButton"
+        app:layout_constraintTop_toBottomOf="@id/btnCalendarioVisitas"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="16dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
