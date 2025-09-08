@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ProyectoAppTeam">
         <activity
+            android:name=".actividades.IntPrincipalActivity"
+            android:exported="false" />
+        <activity
             android:name=".actividades.PrincipalActivity"
             android:exported="false" />
         <activity

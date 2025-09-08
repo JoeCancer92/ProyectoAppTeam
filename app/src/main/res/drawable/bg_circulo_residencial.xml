@@ -1,0 +1,19 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:shape="oval"
+    tools:ignore="ExtraText">
+
+    <gradient
+        android:type="radial"
+        android:gradientRadius="300"
+        android:startColor="#608B92"
+        tools:ignore="ExtraText" />   <!-- Verde residencial -->
+        android:endColor="#4A69E2"     <!-- Azul institucional -->
+        android:centerX="50%"
+        android:centerY="50%" />
+
+    <stroke
+        android:width="4dp"
+        android:color="#F0C76C" />     <!-- Borde beige claro -->
+
+</shape>
