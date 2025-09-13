@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".actividades.InicioActivity"
-    android:background="@android:color/white">
+    android:background="@drawable/fondoofi1">
 
     <!-- Logo centrado -->
     <ImageView
@@ -27,8 +27,9 @@
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:indeterminate="true"
-        android:progressTint="#1976D2"
+        android:indeterminate="false"
+        android:progress="60"
+        android:progressTint="#0B4D71"
         app:layout_constraintTop_toBottomOf="@id/logoApp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

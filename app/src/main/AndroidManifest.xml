@@ -12,6 +12,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ProyectoAppTeam">
         <activity
+            android:name=".actividades.RecuperarPassActivity"
+            android:exported="false" />
+        <activity
+            android:name=".actividades.RegistroActivity"
+            android:exported="false" />
+        <activity
+            android:name=".actividades.MenuPrincipalActivity"
+            android:exported="false" />
+        <activity
             android:name=".actividades.IntPrincipalActivity"
             android:exported="false" />
         <activity

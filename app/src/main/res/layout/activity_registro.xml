@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/fondoofi1">
+
+    <!-- Imagen institucional encima del título -->
+    <ImageView
+        android:id="@+id/logoRegistro"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="4dp"
+        android:contentDescription="@string/icono_app"
+        android:src="@drawable/icono5"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498" />
+
+    <!-- Título -->
+    <TextView
+        android:id="@+id/tituloRegistro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/Registro"
+        android:textColor="@color/colorTextoPrincipal"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/logoRegistro"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Campo: Nombre completo -->
+    <EditText
+        android:id="@+id/inputNombre"
+        android:layout_width="320dp"
+        android:layout_height="47dp"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="@color/colorInput"
+        android:hint="@string/nombrecompleto"
+        android:inputType="textPersonName"
+        android:textColor="@color/colorTextoInput"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tituloRegistro" />
+
+    <!-- Campo: Correo electrónico -->
+    <EditText
+        android:id="@+id/inputCorreo"
+        android:layout_width="317dp"
+        android:layout_height="61dp"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="@color/colorInput"
+        android:hint="@string/correo_electronico"
+        android:inputType="textEmailAddress"
+        android:textColor="@color/colorTextoInput"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/inputNombre" />
+
+    <!-- Campo: Contraseña -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/contenedorPassword"
+        android:layout_width="317dp"
+        android:layout_height="54dp"
+        android:layout_marginTop="16dp"
+        app:endIconMode="password_toggle"
+        app:endIconTint="@color/colorTextoSecundario"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/inputCorreo">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/inputPassword"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:backgroundTint="@color/colorInput"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            android:textColor="@color/colorTextoInput" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Campo: Confirmar contraseña -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/contenedorConfirmar"
+        android:layout_width="322dp"
+        android:layout_height="51dp"
+        android:layout_marginTop="16dp"
+        app:endIconMode="password_toggle"
+        app:endIconTint="@color/colorTextoSecundario"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/contenedorPassword">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/inputConfirmar"
+            android:layout_width="323dp"
+            android:layout_height="match_parent"
+            android:backgroundTint="@color/colorInput"
+            android:hint="@string/confirmar_pass"
+            android:inputType="textPassword"
+            android:textColor="@color/colorTextoInput" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Botón: Registrar -->
+    <Button
+        android:id="@+id/btnRegistrar"
+        android:layout_width="266dp"
+        android:layout_height="57dp"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="@color/colorBotonPrincipal"
+        android:text="@string/registrar"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/contenedorConfirmar" />
+
+    <!-- Botón compuesto: Continuar con Google -->
+    <LinearLayout
+        android:id="@+id/btnGoogleLayout"
+        android:layout_width="265dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/white"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnRegistrar">
+
+        <ImageView
+            android:id="@+id/iconoGoogle"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="12dp"
+            android:contentDescription="@string/icono_google"
+            android:src="@drawable/icogo" />
+
+        <TextView
+            android:id="@+id/textoGoogle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/continuar_google"
+            android:textColor="@color/colorTextoPrincipal"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- Botón: Volver al inicio -->
+    <Button
+        android:id="@+id/btnVolverInicio"
+        android:layout_width="268dp"
+        android:layout_height="43dp"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="@color/colorBotonSecundario"
+        android:text="@string/volver"
+        android:textColor="@color/colorTextoPrincipal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnGoogleLayout" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,10 +9,18 @@
     <!-- Fondo y superficies -->
     <color name="colorBackground">#F4F6F8</color>       <!-- Fondo general -->
     <color name="colorSurface">#FFFFFF</color>          <!-- Superficies blancas -->
+    <color name="fondoResidencial">#5EA1DE</color>      <!-- Fondo azul institucional original -->
+
+    <!-- Combinación matizada equivalente -->
+    <color name="fondoBase1">#216290</color>            <!-- Azul institucional profundo -->
+    <color name="fondoBase2">#C1D9EB</color>            <!-- Azul claro matizado -->
 
     <!-- Texto -->
     <color name="colorTextPrimary">#212121</color>      <!-- Texto principal -->
+    <color name="colorTextoPrincipal">#333333</color>   <!-- Variante institucional -->
     <color name="colorTextSecondary">#757575</color>    <!-- Texto secundario -->
+    <color name="colorTextoSecundario">#757575</color>  <!-- Alias institucional -->
+    <color name="colorTextoInput">#212121</color>       <!-- Texto en campos -->
 
     <!-- Estados -->
     <color name="colorError">#D32F2F</color>            <!-- Mensajes de error -->
@@ -22,6 +30,11 @@
     <color name="colorButton">#42A5F5</color>           <!-- Fondo de botón -->
     <color name="colorButtonPressed">#1976D2</color>    <!-- Ripple o estado activo -->
     <color name="colorButtonText">#FFFFFF</color>       <!-- Texto de botón -->
+    <color name="colorBotonPrincipal">#4CAF50</color>   <!-- Verde colaborativo -->
+    <color name="colorBotonSecundario">#E0E0E0</color>  <!-- Gris claro institucional -->
+
+    <!-- Campos de entrada -->
+    <color name="colorInput">#FFFFFF</color>            <!-- Fondo blanco para inputs -->
 
     <!-- Compatibilidad con Material Theme -->
     <color name="purple_200">#BB86FC</color>
@@ -33,12 +46,5 @@
     <!-- Colores heredados -->
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
-    <color name="fondoResidencial">#BEEB8B</color>
-    <color name="colorTextoPrincipal">#333333</color>
-    <color name="colorInput">#FFFFFF</color> <!-- Fondo blanco para campos de entrada -->
-    <color name="colorTextoInput">#212121</color> <!-- Gris oscuro para texto en campos -->
-    <color name="colorBotonPrincipal">#4CAF50</color> <!-- Verde colaborativo -->
-    <color name="colorTextoSecundario">#757575</color> <!-- Gris medio, ideal para textos secundarios -->
-
 
 </resources>

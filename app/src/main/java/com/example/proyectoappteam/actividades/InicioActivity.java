@@ -1,6 +1,8 @@
 package com.example.proyectoappteam.actividades;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -30,6 +32,11 @@ public class InicioActivity extends AppCompatActivity {
         ImageView logoApp = findViewById(R.id.logoApp);
         ProgressBar progressBar = findViewById(R.id.progressBar);
 
+        // Activar animación y aplicar color institucional al ProgressBar
+        progressBar.setIndeterminate(true);
+        progressBar.setIndeterminateTintList(ColorStateList.valueOf(Color.parseColor("#032E45")));
+
+        // Animación del logo y transición
         logoApp.setAlpha(0f);
         logoApp.animate()
                 .alpha(1f)
@@ -39,7 +46,5 @@ public class InicioActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 });
-
-        progressBar.setIndeterminate(true);
     }
 }

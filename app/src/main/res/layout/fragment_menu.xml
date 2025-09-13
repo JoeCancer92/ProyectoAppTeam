@@ -1,78 +1,139 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/fondo2">
+    android:background="@drawable/fondo50">
 
-    <!-- Círculo institucional de fondo -->
-    <View
-        android:id="@+id/circuloFondo"
-        android:layout_width="353dp"
-        android:layout_height="367dp"
-        android:background="@drawable/bg_circulo_residencial"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <!-- Ícono institucional arriba -->
+
+    <!-- Contenedor cuadrado con fondo institucional -->
+
+    <ImageView
+        android:id="@+id/logoInstitucional"
+        android:layout_width="160dp"
+        android:layout_height="169dp"
+        android:layout_marginTop="16dp"
+        android:background="#00000000"
+        android:src="@drawable/icono5"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Ícono central -->
-    <ImageView
-        android:id="@+id/centroMenu"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:src="@drawable/icono5"
-        android:background="#00000000"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+
+    <TextView
+        android:id="@+id/txtBienvenidoVe"
+        android:layout_width="248dp"
+        android:layout_height="87dp"
+        android:gravity="center"
+        android:shadowColor="#FFFFFF"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="0.1"
+        android:text="@string/Bienvenido"
+        android:textColor="#020310"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/logoInstitucional"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp" />
 
-    <!-- Botón superior -->
-    <ImageButton
-        android:id="@+id/fragImbPerfil"
-        android:layout_width="-1dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/contenedorBotones"
+        android:layout_width="349dp"
         android:layout_height="wrap_content"
-        android:src="@drawable/miperf5"
-        android:background="#00000000"
-        app:layout_constraintBottom_toTopOf="@id/centroMenu"
-        app:layout_constraintStart_toStartOf="@id/centroMenu"
-        app:layout_constraintEnd_toEndOf="@id/centroMenu" />
+        android:layout_marginTop="108dp"
+        android:background="@drawable/bg_cuadrado_residencial"
+        android:padding="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/logoInstitucional">
 
-    <!-- Botón derecho -->
-    <ImageButton
-        android:id="@+id/fragImbMapas"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:src="@drawable/map5"
-        android:background="#00000000"
-        android:translationX="12dp"
-        app:layout_constraintStart_toEndOf="@id/centroMenu"
-        app:layout_constraintTop_toTopOf="@id/centroMenu"
-        app:layout_constraintBottom_toBottomOf="@id/centroMenu" />
+        <!-- Mi Perfil (arriba izquierda) -->
+        <LinearLayout
+            android:id="@+id/bloqueMiPerfil"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-    <!-- Botón inferior -->
-    <ImageButton
-        android:id="@+id/fragImbCalendario"
-        android:layout_width="-1dp"
-        android:layout_height="wrap_content"
-        android:src="@drawable/calend5"
-        android:background="#00000000"
-        app:layout_constraintTop_toBottomOf="@id/centroMenu"
-        app:layout_constraintStart_toStartOf="@id/centroMenu"
-        app:layout_constraintEnd_toEndOf="@id/centroMenu" />
+            <ImageButton
+                android:id="@+id/fragImbMiPerfil"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:background="@drawable/bg_boton_redondo"
+                android:scaleType="centerInside"
+                android:src="@drawable/perf902" />
 
-    <!-- Botón izquierdo -->
-    <ImageButton
-        android:id="@+id/fragImbPreferencias"
-        android:layout_width="-1dp"
-        android:layout_height="wrap_content"
-        android:src="@drawable/pref5"
-        android:background="#00000000"
-        app:layout_constraintEnd_toStartOf="@id/centroMenu"
-        app:layout_constraintTop_toTopOf="@id/centroMenu"
-        app:layout_constraintBottom_toBottomOf="@id/centroMenu" />
+
+        </LinearLayout>
+
+        <!-- Eventos (arriba derecha) -->
+        <LinearLayout
+            android:id="@+id/bloqueEventos"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageButton
+                android:id="@+id/fragImbEventos"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:background="@drawable/bg_boton_redondo"
+                android:scaleType="centerInside"
+                android:src="@drawable/inic902" />
+
+
+        </LinearLayout>
+
+        <!-- Mapas (abajo izquierda) -->
+        <LinearLayout
+            android:id="@+id/bloqueMapa"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/bloqueMiPerfil">
+
+            <ImageButton
+                android:id="@+id/fragImbMapa"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:background="@drawable/bg_boton_redondo"
+                android:scaleType="centerInside"
+                android:src="@drawable/public901" />
+
+
+        </LinearLayout>
+
+        <!-- Mis preferencias (abajo derecha) -->
+        <LinearLayout
+            android:id="@+id/bloquePreferencias"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/bloqueEventos">
+
+            <ImageButton
+                android:id="@+id/fragImbPreferencias"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:background="@drawable/bg_boton_redondo"
+                android:scaleType="centerInside"
+                android:src="@drawable/noti92" />
+
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

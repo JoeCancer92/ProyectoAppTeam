@@ -17,4 +17,22 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="todo">TODO</string>
+    <string name="mispreferencias">Mis Preferencias</string>
+    <string name="eventos">Mis Eventos</string>
+    <string name="miperfil">Mi Perfil</string>
+    <string name="mapas">Ver Mapa</string>
+    <string name="olvide_mi_contraseña">¿Olvidaste tu contraseña?</string>
+    <string name="Registro">Se parte de la comunidad!</string>
+    <string name="continuar_google">Continuar con Google</string>
+    <string name="registrar">Registrar</string>
+    <string name="confirmar_pass">Confirmar Contraseña</string>
+    <string name="password">Contraseña</string>
+    <string name="nombrecompleto">Nombre Completo</string>
+    <string name="icono_google">GOOGLE</string>
+    <string name="icono_app">ICONO APP</string>
+    <string name="volver">Regresar</string>
+    <string name="recuperar_contraseña">Reestablece tu Contraseña</string>
+    <string name="instruccion_recuperacion">Envia un enlace al correo con el registraste tu cuenta</string>
+    <string name="enviar_enlace">Enviar Enlace</string>
+    <string name="Bienvenido">Bienvenido a VeciRed:\nConecta, colabora y transforma tu comunidad</string>
 </resources>

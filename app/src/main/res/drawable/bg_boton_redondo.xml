@@ -1,0 +1,29 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Estado presionado -->
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <solid android:color="#FFBB33" /> <!-- fondo al presionar -->
+            <corners android:radius="20dp" />
+            <stroke android:width="2dp" android:color="#CC8800" /> <!-- borde al presionar -->
+        </shape>
+    </item>
+
+    <!-- Estado enfocado (por teclado o control remoto) -->
+    <item android:state_focused="true">
+        <shape android:shape="rectangle">
+            <solid android:color="#FFF2B0" /> <!-- fondo al enfocar -->
+            <corners android:radius="20dp" />
+            <stroke android:width="2dp" android:color="#FFDD66" /> <!-- borde al enfocar -->
+        </shape>
+    </item>
+
+    <!-- Estado normal -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/colorBackground" /> <!-- fondo base -->
+            <corners android:radius="20dp" />
+        </shape>
+    </item>
+
+</selector>
