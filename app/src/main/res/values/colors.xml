@@ -19,7 +19,7 @@
     <color name="colorTextPrimary">#212121</color>      <!-- Texto principal -->
     <color name="colorTextoPrincipal">#333333</color>   <!-- Variante institucional -->
     <color name="colorTextSecondary">#757575</color>    <!-- Texto secundario -->
-    <color name="colorTextoSecundario">#757575</color>  <!-- Alias institucional -->
+    <color name="colorTextoSecundario">@color/colorBackground</color>  <!-- Alias institucional -->
     <color name="colorTextoInput">#212121</color>       <!-- Texto en campos -->
 
     <!-- Estados -->
