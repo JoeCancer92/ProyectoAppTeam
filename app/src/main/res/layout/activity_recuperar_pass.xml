@@ -43,7 +43,7 @@
         android:layout_height="38dp"
         android:layout_marginTop="8dp"
         android:text="@string/instruccion_recuperacion"
-        android:textColor="@color/colorTextoSecundario"
+        android:textColor="@color/colorSurface"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

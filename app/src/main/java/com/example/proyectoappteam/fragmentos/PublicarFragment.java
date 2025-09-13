@@ -12,10 +12,10 @@ import com.example.proyectoappteam.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link PreferenciasFragment#newInstance} factory method to
+ * Use the {@link PublicarFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class PreferenciasFragment extends Fragment {
+public class PublicarFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -26,7 +26,7 @@ public class PreferenciasFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public PreferenciasFragment() {
+    public PublicarFragment() {
         // Required empty public constructor
     }
 
@@ -36,11 +36,11 @@ public class PreferenciasFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment PreferenciasFragment.
+     * @return A new instance of fragment PublicarFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static PreferenciasFragment newInstance(String param1, String param2) {
-        PreferenciasFragment fragment = new PreferenciasFragment();
+    public static PublicarFragment newInstance(String param1, String param2) {
+        PublicarFragment fragment = new PublicarFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -61,6 +61,6 @@ public class PreferenciasFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_preferencias, container, false);
+        return inflater.inflate(R.layout.fragment_publicar, container, false);
     }
 }

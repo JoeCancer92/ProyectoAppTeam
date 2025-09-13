@@ -13,10 +13,10 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.proyectoappteam.R;
 import com.example.proyectoappteam.clases.Menu;
-import com.example.proyectoappteam.fragmentos.EventosFragment;
-import com.example.proyectoappteam.fragmentos.MapasFragment;
+import com.example.proyectoappteam.fragmentos.InicioFragment;
+import com.example.proyectoappteam.fragmentos.NotificacionFragment;
 import com.example.proyectoappteam.fragmentos.PerfilFragment;
-import com.example.proyectoappteam.fragmentos.PreferenciasFragment;
+import com.example.proyectoappteam.fragmentos.PublicarFragment;
 
 public class MenuPrincipalActivity extends AppCompatActivity implements Menu {
 
@@ -36,9 +36,9 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Menu {
 
         fragments = new Fragment[]{
                 new PerfilFragment(),
-                new EventosFragment(),
-                new MapasFragment(),
-                new PreferenciasFragment()
+                new InicioFragment(),
+                new NotificacionFragment(),
+                new PublicarFragment()
         };
 
         onClickMenu(0); // Carga inicial

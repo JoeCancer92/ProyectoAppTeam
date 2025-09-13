@@ -12,10 +12,10 @@ import com.example.proyectoappteam.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link MapasFragment#newInstance} factory method to
+ * Use the {@link NotificacionFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MapasFragment extends Fragment {
+public class NotificacionFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -26,7 +26,7 @@ public class MapasFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public MapasFragment() {
+    public NotificacionFragment() {
         // Required empty public constructor
     }
 
@@ -36,11 +36,11 @@ public class MapasFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment MapasFragment.
+     * @return A new instance of fragment NotificacionFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static MapasFragment newInstance(String param1, String param2) {
-        MapasFragment fragment = new MapasFragment();
+    public static NotificacionFragment newInstance(String param1, String param2) {
+        NotificacionFragment fragment = new NotificacionFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -61,6 +61,6 @@ public class MapasFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_mapas, container, false);
+        return inflater.inflate(R.layout.fragment_notificacion, container, false);
     }
 }

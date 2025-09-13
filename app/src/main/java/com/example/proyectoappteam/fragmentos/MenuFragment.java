@@ -58,9 +58,9 @@ public class MenuFragment extends Fragment {
 
         ImageButton[] botones = {
                 view.findViewById(R.id.fragImbMiPerfil),
-                view.findViewById(R.id.fragImbEventos),
-                view.findViewById(R.id.fragImbMapa),
-                view.findViewById(R.id.fragImbPreferencias)
+                view.findViewById(R.id.fragImbInicio),
+                view.findViewById(R.id.fragImbPublicar),
+                view.findViewById(R.id.fragImbNotificaciones)
         };
 
         for (ImageButton boton : botones) {
