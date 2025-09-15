@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Estado desactivado -->
+    <item android:state_enabled="false">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/colorBotonDesactivado" />
+            <corners android:radius="8dp" />
+        </shape>
+    </item>
+
+    <!-- Estado activado -->
+    <item android:state_enabled="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/colorBotonPrincipal" />
+            <corners android:radius="8dp" />
+        </shape>
+    </item>
+</selector>

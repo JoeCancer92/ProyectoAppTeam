@@ -35,4 +35,13 @@
     <string name="instruccion_recuperacion">Envia un enlace al correo con el registraste tu cuenta</string>
     <string name="enviar_enlace">Enviar Enlace</string>
     <string name="Bienvenido">Bienvenido a VeciRed:\nConecta, colabora y transforma tu comunidad</string>
+    <string name="seleccionarFecha">Selecciona Fecha</string>
+    <string name="aceptarTerminos">Aceptar Terminos y Condiciones</string>
+    <string name="Regitrarse">Registrarse</string>
+    <string name="regresar">Regresar a Inicio</string>
+    <string name="verTerminos">Ver Terminos y Condiciones</string>
+    <string name="tomarfoto">Tomar Foto</string>
+    <string name="registrarse">Registrarse</string>
+    <string name="fecha_nacimiento">Fecha de Nacimiento</string>
+    <string name="apellidos">Apellidos</string>
 </resources>

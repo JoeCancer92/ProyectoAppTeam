@@ -2,41 +2,42 @@
 <resources>
 
     <!-- Paleta institucional -->
-    <color name="colorPrimary">#1976D2</color>         <!-- Azul institucional -->
-    <color name="colorPrimaryDark">#115293</color>     <!-- Azul profundo -->
-    <color name="colorAccent">#00BCD4</color>          <!-- Detalles interactivos -->
+    <color name="colorPrimary">#1976D2</color>
+    <color name="colorPrimaryDark">#115293</color>
+    <color name="colorAccent">#00BCD4</color>
 
     <!-- Fondo y superficies -->
-    <color name="colorBackground">#F4F6F8</color>       <!-- Fondo general -->
-    <color name="colorSurface">#FFFFFF</color>          <!-- Superficies blancas -->
-    <color name="fondoResidencial">#5EA1DE</color>      <!-- Fondo azul institucional original -->
+    <color name="colorBackground">#F4F6F8</color>
+    <color name="colorSurface">#FFFFFF</color>
+    <color name="fondoResidencial">#5EA1DE</color>
 
     <!-- Combinación matizada equivalente -->
-    <color name="fondoBase1">#216290</color>            <!-- Azul institucional profundo -->
-    <color name="fondoBase2">#C1D9EB</color>            <!-- Azul claro matizado -->
+    <color name="fondoBase1">#216290</color>
+    <color name="fondoBase2">#C1D9EB</color>
 
     <!-- Texto -->
-    <color name="colorTextPrimary">#212121</color>      <!-- Texto principal -->
-    <color name="colorTextoPrincipal">#333333</color>   <!-- Variante institucional -->
-    <color name="colorTextSecondary">#757575</color>    <!-- Texto secundario -->
-    <color name="colorTextoSecundario">@color/black</color>  <!-- Alias institucional -->
-    <color name="colorTextoInput">#212121</color>       <!-- Texto en campos -->
+    <color name="colorTextPrimary">#212121</color>
+    <color name="colorTextoPrincipal">#333333</color>
+    <color name="colorTextSecondary">#757575</color>
+    <color name="colorTextoSecundario">@color/black</color>
+    <color name="colorTextoInput">#212121</color>
 
     <!-- Estados -->
-    <color name="colorError">#D32F2F</color>            <!-- Mensajes de error -->
-    <color name="colorSuccess">#388E3C</color>          <!-- Confirmaciones -->
+    <color name="colorError">#D32F2F</color>
+    <color name="colorSuccess">#388E3C</color>
 
     <!-- Botones -->
-    <color name="colorButton">#42A5F5</color>           <!-- Fondo de botón -->
-    <color name="colorButtonPressed">#1976D2</color>    <!-- Ripple o estado activo -->
-    <color name="colorButtonText">#FFFFFF</color>       <!-- Texto de botón -->
-    <color name="colorBotonPrincipal">#4CAF50</color>   <!-- Verde colaborativo -->
-    <color name="colorBotonSecundario">#E0E0E0</color>  <!-- Gris claro institucional -->
+    <color name="colorButton">#42A5F5</color>
+    <color name="colorButtonPressed">#1976D2</color>
+    <color name="colorButtonText">#FFFFFF</color>
+    <color name="colorBotonPrincipal">#4CAF50</color>
+    <color name="colorBotonSecundario">#E0E0E0</color>
+    <color name="colorBotonDesactivado">#BDBDBD</color>
 
     <!-- Campos de entrada -->
-    <color name="colorInput">#FFFFFF</color>            <!-- Fondo blanco para inputs -->
+    <color name="colorInput">#FFFFFF</color>
 
-    <!-- Compatibilidad con Material Theme -->
+    <!-- Compatibilidad Material Theme -->
     <color name="purple_200">#BB86FC</color>
     <color name="purple_500">#6200EE</color>
     <color name="purple_700">#3700B3</color>
