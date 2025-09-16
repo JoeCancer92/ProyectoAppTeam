@@ -28,7 +28,7 @@ import java.util.Calendar;
 
 public class RegistroActivity extends AppCompatActivity {
 
-    EditText inputFechaNac;
+    EditText inputFechaNac, inputNombre, inputApellidos, inputCorreo, inputClave, inputClave2;
     Button btnSeleccionarFecha, btnVolverInicio, btnVerTerminos, btnEnviarRegistro, btnTomarFoto;
     CheckBox chkTerminos;
     ImageView imgFotoPerfil;
@@ -49,11 +49,18 @@ public class RegistroActivity extends AppCompatActivity {
         });
 
         inputFechaNac = findViewById(R.id.inputFechaNac);
+        inputNombre = findViewById(R.id.inputNombre);
+        inputApellidos = findViewById(R.id.inputApellidos);
+        inputCorreo = findViewById(R.id.inputCorreo);
+        inputClave = findViewById(R.id.inputClave);
+        inputClave2 = findViewById(R.id.inputClave2);
+
         btnSeleccionarFecha = findViewById(R.id.btnSeleccionarFecha);
         btnVolverInicio = findViewById(R.id.btnVolverInicio);
         btnVerTerminos = findViewById(R.id.btnVerTerminos);
         btnEnviarRegistro = findViewById(R.id.btnEnviarRegistro);
         btnTomarFoto = findViewById(R.id.btnTomarFoto);
+
         chkTerminos = findViewById(R.id.chkTerminos);
         imgFotoPerfil = findViewById(R.id.imgFotoPerfil);
         calendario = Calendar.getInstance();
@@ -65,9 +72,13 @@ public class RegistroActivity extends AppCompatActivity {
         }
 
         btnEnviarRegistro.setEnabled(false);
-        chkTerminos.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            btnEnviarRegistro.setEnabled(isChecked);
-        });
+
+        chkTerminos.setOnCheckedChangeListener((buttonView, isChecked) -> validarCampos());
+        inputNombre.setOnFocusChangeListener((v, hasFocus) -> validarCampos());
+        inputApellidos.setOnFocusChangeListener((v, hasFocus) -> validarCampos());
+        inputCorreo.setOnFocusChangeListener((v, hasFocus) -> validarCampos());
+        inputClave.setOnFocusChangeListener((v, hasFocus) -> validarCampos());
+        inputClave2.setOnFocusChangeListener((v, hasFocus) -> validarCampos());
 
         btnSeleccionarFecha.setOnClickListener(v -> {
             int año = calendario.get(Calendar.YEAR);
@@ -79,6 +90,7 @@ public class RegistroActivity extends AppCompatActivity {
                     (view, añoSel, mesSel, diaSel) -> {
                         String fecha = String.format("%02d/%02d/%04d", diaSel, mesSel + 1, añoSel);
                         inputFechaNac.setText(fecha);
+                        validarCampos();
                     },
                     año, mes, día
             );
@@ -109,7 +121,6 @@ public class RegistroActivity extends AppCompatActivity {
                     .show();
         });
 
-        // Captura directa sin rutas ni almacenamiento externo
         btnTomarFoto.setOnClickListener(v -> {
             Intent tomarFoto = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             startActivityForResult(tomarFoto, REQUEST_FOTO);
@@ -121,6 +132,23 @@ public class RegistroActivity extends AppCompatActivity {
         });
     }
 
+    private void validarCampos() {
+        boolean fotoTomada = imgFotoPerfil.getDrawable() != null;
+        boolean fechaValida = !inputFechaNac.getText().toString().trim().isEmpty();
+        boolean nombreValido = !inputNombre.getText().toString().trim().isEmpty();
+        boolean apellidosValidos = !inputApellidos.getText().toString().trim().isEmpty();
+        boolean correoValido = !inputCorreo.getText().toString().trim().isEmpty();
+        boolean claveValida = !inputClave.getText().toString().trim().isEmpty();
+        boolean clave2Valida = !inputClave2.getText().toString().trim().isEmpty();
+        boolean clavesCoinciden = inputClave.getText().toString().equals(inputClave2.getText().toString());
+        boolean terminosAceptados = chkTerminos.isChecked();
+
+        boolean habilitar = fotoTomada && fechaValida && nombreValido && apellidosValidos &&
+                correoValido && claveValida && clave2Valida && clavesCoinciden && terminosAceptados;
+
+        btnEnviarRegistro.setEnabled(habilitar);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -130,6 +158,7 @@ public class RegistroActivity extends AppCompatActivity {
             if (extras != null && extras.get("data") != null) {
                 Bitmap foto = (Bitmap) extras.get("data");
                 imgFotoPerfil.setImageBitmap(foto);
+                validarCampos();
             } else {
                 Toast.makeText(this, "No se recibió imagen", Toast.LENGTH_SHORT).show();
             }

@@ -17,15 +17,20 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ProyectoAppTeam">
 
-        <!-- Actividades -->
-        <activity android:name=".actividades.RegistroActivity" android:exported="false" />
-        <activity android:name=".actividades.PrincipalActivity" android:exported="true">
+        <!-- Actividad de inicio institucional con logo VeciRed -->
+        <activity
+            android:name=".actividades.InicioActivity"
+            android:exported="true"
+            android:theme="@style/Theme.ProyectoAppTeam">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".actividades.InicioActivity" android:exported="false" />
+
+        <!-- Otras actividades -->
+        <activity android:name=".actividades.PrincipalActivity" android:exported="false" />
+        <activity android:name=".actividades.RegistroActivity" android:exported="false" />
         <activity android:name=".actividades.MenuPrincipalActivity" android:exported="false" />
         <activity android:name=".actividades.RecuperarPassActivity" android:exported="false" />
 
