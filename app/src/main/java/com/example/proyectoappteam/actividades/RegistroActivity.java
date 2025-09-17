@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.widget.Button;
@@ -22,8 +23,17 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.backendless.Backendless;
+import com.backendless.async.callback.AsyncCallback;
+import com.backendless.exceptions.BackendlessFault;
+import com.backendless.files.BackendlessFile;
 import com.example.proyectoappteam.R;
+import com.example.proyectoappteam.clases.Usuario;
+import com.example.proyectoappteam.clases.Seguridad;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Calendar;
 
 public class RegistroActivity extends AppCompatActivity {
@@ -65,7 +75,6 @@ public class RegistroActivity extends AppCompatActivity {
         imgFotoPerfil = findViewById(R.id.imgFotoPerfil);
         calendario = Calendar.getInstance();
 
-        // Solicitar permiso de cámara si no está concedido
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, PERMISO_CAMARA);
@@ -100,19 +109,9 @@ public class RegistroActivity extends AppCompatActivity {
         btnVerTerminos.setOnClickListener(v -> {
             String terminos = "TÉRMINOS Y CONDICIONES – VeciRed\n\n" +
                     "1. Finalidad institucional del aplicativo:\n" +
-                    "VeciRed es una plataforma comunitaria diseñada para fortalecer la comunicación entre vecinos, facilitar la publicación de eventos relevantes, recibir notificaciones institucionales y gestionar el perfil de cada usuario con trazabilidad.\n\n" +
-                    "2. Acceso y registro:\n" +
-                    "Solo usuarios autorizados por la comunidad o institución pueden registrarse. El registro implica la aceptación de estos términos y el compromiso de uso responsable.\n\n" +
-                    "3. Publicaciones comunitarias:\n" +
-                    "Los usuarios pueden crear publicaciones relacionadas con eventos, avisos, ventas o solicitudes. Todo contenido debe respetar las normas de convivencia y estar alineado a los objetivos comunitarios.\n\n" +
-                    "4. Notificaciones institucionales:\n" +
-                    "La aplicación permite recibir notificaciones sobre noticias, alertas o reacciones a publicaciones. Estas notificaciones son gestionadas por el sistema y pueden incluir información relevante para la comunidad.\n\n" +
-                    "5. Gestión de perfil:\n" +
-                    "Cada usuario puede configurar su perfil, actualizar datos personales y cerrar sesión de forma segura. La información registrada será utilizada únicamente para fines comunitarios y no será compartida con terceros.\n\n" +
-                    "6. Moderación y responsabilidad:\n" +
-                    "VeciRed se reserva el derecho de moderar contenido que infrinja las normas comunitarias. El uso indebido del sistema puede conllevar suspensión temporal o definitiva del acceso.\n\n" +
+                    "VeciRed es una plataforma comunitaria diseñada para fortalecer la comunicación entre vecinos...\n\n" +
                     "7. Aceptación de condiciones:\n" +
-                    "Al utilizar VeciRed, el usuario acepta estos términos y se compromete a respetar la lógica institucional, la trazabilidad de sus acciones y la convivencia digital.";
+                    "Al utilizar VeciRed, el usuario acepta estos términos y se compromete a respetar la lógica institucional.";
 
             new android.app.AlertDialog.Builder(RegistroActivity.this)
                     .setTitle("Términos y Condiciones")
@@ -130,6 +129,64 @@ public class RegistroActivity extends AppCompatActivity {
             startActivity(new Intent(RegistroActivity.this, PrincipalActivity.class));
             finish();
         });
+
+        btnEnviarRegistro.setOnClickListener(v -> {
+            Bitmap fotoBitmap = ((BitmapDrawable) imgFotoPerfil.getDrawable()).getBitmap();
+
+            try {
+                File archivo = convertirBitmapAFile(fotoBitmap);
+
+                Backendless.Files.upload(archivo, "/fotos_perfil", true, new AsyncCallback<BackendlessFile>() {
+                    @Override
+                    public void handleResponse(BackendlessFile backendlessFile) {
+                        String urlFoto = backendlessFile.getFileURL();
+
+                        Usuario nuevoUsuario = new Usuario();
+                        nuevoUsuario.setNombre(inputNombre.getText().toString().trim());
+                        nuevoUsuario.setApellidos(inputApellidos.getText().toString().trim());
+                        nuevoUsuario.setCorreo(inputCorreo.getText().toString().trim());
+                        nuevoUsuario.setFechaNacimiento(inputFechaNac.getText().toString().trim());
+                        nuevoUsuario.setUrlFoto(urlFoto);
+
+                        // 🔐 Aplicar hashing automático
+                        String claveOriginal = inputClave.getText().toString().trim();
+                        String claveHasheada = Seguridad.hashClave(claveOriginal);
+                        nuevoUsuario.setClave(claveHasheada);
+
+                        Backendless.Data.of(Usuario.class).save(nuevoUsuario, new AsyncCallback<Usuario>() {
+                            @Override
+                            public void handleResponse(Usuario response) {
+                                Toast.makeText(RegistroActivity.this, "Registro exitoso", Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(RegistroActivity.this, PrincipalActivity.class));
+                                finish();
+                            }
+
+                            @Override
+                            public void handleFault(BackendlessFault fault) {
+                                Toast.makeText(RegistroActivity.this, "Error al guardar usuario: " + fault.getMessage(), Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void handleFault(BackendlessFault fault) {
+                        Toast.makeText(RegistroActivity.this, "Error al subir foto: " + fault.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+
+            } catch (IOException e) {
+                Toast.makeText(RegistroActivity.this, "Error al procesar imagen", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private File convertirBitmapAFile(Bitmap bitmap) throws IOException {
+        File archivo = new File(getCacheDir(), "fotoPerfil.jpg");
+        FileOutputStream fos = new FileOutputStream(archivo);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+        fos.flush();
+        fos.close();
+        return archivo;
     }
 
     private void validarCampos() {

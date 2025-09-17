@@ -44,4 +44,8 @@
     <string name="registrarse">Registrarse</string>
     <string name="fecha_nacimiento">Fecha de Nacimiento</string>
     <string name="apellidos">Apellidos</string>
+    <string name="publicar">Bienvenido a la seccion de Publicaciones</string>
+    <string name="inicio">Bienvenido al Inicio, Enterate de lo que publica tu comunidad</string>
+    <string name="Perfil">Seccion de Perfil - configuraciones principales</string>
+    <string name="notificaciones">Seccion de Notificaciones</string>
 </resources>

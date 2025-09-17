@@ -1,6 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.proyectoappteam">
 
+    <!-- Permiso para acceder a internet (obligatorio para Backendless) -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <!-- Declaración de cámara como característica opcional -->
     <uses-feature android:name="android.hardware.camera" android:required="false" />
 
@@ -8,6 +11,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application
+        android:name=".ProyectoAppTeam"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
