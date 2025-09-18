@@ -19,7 +19,7 @@
     <string name="todo">TODO</string>
     <string name="mispreferencias">Mis Preferencias</string>
     <string name="eventos">Mis Eventos</string>
-    <string name="miperfil">Mi Perfil</string>
+    <string name="miperfil">Mi Perfil - Configuración Básica</string>
     <string name="mapas">Ver Mapa</string>
     <string name="olvide_mi_contraseña">¿Olvidaste tu contraseña?</string>
     <string name="Registro">Se parte de la comunidad!</string>
@@ -56,4 +56,6 @@
     <string name="completa_campos">Completa todos los campos</string>
     <string name="claves_no_coinciden">Las contraseñas no coinciden</string>
     <string name="contrasena_actualizada">Contraseña actualizada correctamente</string>
+    <string name="volverPrincipal">Regresar</string>
+    <string name="cerrarsesion">Cerrar Sesión</string>
 </resources>

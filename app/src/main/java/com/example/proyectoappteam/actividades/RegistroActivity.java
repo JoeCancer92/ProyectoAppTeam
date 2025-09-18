@@ -50,6 +50,9 @@ public class RegistroActivity extends AppCompatActivity {
     static final int REQUEST_FOTO = 1001;
     static final int PERMISO_CAMARA = 200;
 
+
+    private boolean fotoTomadaCorrectamente = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,6 +96,12 @@ public class RegistroActivity extends AppCompatActivity {
         inputClave.setOnFocusChangeListener((v, hasFocus) -> validarCampos());
         inputClave2.setOnFocusChangeListener((v, hasFocus) -> validarCampos());
 
+        inputFechaNac.setKeyListener(null);
+        inputFechaNac.setFocusable(false);
+        inputFechaNac.setClickable(false);
+        inputFechaNac.setCursorVisible(false);
+        inputFechaNac.setLongClickable(false);
+
         btnSeleccionarFecha.setOnClickListener(v -> {
             int año = calendario.get(Calendar.YEAR);
             int mes = calendario.get(Calendar.MONTH);
@@ -111,7 +120,6 @@ public class RegistroActivity extends AppCompatActivity {
         });
 
         btnVerTerminos.setOnClickListener(v -> {
-            // Llama a la función para mostrar los términos y condiciones desde Backendless
             mostrarTerminosYCondiciones();
         });
 
@@ -143,7 +151,7 @@ public class RegistroActivity extends AppCompatActivity {
                         nuevoUsuario.setFechaNacimiento(inputFechaNac.getText().toString().trim());
                         nuevoUsuario.setUrlFoto(urlFoto);
 
-                        //Aplicar hashing automático
+                        // Aplicar hashing automático
                         String claveOriginal = inputClave.getText().toString().trim();
                         String claveHasheada = Seguridad.hashClave(claveOriginal);
                         nuevoUsuario.setClave(claveHasheada);
@@ -176,17 +184,13 @@ public class RegistroActivity extends AppCompatActivity {
     }
 
     private void mostrarTerminosYCondiciones() {
-        // Crea un constructor de consultas
         DataQueryBuilder queryBuilder = DataQueryBuilder.create();
-        // Indica que ordene los resultados por el campo 'orden' de forma ascendente
         queryBuilder.setSortBy("orden ASC");
 
-        // Realiza la consulta a la tabla "TerminosCondiciones"
         Backendless.Data.of("TerminosCondiciones").find(queryBuilder, new AsyncCallback<List<Map>>() {
             @Override
             public void handleResponse(List<Map> terminos) {
                 if (!terminos.isEmpty()) {
-                    // Concatena el contenido de todas las filas en el orden correcto
                     StringBuilder contenidoCompleto = new StringBuilder();
                     for (Map<String, Object> registroTerminos : terminos) {
                         String contenido = (String) registroTerminos.get("contenido");
@@ -195,7 +199,6 @@ public class RegistroActivity extends AppCompatActivity {
                         }
                     }
 
-                    // Muestra el contenido completo en una ventana emergente
                     AlertDialog.Builder builder = new AlertDialog.Builder(RegistroActivity.this);
                     builder.setTitle("Términos y Condiciones");
                     builder.setMessage(contenidoCompleto.toString());
@@ -225,7 +228,8 @@ public class RegistroActivity extends AppCompatActivity {
     }
 
     private void validarCampos() {
-        boolean fotoTomada = imgFotoPerfil.getDrawable() != null;
+        // AHORA USA LA VARIABLE BOOLEANA EN LUGAR DE imgFotoPerfil.getDrawable() != null
+        boolean fotoTomada = fotoTomadaCorrectamente;
         boolean fechaValida = !inputFechaNac.getText().toString().trim().isEmpty();
         boolean nombreValido = !inputNombre.getText().toString().trim().isEmpty();
         boolean apellidosValidos = !inputApellidos.getText().toString().trim().isEmpty();
@@ -250,6 +254,8 @@ public class RegistroActivity extends AppCompatActivity {
             if (extras != null && extras.get("data") != null) {
                 Bitmap foto = (Bitmap) extras.get("data");
                 imgFotoPerfil.setImageBitmap(foto);
+                // AÑADE ESTA LÍNEA PARA ACTIVAR EL INDICADOR DE FOTO
+                fotoTomadaCorrectamente = true;
                 validarCampos();
             } else {
                 Toast.makeText(this, "No se recibió imagen", Toast.LENGTH_SHORT).show();

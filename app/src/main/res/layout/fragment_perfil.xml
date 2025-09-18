@@ -8,38 +8,67 @@
     tools:context=".fragmentos.PerfilFragment"
     android:background="@drawable/fondo50">
 
-    <!-- Contenedor de contenido institucional -->
     <LinearLayout
-        android:id="@+id/contenidoPerfil"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="331dp"
+        android:layout_height="572dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="150dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="150dp"
+        android:background="@drawable/bg_contenedor"
         android:orientation="vertical"
-        android:gravity="center"
         android:padding="24dp"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginStart="96dp">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/txtTituloPerfil"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sección de Perfil - configuraciones principales"
-            android:textSize="20sp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="32dp"
+            android:text="@string/miperfil"
             android:textColor="#000000"
-            android:layout_marginBottom="32dp" />
+            android:textSize="20sp" />
 
-        <Button
-            android:id="@+id/btnVolverMenu"
-            android:layout_width="wrap_content"
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="VOLVER AL MENÚ"
-            android:backgroundTint="#FFE680"
-            android:textColor="#000000"
-            android:padding="12dp"
-            android:elevation="4dp" />
-    </LinearLayout>
+            android:gravity="center"
+            android:orientation="horizontal">
 
+            <Button
+                android:id="@+id/btnVolverMenu"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:backgroundTint="#FFE680"
+                android:elevation="4dp"
+                android:padding="12dp"
+                android:text="@string/volverPrincipal"
+                android:textAllCaps="false"
+                android:textColor="#000000" />
+
+            <Button
+                android:id="@+id/btnCerrarSesion"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:backgroundTint="#FF4444"
+                android:elevation="4dp"
+                android:padding="12dp"
+                android:text="@string/cerrarsesion"
+                android:textAllCaps="false"
+                android:textColor="#FFFFFF" />
+        </LinearLayout>
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

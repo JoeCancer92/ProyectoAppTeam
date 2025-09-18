@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/fondo50"
-    tools:context=".actividades.MenuPrincipalActivity">
+    tools:context="actividades.MenuPrincipalActivity">
 
     <!-- Contenedor dinámico para fragmentos -->
     <FrameLayout

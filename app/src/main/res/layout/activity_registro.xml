@@ -112,7 +112,7 @@
                 android:hint="@string/fecha_nacimiento"
                 android:focusable="true"
                 android:clickable="true"
-                android:inputType="date" />
+                android:inputType="none" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
