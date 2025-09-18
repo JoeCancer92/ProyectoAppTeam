@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -27,6 +28,7 @@ import com.backendless.Backendless;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.files.BackendlessFile;
+import com.backendless.persistence.DataQueryBuilder;
 import com.example.proyectoappteam.R;
 import com.example.proyectoappteam.clases.Usuario;
 import com.example.proyectoappteam.clases.Seguridad;
@@ -35,6 +37,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.List;
+import java.util.Map;
 
 public class RegistroActivity extends AppCompatActivity {
 
@@ -107,17 +111,8 @@ public class RegistroActivity extends AppCompatActivity {
         });
 
         btnVerTerminos.setOnClickListener(v -> {
-            String terminos = "TÉRMINOS Y CONDICIONES – VeciRed\n\n" +
-                    "1. Finalidad institucional del aplicativo:\n" +
-                    "VeciRed es una plataforma comunitaria diseñada para fortalecer la comunicación entre vecinos...\n\n" +
-                    "7. Aceptación de condiciones:\n" +
-                    "Al utilizar VeciRed, el usuario acepta estos términos y se compromete a respetar la lógica institucional.";
-
-            new android.app.AlertDialog.Builder(RegistroActivity.this)
-                    .setTitle("Términos y Condiciones")
-                    .setMessage(terminos)
-                    .setPositiveButton("Aceptar", null)
-                    .show();
+            // Llama a la función para mostrar los términos y condiciones desde Backendless
+            mostrarTerminosYCondiciones();
         });
 
         btnTomarFoto.setOnClickListener(v -> {
@@ -148,7 +143,7 @@ public class RegistroActivity extends AppCompatActivity {
                         nuevoUsuario.setFechaNacimiento(inputFechaNac.getText().toString().trim());
                         nuevoUsuario.setUrlFoto(urlFoto);
 
-                        // 🔐 Aplicar hashing automático
+                        //Aplicar hashing automático
                         String claveOriginal = inputClave.getText().toString().trim();
                         String claveHasheada = Seguridad.hashClave(claveOriginal);
                         nuevoUsuario.setClave(claveHasheada);
@@ -176,6 +171,46 @@ public class RegistroActivity extends AppCompatActivity {
 
             } catch (IOException e) {
                 Toast.makeText(RegistroActivity.this, "Error al procesar imagen", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void mostrarTerminosYCondiciones() {
+        // Crea un constructor de consultas
+        DataQueryBuilder queryBuilder = DataQueryBuilder.create();
+        // Indica que ordene los resultados por el campo 'orden' de forma ascendente
+        queryBuilder.setSortBy("orden ASC");
+
+        // Realiza la consulta a la tabla "TerminosCondiciones"
+        Backendless.Data.of("TerminosCondiciones").find(queryBuilder, new AsyncCallback<List<Map>>() {
+            @Override
+            public void handleResponse(List<Map> terminos) {
+                if (!terminos.isEmpty()) {
+                    // Concatena el contenido de todas las filas en el orden correcto
+                    StringBuilder contenidoCompleto = new StringBuilder();
+                    for (Map<String, Object> registroTerminos : terminos) {
+                        String contenido = (String) registroTerminos.get("contenido");
+                        if (contenido != null) {
+                            contenidoCompleto.append(contenido).append("\n\n");
+                        }
+                    }
+
+                    // Muestra el contenido completo en una ventana emergente
+                    AlertDialog.Builder builder = new AlertDialog.Builder(RegistroActivity.this);
+                    builder.setTitle("Términos y Condiciones");
+                    builder.setMessage(contenidoCompleto.toString());
+                    builder.setPositiveButton("Cerrar", (dialog, which) -> {
+                        dialog.dismiss();
+                    });
+                    builder.show();
+                } else {
+                    Toast.makeText(RegistroActivity.this, "Error: No se encontraron los términos y condiciones.", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void handleFault(BackendlessFault fault) {
+                Toast.makeText(RegistroActivity.this, "Error al cargar los términos: " + fault.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }

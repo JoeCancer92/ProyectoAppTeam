@@ -38,7 +38,6 @@
         <activity android:name=".actividades.MenuPrincipalActivity" android:exported="false" />
         <activity android:name=".actividades.RecuperarPassActivity" android:exported="false" />
 
-        <!-- FileProvider eliminado porque no se usa almacenamiento externo -->
 
     </application>
 </manifest>

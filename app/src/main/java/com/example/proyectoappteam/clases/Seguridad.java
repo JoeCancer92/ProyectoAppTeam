@@ -16,7 +16,7 @@ public class Seguridad {
             }
             return hexString.toString();
         } catch (NoSuchAlgorithmException e) {
-            return null; // Manejo institucional de error
+            return claveOriginal; // Fallback institucional
         }
     }
 }

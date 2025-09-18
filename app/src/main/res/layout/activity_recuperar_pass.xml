@@ -10,7 +10,6 @@
     android:padding="24dp"
     tools:context=".actividades.RecuperarPassActivity">
 
-    <!-- Logo institucional -->
     <ImageView
         android:id="@+id/logoRecuperar"
         android:layout_width="80dp"
@@ -22,7 +21,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Título -->
     <TextView
         android:id="@+id/tituloRecuperar"
         android:layout_width="wrap_content"
@@ -36,7 +34,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Texto informativo -->
     <TextView
         android:id="@+id/textoInstruccion"
         android:layout_width="256dp"
@@ -50,7 +47,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tituloRecuperar" />
 
-    <!-- Campo: Correo electrónico -->
     <EditText
         android:id="@+id/inputCorreoRecuperar"
         android:layout_width="327dp"
@@ -64,20 +60,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textoInstruccion" />
 
-    <!-- Botón: Enviar enlace -->
     <Button
-        android:id="@+id/btnEnviarRecuperacion"
+        android:id="@+id/btnVerificarCorreo"
         android:layout_width="300dp"
         android:layout_height="43dp"
         android:layout_marginTop="24dp"
         android:backgroundTint="@color/colorBotonPrincipal"
-        android:text="@string/enviar_enlace"
+        android:text="@string/verificar"
+        android:textAllCaps="false"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/inputCorreoRecuperar" />
 
-    <!-- Botón: Volver al inicio -->
     <Button
         android:id="@+id/btnVolverInicio"
         android:layout_width="291dp"
@@ -86,8 +81,73 @@
         android:backgroundTint="@color/colorBotonSecundario"
         android:text="@string/volver"
         android:textColor="@color/colorTextoPrincipal"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textAllCaps="false"
+        app:layout_constraintTop_toBottomOf="@id/btnVerificarCorreo"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnEnviarRecuperacion" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <TextView
+        android:id="@+id/txtMensajeDesarrollo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/mensaje_equipo_desarrollo"
+        android:textColor="@color/colorError"
+        android:textSize="14sp"
+        android:layout_marginTop="16dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/btnVolverInicio"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ListView
+        android:id="@+id/listEquipoDesarrollo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/txtMensajeDesarrollo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <EditText
+        android:id="@+id/inputNuevaClave"
+        android:layout_width="327dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="@color/colorInput"
+        android:hint="@string/nueva_contraseña"
+        android:inputType="textPassword"
+        android:textColor="@color/colorTextoInput"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/listEquipoDesarrollo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <EditText
+        android:id="@+id/inputConfirmarClave"
+        android:layout_width="327dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="@color/colorInput"
+        android:hint="@string/confirmar_contraseña"
+        android:inputType="textPassword"
+        android:textColor="@color/colorTextoInput"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/inputNuevaClave"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/btnCambiarClave"
+        android:layout_width="300dp"
+        android:layout_height="43dp"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="@color/colorBotonPrincipal"
+        android:text="@string/cambiar_contraseña"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/inputConfirmarClave"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

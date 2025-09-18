@@ -16,6 +16,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.proyectoappteam.R;
 import com.example.proyectoappteam.clases.Menu;
+import com.example.proyectoappteam.clases.Usuario;
 import com.example.proyectoappteam.fragmentos.InicioFragment;
 import com.example.proyectoappteam.fragmentos.MenuFragment;
 import com.example.proyectoappteam.fragmentos.NotificacionFragment;
@@ -28,30 +29,49 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Menu {
     private MenuFragment menuFragment;
     private LinearLayout contenedorBotonesInferior;
 
+    // Usuario activo disponible para todo el flujo institucional
+    public static Usuario usuarioActivo;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_menu_principal);
 
+        // Aplicar márgenes del sistema
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        contenedorBotonesInferior = findViewById(R.id.contenedorBotonesInferior);
-        if (contenedorBotonesInferior != null) {
-            contenedorBotonesInferior.setVisibility(View.GONE); // Ocultar al iniciar
+        // Recuperar usuario desde el Intent y validar estructura
+        Object recibido = getIntent().getSerializableExtra("usuario");
+        if (recibido instanceof Usuario) {
+            Usuario recibidoUsuario = (Usuario) recibido;
+            if (recibidoUsuario.getCorreo() != null && !recibidoUsuario.getCorreo().isEmpty()) {
+                usuarioActivo = recibidoUsuario;
+            } else {
+                usuarioActivo = null; // Usuario inválido para flujos que requieren correo
+            }
+        } else {
+            usuarioActivo = null;
         }
 
+        // Ocultar botones inferiores al iniciar
+        contenedorBotonesInferior = findViewById(R.id.contenedorBotonesInferior);
+        if (contenedorBotonesInferior != null) {
+            contenedorBotonesInferior.setVisibility(View.GONE);
+        }
+
+        // Inicializar fragmento de menú lateral
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-
         menuFragment = new MenuFragment();
         ft.add(R.id.priRelContenedor, menuFragment, "menu");
         ft.commit();
 
+        // Inicializar fragmentos principales
         fragments = new Fragment[]{
                 new PerfilFragment(),       // 0
                 new InicioFragment(),       // 1
@@ -59,23 +79,17 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Menu {
                 new NotificacionFragment()  // 3
         };
 
-        // 🔗 Asignar listeners a botones del menú inferior
-        ImageButton lateralBtnMiPerfil = findViewById(R.id.lateralBtnMiPerfil);
-        ImageButton lateralBtnInicio = findViewById(R.id.lateralBtnInicio);
-        ImageButton lateralBtnPublicar = findViewById(R.id.lateralBtnPublicar);
-        ImageButton lateralBtnNotificaciones = findViewById(R.id.lateralBtnNotificaciones);
+        // Configurar navegación lateral
+        configurarBotonLateral(R.id.lateralBtnMiPerfil, 0);
+        configurarBotonLateral(R.id.lateralBtnInicio, 1);
+        configurarBotonLateral(R.id.lateralBtnPublicar, 2);
+        configurarBotonLateral(R.id.lateralBtnNotificaciones, 3);
+    }
 
-        if (lateralBtnMiPerfil != null) {
-            lateralBtnMiPerfil.setOnClickListener(v -> onClickMenu(0));
-        }
-        if (lateralBtnInicio != null) {
-            lateralBtnInicio.setOnClickListener(v -> onClickMenu(1));
-        }
-        if (lateralBtnPublicar != null) {
-            lateralBtnPublicar.setOnClickListener(v -> onClickMenu(2));
-        }
-        if (lateralBtnNotificaciones != null) {
-            lateralBtnNotificaciones.setOnClickListener(v -> onClickMenu(3));
+    private void configurarBotonLateral(int idBoton, int idFragmento) {
+        ImageButton boton = findViewById(idBoton);
+        if (boton != null) {
+            boton.setOnClickListener(v -> onClickMenu(idFragmento));
         }
     }
 
@@ -84,16 +98,19 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Menu {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
 
+        // Ocultar todos los fragmentos activos
         for (Fragment f : fragments) {
             if (f.isAdded()) ft.hide(f);
         }
 
         if (id == -1) {
+            // Mostrar menú lateral
             ft.show(menuFragment);
             if (contenedorBotonesInferior != null) {
-                contenedorBotonesInferior.setVisibility(View.GONE); // Ocultar si vuelve al menú
+                contenedorBotonesInferior.setVisibility(View.GONE);
             }
         } else {
+            // Mostrar fragmento seleccionado
             Fragment target = fragments[id];
             if (target.isAdded()) {
                 ft.show(target);
@@ -102,7 +119,7 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Menu {
             }
             ft.hide(menuFragment);
             if (contenedorBotonesInferior != null) {
-                contenedorBotonesInferior.setVisibility(View.VISIBLE); // Mostrar al navegar
+                contenedorBotonesInferior.setVisibility(View.VISIBLE);
             }
         }
 
