@@ -11,6 +11,7 @@ public class Usuario implements Serializable {
     private String clave;
     private String fechaNacimiento;
     private String urlFoto;
+    private String dni; // ¡Campo añadido!
 
     public Usuario() {}
 
@@ -68,5 +69,14 @@ public class Usuario implements Serializable {
 
     public void setUrlFoto(String urlFoto) {
         this.urlFoto = urlFoto;
+    }
+
+    // Métodos Getter y Setter para el nuevo campo 'dni'
+    public String getDni() {
+        return dni;
+    }
+
+    public void setDni(String dni) {
+        this.dni = dni;
     }
 }

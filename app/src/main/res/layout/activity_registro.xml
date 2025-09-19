@@ -12,7 +12,6 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Título institucional -->
         <TextView
             android:id="@+id/txtRegistro"
             android:layout_width="match_parent"
@@ -24,13 +23,11 @@
             android:gravity="center"
             android:layout_marginBottom="16dp" />
 
-        <!-- Bloque horizontal: Foto + Datos -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <!-- Foto a la izquierda -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -57,7 +54,6 @@
                     android:textColor="@color/white" />
             </LinearLayout>
 
-            <!-- Datos a la derecha -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -91,6 +87,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                     <EditText
+                        android:id="@+id/inputDni"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="DNI"
+                        android:inputType="number"
+                        android:maxLength="8" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <EditText
                         android:id="@+id/inputCorreo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -100,7 +108,6 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Fecha de nacimiento -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -125,7 +132,6 @@
             android:textColor="@color/colorTextoPrincipal"
             android:layout_marginBottom="16dp" />
 
-        <!-- Contraseña -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -150,7 +156,6 @@
                 android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Términos -->
         <CheckBox
             android:id="@+id/chkTerminos"
             android:layout_width="match_parent"
