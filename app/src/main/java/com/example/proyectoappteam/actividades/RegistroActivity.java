@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -25,10 +26,13 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.backendless.Backendless;
+import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.files.BackendlessFile;
 import com.backendless.persistence.DataQueryBuilder;
+import com.backendless.messaging.MessageStatus;
+import com.backendless.messaging.EmailEnvelope;
 import com.example.proyectoappteam.R;
 import com.example.proyectoappteam.clases.Usuario;
 import com.example.proyectoappteam.clases.Seguridad;
@@ -39,6 +43,7 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 public class RegistroActivity extends AppCompatActivity {
 
@@ -49,7 +54,6 @@ public class RegistroActivity extends AppCompatActivity {
     Calendar calendario;
     static final int REQUEST_FOTO = 1001;
     static final int PERMISO_CAMARA = 200;
-
 
     private boolean fotoTomadaCorrectamente = false;
 
@@ -71,7 +75,7 @@ public class RegistroActivity extends AppCompatActivity {
         inputCorreo = findViewById(R.id.inputCorreo);
         inputClave = findViewById(R.id.inputClave);
         inputClave2 = findViewById(R.id.inputClave2);
-        inputDni = findViewById(R.id.inputDni); // Nueva referencia
+        inputDni = findViewById(R.id.inputDni);
 
         btnSeleccionarFecha = findViewById(R.id.btnSeleccionarFecha);
         btnVolverInicio = findViewById(R.id.btnVolverInicio);
@@ -93,10 +97,10 @@ public class RegistroActivity extends AppCompatActivity {
         chkTerminos.setOnCheckedChangeListener((buttonView, isChecked) -> validarCampos());
         inputNombre.setOnFocusChangeListener((v, hasFocus) -> validarCampos());
         inputApellidos.setOnFocusChangeListener((v, hasFocus) -> validarCampos());
-        inputDni.setOnFocusChangeListener((v, hasFocus) -> validarCampos()); // Nuevo listener
         inputCorreo.setOnFocusChangeListener((v, hasFocus) -> validarCampos());
         inputClave.setOnFocusChangeListener((v, hasFocus) -> validarCampos());
         inputClave2.setOnFocusChangeListener((v, hasFocus) -> validarCampos());
+        inputDni.setOnFocusChangeListener((v, hasFocus) -> validarCampos());
 
         inputFechaNac.setKeyListener(null);
         inputFechaNac.setFocusable(false);
@@ -137,29 +141,132 @@ public class RegistroActivity extends AppCompatActivity {
 
         btnEnviarRegistro.setOnClickListener(v -> {
             String dni = inputDni.getText().toString().trim();
+            verificarDniExistente(dni);
+        });
+    }
 
-            // Lógica para verificar si el DNI ya existe
-            DataQueryBuilder queryBuilder = DataQueryBuilder.create();
-            queryBuilder.setWhereClause("dni = '" + dni + "'");
+    private void verificarDniExistente(String dni) {
+        String whereClause = "dni = '" + dni + "'";
+        DataQueryBuilder queryBuilder = DataQueryBuilder.create();
+        queryBuilder.setWhereClause(whereClause);
 
-            Backendless.Data.of(Usuario.class).find(queryBuilder, new AsyncCallback<List<Usuario>>() {
-                @Override
-                public void handleResponse(List<Usuario> usuariosEncontrados) {
-                    if (usuariosEncontrados.isEmpty()) {
-                        // DNI no encontrado, proceder con el registro
-                        registrarNuevoUsuario(dni);
-                    } else {
-                        // DNI ya existe, mostrar error
-                        Toast.makeText(RegistroActivity.this, "Ya existe un usuario con este DNI.", Toast.LENGTH_LONG).show();
-                    }
+        Backendless.Data.of(BackendlessUser.class).find(queryBuilder, new AsyncCallback<List<BackendlessUser>>() {
+            @Override
+            public void handleResponse(List<BackendlessUser> usuarios) {
+                if (usuarios != null && !usuarios.isEmpty()) {
+                    Toast.makeText(RegistroActivity.this, "El DNI ya está registrado.", Toast.LENGTH_LONG).show();
+                    return;
                 }
 
+                Backendless.Data.of("Usuario").find(queryBuilder, new AsyncCallback<List<Map>>() {
+                    @Override
+                    public void handleResponse(List<Map> usuariosUsuario) {
+                        if (usuariosUsuario != null && !usuariosUsuario.isEmpty()) {
+                            Toast.makeText(RegistroActivity.this, "El DNI ya está registrado.", Toast.LENGTH_LONG).show();
+                        } else {
+                            procesarRegistro();
+                        }
+                    }
+
+                    @Override
+                    public void handleFault(BackendlessFault fault) {
+                        Toast.makeText(RegistroActivity.this, "Error al verificar el DNI en tabla 'Usuario': " + fault.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+
+            @Override
+            public void handleFault(BackendlessFault fault) {
+                Toast.makeText(RegistroActivity.this, "Error al verificar el DNI en tabla 'Users': " + fault.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void procesarRegistro() {
+        Bitmap fotoBitmap = ((BitmapDrawable) imgFotoPerfil.getDrawable()).getBitmap();
+        try {
+            File archivo = convertirBitmapAFile(fotoBitmap);
+
+            Backendless.Files.upload(archivo, "/fotos_perfil", true, new AsyncCallback<BackendlessFile>() {
+                @Override
+                public void handleResponse(BackendlessFile backendlessFile) {
+                    String urlFoto = backendlessFile.getFileURL();
+                    String dni = inputDni.getText().toString().trim();
+                    String claveOriginal = inputClave.getText().toString().trim();
+
+                    // Aplicar hashing a la clave para guardar en la tabla personalizada
+                    String claveHasheada = Seguridad.hashClave(claveOriginal);
+
+                    // 1. Crear el objeto BackendlessUser para la tabla `Users`
+                    BackendlessUser nuevoBackendlessUser = new BackendlessUser();
+                    nuevoBackendlessUser.setEmail(inputCorreo.getText().toString().trim());
+                    nuevoBackendlessUser.setPassword(claveOriginal); // Backendless se encarga del hasheo aquí
+
+                    nuevoBackendlessUser.setProperty("dni", dni);
+                    nuevoBackendlessUser.setProperty("nombre", inputNombre.getText().toString().trim());
+                    nuevoBackendlessUser.setProperty("apellidos", inputApellidos.getText().toString().trim());
+                    nuevoBackendlessUser.setProperty("fechanacimiento", inputFechaNac.getText().toString().trim());
+                    nuevoBackendlessUser.setProperty("urlfoto", urlFoto);
+
+                    Backendless.UserService.register(nuevoBackendlessUser, new AsyncCallback<BackendlessUser>() {
+                        @Override
+                        public void handleResponse(BackendlessUser registeredUser) {
+                            // 2. Si el registro en `Users` es exitoso, iniciar sesión con el usuario
+                            Backendless.UserService.login(inputCorreo.getText().toString().trim(), claveOriginal, new AsyncCallback<BackendlessUser>() {
+                                @Override
+                                public void handleResponse(BackendlessUser loggedInUser) {
+                                    // 3. Crear el objeto para la tabla `Usuario`. NO SE ASIGNA EL OBJECTID
+                                    Usuario nuevoUsuario = new Usuario();
+                                    nuevoUsuario.setNombre(inputNombre.getText().toString().trim());
+                                    nuevoUsuario.setApellidos(inputApellidos.getText().toString().trim());
+                                    nuevoUsuario.setCorreo(inputCorreo.getText().toString().trim());
+                                    nuevoUsuario.setFechaNacimiento(inputFechaNac.getText().toString().trim());
+                                    nuevoUsuario.setUrlFoto(urlFoto);
+                                    nuevoUsuario.setDni(dni);
+                                    nuevoUsuario.setClave(claveHasheada); // Usa la clave hasheada aquí
+
+                                    // 4. Guardar los datos en la tabla `Usuario`. Backendless asignará el objectId y el ownerId.
+                                    Backendless.Data.of(Usuario.class).save(nuevoUsuario, new AsyncCallback<Usuario>() {
+                                        @Override
+                                        public void handleResponse(Usuario response) {
+                                            Toast.makeText(RegistroActivity.this, "Registro exitoso", Toast.LENGTH_SHORT).show();
+                                            startActivity(new Intent(RegistroActivity.this, PrincipalActivity.class));
+                                            finish();
+                                        }
+
+                                        @Override
+                                        public void handleFault(BackendlessFault fault) {
+                                            Toast.makeText(RegistroActivity.this, "Error al guardar información adicional: " + fault.getMessage(), Toast.LENGTH_LONG).show();
+                                            // Eliminar el usuario de la tabla `Users` si falla la segunda parte del registro.
+                                            Backendless.Data.of(BackendlessUser.class).remove(loggedInUser, new AsyncCallback<Long>() {
+                                                @Override
+                                                public void handleResponse(Long response) {}
+                                                @Override
+                                                public void handleFault(BackendlessFault fault) {}
+                                            });
+                                        }
+                                    });
+                                }
+                                @Override
+                                public void handleFault(BackendlessFault fault) {
+                                    Toast.makeText(RegistroActivity.this, "Error al iniciar sesión después del registro: " + fault.getMessage(), Toast.LENGTH_LONG).show();
+                                }
+                            });
+                        }
+                        @Override
+                        public void handleFault(BackendlessFault fault) {
+                            Toast.makeText(RegistroActivity.this, "Error al registrar en Backendless: " + fault.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
                 @Override
                 public void handleFault(BackendlessFault fault) {
-                    Toast.makeText(RegistroActivity.this, "Error al verificar DNI: " + fault.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(RegistroActivity.this, "Error al subir foto: " + fault.getMessage(), Toast.LENGTH_LONG).show();
                 }
             });
-        });
+        } catch (IOException e) {
+            Toast.makeText(RegistroActivity.this, "Error al procesar imagen", Toast.LENGTH_LONG).show();
+        }
     }
 
     private void mostrarTerminosYCondiciones() {
@@ -197,56 +304,6 @@ public class RegistroActivity extends AppCompatActivity {
         });
     }
 
-    // Método para registrar al nuevo usuario
-    private void registrarNuevoUsuario(String dni) {
-        Bitmap fotoBitmap = ((BitmapDrawable) imgFotoPerfil.getDrawable()).getBitmap();
-
-        try {
-            File archivo = convertirBitmapAFile(fotoBitmap);
-
-            Backendless.Files.upload(archivo, "/fotos_perfil", true, new AsyncCallback<BackendlessFile>() {
-                @Override
-                public void handleResponse(BackendlessFile backendlessFile) {
-                    String urlFoto = backendlessFile.getFileURL();
-
-                    Usuario nuevoUsuario = new Usuario();
-                    nuevoUsuario.setNombre(inputNombre.getText().toString().trim());
-                    nuevoUsuario.setApellidos(inputApellidos.getText().toString().trim());
-                    nuevoUsuario.setCorreo(inputCorreo.getText().toString().trim());
-                    nuevoUsuario.setFechaNacimiento(inputFechaNac.getText().toString().trim());
-                    nuevoUsuario.setUrlFoto(urlFoto);
-                    nuevoUsuario.setDni(dni);
-
-                    String claveOriginal = inputClave.getText().toString().trim();
-                    String claveHasheada = Seguridad.hashClave(claveOriginal);
-                    nuevoUsuario.setClave(claveHasheada);
-
-                    Backendless.Data.of(Usuario.class).save(nuevoUsuario, new AsyncCallback<Usuario>() {
-                        @Override
-                        public void handleResponse(Usuario response) {
-                            Toast.makeText(RegistroActivity.this, "Registro exitoso", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(RegistroActivity.this, PrincipalActivity.class));
-                            finish();
-                        }
-
-                        @Override
-                        public void handleFault(BackendlessFault fault) {
-                            Toast.makeText(RegistroActivity.this, "Error al guardar usuario: " + fault.getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    });
-                }
-
-                @Override
-                public void handleFault(BackendlessFault fault) {
-                    Toast.makeText(RegistroActivity.this, "Error al subir foto: " + fault.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            });
-
-        } catch (IOException e) {
-            Toast.makeText(RegistroActivity.this, "Error al procesar imagen", Toast.LENGTH_LONG).show();
-        }
-    }
-
     private File convertirBitmapAFile(Bitmap bitmap) throws IOException {
         File archivo = new File(getCacheDir(), "fotoPerfil.jpg");
         FileOutputStream fos = new FileOutputStream(archivo);
@@ -261,15 +318,15 @@ public class RegistroActivity extends AppCompatActivity {
         boolean fechaValida = !inputFechaNac.getText().toString().trim().isEmpty();
         boolean nombreValido = !inputNombre.getText().toString().trim().isEmpty();
         boolean apellidosValidos = !inputApellidos.getText().toString().trim().isEmpty();
-        boolean dniValido = inputDni.getText().toString().trim().length() == 8; // Nueva validación de DNI
         boolean correoValido = !inputCorreo.getText().toString().trim().isEmpty();
         boolean claveValida = !inputClave.getText().toString().trim().isEmpty();
         boolean clave2Valida = !inputClave2.getText().toString().trim().isEmpty();
+        boolean dniValido = !inputDni.getText().toString().trim().isEmpty();
         boolean clavesCoinciden = inputClave.getText().toString().equals(inputClave2.getText().toString());
         boolean terminosAceptados = chkTerminos.isChecked();
 
         boolean habilitar = fotoTomada && fechaValida && nombreValido && apellidosValidos &&
-                dniValido && correoValido && claveValida && clave2Valida && clavesCoinciden && terminosAceptados;
+                correoValido && claveValida && clave2Valida && dniValido && clavesCoinciden && terminosAceptados;
 
         btnEnviarRegistro.setEnabled(habilitar);
     }

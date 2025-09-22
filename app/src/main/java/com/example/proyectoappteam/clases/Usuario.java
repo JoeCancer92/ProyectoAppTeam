@@ -11,9 +11,14 @@ public class Usuario implements Serializable {
     private String clave;
     private String fechaNacimiento;
     private String urlFoto;
-    private String dni; // ¡Campo añadido!
+    private String ownerId;
+
+    // --- NUEVO CAMPO AÑADIDO ---
+    private String dni;
 
     public Usuario() {}
+
+    // --- MÉTODOS GETTERS Y SETTERS ---
 
     public String getObjectId() {
         return objectId;
@@ -71,7 +76,15 @@ public class Usuario implements Serializable {
         this.urlFoto = urlFoto;
     }
 
-    // Métodos Getter y Setter para el nuevo campo 'dni'
+    public String getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(String ownerId) {
+        this.ownerId = ownerId;
+    }
+
+    // --- NUEVOS MÉTODOS AÑADIDOS ---
     public String getDni() {
         return dni;
     }

@@ -73,6 +73,93 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/inputCorreoRecuperar" />
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layoutCodigoRecuperacion"
+        android:layout_width="327dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:hint="@string/codigo_recuperacion"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/btnVerificarCorreo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/inputCodigoRecuperacion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/colorInput"
+            android:textColor="@color/colorTextoInput"
+            android:inputType="text" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/btnComprobarClave"
+        android:layout_width="300dp"
+        android:layout_height="43dp"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="@color/colorBotonPrincipal"
+        android:text="@string/comprobar_clave"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/layoutCodigoRecuperacion"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layoutNuevaClave"
+        android:layout_width="327dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:hint="@string/nueva_contraseña"
+        android:visibility="gone"
+        app:endIconMode="password_toggle"
+        app:layout_constraintTop_toBottomOf="@id/btnComprobarClave"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/inputNuevaClave"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/colorInput"
+            android:textColor="@color/colorTextoInput"
+            android:inputType="textPassword" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layoutConfirmarClave"
+        android:layout_width="327dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:hint="@string/confirmar_contraseña"
+        android:visibility="gone"
+        app:endIconMode="password_toggle"
+        app:layout_constraintTop_toBottomOf="@id/layoutNuevaClave"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/inputConfirmarClave"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/colorInput"
+            android:textColor="@color/colorTextoInput"
+            android:inputType="textPassword" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/btnCambiarClave"
+        android:layout_width="300dp"
+        android:layout_height="43dp"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="@color/colorBotonPrincipal"
+        android:text="@string/cambiar_contraseña"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/layoutConfirmarClave"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <Button
         android:id="@+id/btnVolverInicio"
         android:layout_width="291dp"
@@ -82,7 +169,7 @@
         android:text="@string/volver"
         android:textColor="@color/colorTextoPrincipal"
         android:textAllCaps="false"
-        app:layout_constraintTop_toBottomOf="@id/btnVerificarCorreo"
+        app:layout_constraintTop_toBottomOf="@id/btnCambiarClave"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -109,45 +196,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <EditText
-        android:id="@+id/inputNuevaClave"
-        android:layout_width="327dp"
-        android:layout_height="44dp"
-        android:layout_marginTop="24dp"
-        android:backgroundTint="@color/colorInput"
-        android:hint="@string/nueva_contraseña"
-        android:inputType="textPassword"
-        android:textColor="@color/colorTextoInput"
-        android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/listEquipoDesarrollo"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <EditText
-        android:id="@+id/inputConfirmarClave"
-        android:layout_width="327dp"
-        android:layout_height="44dp"
-        android:layout_marginTop="16dp"
-        android:backgroundTint="@color/colorInput"
-        android:hint="@string/confirmar_contraseña"
-        android:inputType="textPassword"
-        android:textColor="@color/colorTextoInput"
-        android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/inputNuevaClave"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <Button
-        android:id="@+id/btnCambiarClave"
-        android:layout_width="300dp"
-        android:layout_height="43dp"
-        android:layout_marginTop="24dp"
-        android:backgroundTint="@color/colorBotonPrincipal"
-        android:text="@string/cambiar_contraseña"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/inputConfirmarClave"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

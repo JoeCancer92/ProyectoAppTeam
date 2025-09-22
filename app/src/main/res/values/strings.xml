@@ -58,4 +58,6 @@
     <string name="contrasena_actualizada">Contraseña actualizada correctamente</string>
     <string name="volverPrincipal">Regresar</string>
     <string name="cerrarsesion">Cerrar Sesión</string>
+    <string name="codigo_recuperacion">Clave Temporal</string>
+    <string name="comprobar_clave">Comprobar Clave</string>
 </resources>
