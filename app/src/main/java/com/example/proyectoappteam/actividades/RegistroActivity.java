@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -30,20 +31,21 @@ import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.files.BackendlessFile;
-import com.backendless.persistence.DataQueryBuilder;
-import com.backendless.messaging.MessageStatus;
 import com.backendless.messaging.EmailEnvelope;
+import com.backendless.messaging.MessageStatus;
+import com.backendless.persistence.DataQueryBuilder;
 import com.example.proyectoappteam.R;
-import com.example.proyectoappteam.clases.Usuario;
 import com.example.proyectoappteam.clases.Seguridad;
+import com.example.proyectoappteam.clases.Usuario;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
 public class RegistroActivity extends AppCompatActivity {
 
@@ -194,13 +196,12 @@ public class RegistroActivity extends AppCompatActivity {
                     String dni = inputDni.getText().toString().trim();
                     String claveOriginal = inputClave.getText().toString().trim();
 
-                    // Aplicar hashing a la clave para guardar en la tabla personalizada
                     String claveHasheada = Seguridad.hashClave(claveOriginal);
 
                     // 1. Crear el objeto BackendlessUser para la tabla `Users`
                     BackendlessUser nuevoBackendlessUser = new BackendlessUser();
                     nuevoBackendlessUser.setEmail(inputCorreo.getText().toString().trim());
-                    nuevoBackendlessUser.setPassword(claveOriginal); // Backendless se encarga del hasheo aquí
+                    nuevoBackendlessUser.setPassword(claveOriginal);
 
                     nuevoBackendlessUser.setProperty("dni", dni);
                     nuevoBackendlessUser.setProperty("nombre", inputNombre.getText().toString().trim());
@@ -211,62 +212,89 @@ public class RegistroActivity extends AppCompatActivity {
                     Backendless.UserService.register(nuevoBackendlessUser, new AsyncCallback<BackendlessUser>() {
                         @Override
                         public void handleResponse(BackendlessUser registeredUser) {
-                            // 2. Si el registro en `Users` es exitoso, iniciar sesión con el usuario
-                            Backendless.UserService.login(inputCorreo.getText().toString().trim(), claveOriginal, new AsyncCallback<BackendlessUser>() {
+                            // 2. Si el registro en `Users` es exitoso, ahora guarda en tu tabla personalizada.
+                            Usuario nuevoUsuario = new Usuario();
+                            nuevoUsuario.setNombre(inputNombre.getText().toString().trim());
+                            nuevoUsuario.setApellidos(inputApellidos.getText().toString().trim());
+                            nuevoUsuario.setCorreo(inputCorreo.getText().toString().trim());
+                            nuevoUsuario.setFechaNacimiento(inputFechaNac.getText().toString().trim());
+                            nuevoUsuario.setUrlFoto(urlFoto);
+                            nuevoUsuario.setDni(dni);
+                            nuevoUsuario.setClave(claveHasheada);
+
+                            nuevoUsuario.setOwnerId(registeredUser.getObjectId());
+
+                            // 3. Guardar los datos en la tabla `Usuario`.
+                            Backendless.Data.of(Usuario.class).save(nuevoUsuario, new AsyncCallback<Usuario>() {
                                 @Override
-                                public void handleResponse(BackendlessUser loggedInUser) {
-                                    // 3. Crear el objeto para la tabla `Usuario`. NO SE ASIGNA EL OBJECTID
-                                    Usuario nuevoUsuario = new Usuario();
-                                    nuevoUsuario.setNombre(inputNombre.getText().toString().trim());
-                                    nuevoUsuario.setApellidos(inputApellidos.getText().toString().trim());
-                                    nuevoUsuario.setCorreo(inputCorreo.getText().toString().trim());
-                                    nuevoUsuario.setFechaNacimiento(inputFechaNac.getText().toString().trim());
-                                    nuevoUsuario.setUrlFoto(urlFoto);
-                                    nuevoUsuario.setDni(dni);
-                                    nuevoUsuario.setClave(claveHasheada); // Usa la clave hasheada aquí
+                                public void handleResponse(Usuario response) {
+                                    // 4. Si el guardado en ambas tablas fue exitoso, envía el correo de bienvenida.
+                                    enviarCorreoBienvenida(inputCorreo.getText().toString().trim(), inputNombre.getText().toString().trim());
 
-                                    // 4. Guardar los datos en la tabla `Usuario`. Backendless asignará el objectId y el ownerId.
-                                    Backendless.Data.of(Usuario.class).save(nuevoUsuario, new AsyncCallback<Usuario>() {
-                                        @Override
-                                        public void handleResponse(Usuario response) {
-                                            Toast.makeText(RegistroActivity.this, "Registro exitoso", Toast.LENGTH_SHORT).show();
-                                            startActivity(new Intent(RegistroActivity.this, PrincipalActivity.class));
-                                            finish();
-                                        }
-
-                                        @Override
-                                        public void handleFault(BackendlessFault fault) {
-                                            Toast.makeText(RegistroActivity.this, "Error al guardar información adicional: " + fault.getMessage(), Toast.LENGTH_LONG).show();
-                                            // Eliminar el usuario de la tabla `Users` si falla la segunda parte del registro.
-                                            Backendless.Data.of(BackendlessUser.class).remove(loggedInUser, new AsyncCallback<Long>() {
-                                                @Override
-                                                public void handleResponse(Long response) {}
-                                                @Override
-                                                public void handleFault(BackendlessFault fault) {}
-                                            });
-                                        }
-                                    });
+                                    Toast.makeText(RegistroActivity.this, "Registro exitoso", Toast.LENGTH_SHORT).show();
+                                    startActivity(new Intent(RegistroActivity.this, PrincipalActivity.class));
+                                    finish();
                                 }
+
                                 @Override
                                 public void handleFault(BackendlessFault fault) {
-                                    Toast.makeText(RegistroActivity.this, "Error al iniciar sesión después del registro: " + fault.getMessage(), Toast.LENGTH_LONG).show();
+                                    Log.e("RegistroActivity", "Error al guardar información adicional: " + fault.getMessage());
+                                    Toast.makeText(RegistroActivity.this, "Error al guardar información adicional: " + fault.getMessage(), Toast.LENGTH_LONG).show();
+                                    // Si falla la segunda parte del registro, elimina el usuario de la tabla `Users`.
+                                    Backendless.Data.of(BackendlessUser.class).remove(registeredUser, new AsyncCallback<Long>() {
+                                        @Override
+                                        public void handleResponse(Long response) {}
+                                        @Override
+                                        public void handleFault(BackendlessFault fault) {}
+                                    });
                                 }
                             });
                         }
                         @Override
                         public void handleFault(BackendlessFault fault) {
+                            Log.e("RegistroActivity", "Error al registrar en Backendless: " + fault.getMessage());
                             Toast.makeText(RegistroActivity.this, "Error al registrar en Backendless: " + fault.getMessage(), Toast.LENGTH_LONG).show();
                         }
                     });
                 }
                 @Override
                 public void handleFault(BackendlessFault fault) {
+                    Log.e("RegistroActivity", "Error al subir foto: " + fault.getMessage());
                     Toast.makeText(RegistroActivity.this, "Error al subir foto: " + fault.getMessage(), Toast.LENGTH_LONG).show();
                 }
             });
         } catch (IOException e) {
+            Log.e("RegistroActivity", "Error al procesar imagen: " + e.getMessage());
             Toast.makeText(RegistroActivity.this, "Error al procesar imagen", Toast.LENGTH_LONG).show();
         }
+    }
+
+    // Método para enviar el correo de bienvenida
+    private void enviarCorreoBienvenida(String email, String nombre) {
+        String templateName = "User Made Registration";
+
+        List<String> recipients = new ArrayList<>();
+        recipients.add(email);
+
+        EmailEnvelope emailEnvelope = new EmailEnvelope();
+
+        HashMap<String, String> placeholders = new HashMap<>();
+        placeholders.put("nombre", nombre);
+
+        Backendless.Messaging.sendEmailFromTemplate(
+                templateName,
+                emailEnvelope,
+                placeholders,
+                new AsyncCallback<MessageStatus>() {
+                    @Override
+                    public void handleResponse(MessageStatus response) {
+                        Log.d("RegistroActivity", "Correo de bienvenida enviado con éxito");
+                    }
+                    @Override
+                    public void handleFault(BackendlessFault fault) {
+                        Log.e("RegistroActivity", "Error al enviar correo de bienvenida: " + fault.getMessage());
+                    }
+                });
     }
 
     private void mostrarTerminosYCondiciones() {
