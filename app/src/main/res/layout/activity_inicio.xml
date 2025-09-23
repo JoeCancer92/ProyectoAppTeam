@@ -11,8 +11,8 @@
     <!-- Logo centrado -->
     <ImageView
         android:id="@+id/logoApp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="280dp"
+        android:layout_height="100dp"
         android:src="@drawable/logo5"
         android:scaleType="fitCenter"
         app:layout_constraintTop_toTopOf="parent"

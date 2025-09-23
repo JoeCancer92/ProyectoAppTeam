@@ -6,20 +6,31 @@
     android:id="@+id/contenedorBotones"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/fondo50"
+
     tools:context=".fragmentos.MenuFragment">
 
     <!-- Ícono institucional arriba -->
     <ImageView
         android:id="@+id/logoInstitucional"
-        android:layout_width="160dp"
+        android:layout_width="150dp"
         android:layout_height="169dp"
         android:background="#00000000"
         android:src="@drawable/icono5"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="50dp" />
+
+    <ImageView
+        android:id="@+id/logoNombre"
+        android:layout_width="200dp"
+        android:layout_height="100dp"
+        android:background="#00000000"
+        android:src="@drawable/logonombre"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="180dp" />
 
     <!-- Mensaje institucional -->
     <TextView
@@ -34,7 +45,7 @@
         app:layout_constraintTop_toBottomOf="@id/logoInstitucional"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="8dp" />
+        android:layout_marginTop="50dp" />
 
     <!-- Contenedor cuadrado centrado verticalmente -->
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/fondo50"
+    android:background="@drawable/fondoofi1"
     tools:context="actividades.MenuPrincipalActivity">
 
     <!-- Contenedor dinámico para fragmentos -->
