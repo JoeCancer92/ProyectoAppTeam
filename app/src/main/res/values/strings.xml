@@ -32,7 +32,7 @@
     <string name="icono_app">ICONO APP</string>
     <string name="volver">Regresar</string>
     <string name="recuperar_contraseña">Reestablece tu Contraseña</string>
-    <string name="instruccion_recuperacion">Envia un enlace al correo con el registraste tu cuenta</string>
+    <string name="instruccion_recuperacion">Envia un enlace al correo con el que registraste tu cuenta</string>
     <string name="enviar_enlace">Enviar Enlace</string>
     <string name="Bienvenido">Bienvenido a VeciRed:\nConecta, colabora y transforma tu comunidad</string>
     <string name="seleccionarFecha">Selecciona Fecha</string>
