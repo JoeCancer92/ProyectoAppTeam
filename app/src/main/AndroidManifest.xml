@@ -1,14 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.proyectoappteam">
 
     <!-- Permiso para acceder a internet (obligatorio para Backendless) -->
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!-- Permisos para la cámara y el almacenamiento externo -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
+
     <!-- Declaración de cámara como característica opcional -->
     <uses-feature android:name="android.hardware.camera" android:required="false" />
-
-    <!-- Permiso para acceder a la cámara -->
-    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:name=".ProyectoAppTeam"
@@ -38,6 +40,17 @@
         <activity android:name=".actividades.MenuPrincipalActivity" android:exported="false" />
         <activity android:name=".actividades.RecuperarPassActivity" android:exported="false" />
 
+        <!-- Proveedor de archivos para la cámara -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.example.proyectoappteam.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
 
     </application>
+
 </manifest>

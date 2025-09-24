@@ -60,4 +60,13 @@
     <string name="cerrarsesion">Cerrar Sesión</string>
     <string name="codigo_recuperacion">Clave Temporal</string>
     <string name="comprobar_clave">Comprobar Clave</string>
+    <string name="dni">DNI</string>
+    <string name="guardar">Guardar</string>
+    <string name="editar">Editar</string>
+    <string name="cambiar_contrasena">Cambiar Contraseña</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="cambiar_foto">Cambiar Foto</string>
+    <string name="modificar_fecha">Modificar Fecha de Nacimiento</string>
+    <string name="nueva_contrasena">Nueva Contraseña</string>
+    <string name="confirmar_contrasena">Confirmar Contraseña</string>
 </resources>
