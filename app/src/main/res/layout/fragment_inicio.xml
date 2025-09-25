@@ -5,43 +5,44 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragmentos.InicioFragment"
-    >
+    android:background="@drawable/fondoofi1"
+    tools:context=".fragmentos.InicioFragment">
 
-    <!-- Contenedor de contenido alineado institucionalmente -->
-    <LinearLayout
-        android:id="@+id/contenidoInicio"
-        android:layout_width="315dp"
-        android:layout_height="188dp"
-        android:layout_marginStart="96dp"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="24dp"
+    <TextView
+        android:id="@+id/tv_noticias_comunidad"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Noticias Sobre tu Comunidad"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_publicaciones"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.465">
+        app:layout_constraintTop_toBottomOf="@+id/tv_noticias_comunidad"
+        tools:listitem="@layout/list_item_publicacion" />
 
-        <TextView
-            android:id="@+id/txtTituloInicio"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp"
-            android:text="Inicio - resumen comunitario"
-            android:textColor="#000000"
-            android:textSize="20sp" />
-
-        <Button
-            android:id="@+id/btnVolverMenu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="#FFE680"
-            android:elevation="4dp"
-            android:padding="12dp"
-            android:text="VOLVER AL MENÚ"
-            android:textColor="#000000" />
-    </LinearLayout>
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,37 +1,21 @@
 package com.example.proyectoappteam.clases;
 
-import java.util.Date;
-
-// Esta clase representa una fila en la tabla 'publicaciones' de Backendless.
-// Los nombres de las variables deben coincidir con los nombres de las columnas.
 public class Publicaciones {
 
-    // Columnas que creaste manualmente
-    private String categoria;
-    private String descripcion;
-    private boolean esUrgente;
-    private double latitud;
-    private double longitud;
-    private String ubicacion; // ¡Nuevo campo añadido!
-    private String fotos; // Almacenará el JSON de las URLs de las fotos
-
-    // Columnas que Backendless crea automáticamente
     private String objectId;
-    private Date created;
+    private String descripcion;
+    private String ubicacion;
     private String ownerId;
-    private Date updated;
+    private String fotos; // Campo para la URL de las fotos
+    private Boolean esUrgente; // Campo para el estado de urgencia
 
-    // Constructor vacío requerido por Backendless
-    public Publicaciones() {
+    // Getters y Setters para cada propiedad
+    public String getObjectId() {
+        return objectId;
     }
 
-    // Getters y Setters
-    public String getCategoria() {
-        return categoria;
-    }
-
-    public void setCategoria(String categoria) {
-        this.categoria = categoria;
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
     }
 
     public String getDescripcion() {
@@ -42,61 +26,12 @@ public class Publicaciones {
         this.descripcion = descripcion;
     }
 
-    public boolean isEsUrgente() {
-        return esUrgente;
-    }
-
-    public void setEsUrgente(boolean esUrgente) {
-        this.esUrgente = esUrgente;
-    }
-
-    public double getLatitud() {
-        return latitud;
-    }
-
-    public void setLatitud(double latitud) {
-        this.latitud = latitud;
-    }
-
-    public double getLongitud() {
-        return longitud;
-    }
-
-    public void setLongitud(double longitud) {
-        this.longitud = longitud;
-    }
-
-    // Getter y Setter para el nuevo campo 'ubicacion'
     public String getUbicacion() {
         return ubicacion;
     }
 
     public void setUbicacion(String ubicacion) {
         this.ubicacion = ubicacion;
-    }
-
-    public String getFotos() {
-        return fotos;
-    }
-
-    public void setFotos(String fotos) {
-        this.fotos = fotos;
-    }
-
-    public String getObjectId() {
-        return objectId;
-    }
-
-    public void setObjectId(String objectId) {
-        this.objectId = objectId;
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
     }
 
     public String getOwnerId() {
@@ -107,11 +42,28 @@ public class Publicaciones {
         this.ownerId = ownerId;
     }
 
-    public Date getUpdated() {
-        return updated;
+    public String getFotos() {
+        return fotos;
     }
 
-    public void setUpdated(Date updated) {
-        this.updated = updated;
+    public void setFotos(String fotos) {
+        this.fotos = fotos;
+    }
+
+    public Boolean getEsUrgente() {
+        return esUrgente;
+    }
+
+    public void setEsUrgente(Boolean esUrgente) {
+        this.esUrgente = esUrgente;
+    }
+
+    public void setCategoria(String categoria) {
+    }
+
+    public void setLongitud(double selectedLongitud) {
+    }
+
+    public void setLatitud(double selectedLatitud) {
     }
 }

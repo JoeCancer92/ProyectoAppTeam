@@ -88,4 +88,8 @@
     <string name="cancelarpubli">Cancelar</string>
     <string name="title_activity_maps">Seleccionar Ubicación</string>
     <string name="seleccionar_ubicacion_text">Selecciona Sitio Cercano</string>
+    <string name="noticias_comunidad">Noticias Sobre tu Comunidad</string>
+    <string name="imagen_de_perfil">foto de usuario</string>
+    <string name="comentar">Comentar</string>
+    <string name="ver_fotos">Ver Fotos</string>
 </resources>
