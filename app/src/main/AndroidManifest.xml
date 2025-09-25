@@ -2,15 +2,20 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.proyectoappteam">
 
-    <!-- Permiso para acceder a internet (obligatorio para Backendless) -->
+    <!-- Permisos para acceder a internet (obligatorio para Backendless y Google Maps) -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <!-- Permisos para la cámara y el almacenamiento externo -->
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
-
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
     <!-- Declaración de cámara como característica opcional -->
-    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
 
     <application
         android:name=".ProyectoAppTeam"
@@ -22,6 +27,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ProyectoAppTeam">
+
+        <!-- Clave de la API de Google Maps -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBQYSEmMr8rD3OCOhpQtt8EyrfF1ZJVWyU" />
+
+        <activity
+            android:name=".actividades.MapsActivity"
+            android:exported="false"
+            android:label="@string/title_activity_maps" />
 
         <!-- Actividad de inicio institucional con logo VeciRed -->
         <activity
@@ -35,10 +50,18 @@
         </activity>
 
         <!-- Otras actividades -->
-        <activity android:name=".actividades.PrincipalActivity" android:exported="false" />
-        <activity android:name=".actividades.RegistroActivity" android:exported="false" />
-        <activity android:name=".actividades.MenuPrincipalActivity" android:exported="false" />
-        <activity android:name=".actividades.RecuperarPassActivity" android:exported="false" />
+        <activity
+            android:name=".actividades.PrincipalActivity"
+            android:exported="false" />
+        <activity
+            android:name=".actividades.RegistroActivity"
+            android:exported="false" />
+        <activity
+            android:name=".actividades.MenuPrincipalActivity"
+            android:exported="false" />
+        <activity
+            android:name=".actividades.RecuperarPassActivity"
+            android:exported="false" />
 
         <!-- Proveedor de archivos para la cámara -->
         <provider
@@ -50,7 +73,5 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
     </application>
-
 </manifest>

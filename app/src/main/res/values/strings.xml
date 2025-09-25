@@ -44,7 +44,7 @@
     <string name="registrarse">Registrarse</string>
     <string name="fecha_nacimiento">Fecha de Nacimiento</string>
     <string name="apellidos">Apellidos</string>
-    <string name="publicar">Bienvenido a la seccion de Publicaciones</string>
+    <string name="publicar">Publicar</string>
     <string name="inicio">Bienvenido al Inicio, Enterate de lo que publica tu comunidad</string>
     <string name="Perfil">Seccion de Perfil - configuraciones principales</string>
     <string name="notificaciones">Seccion de Notificaciones</string>
@@ -69,4 +69,23 @@
     <string name="modificar_fecha">Modificar Fecha de Nacimiento</string>
     <string name="nueva_contrasena">Nueva Contraseña</string>
     <string name="confirmar_contrasena">Confirmar Contraseña</string>
+    <string name="titulo_consejos">Consejos que debes tener en cuenta</string>
+    <string name="anuncio_urgente">Anuncio Urgente</string>
+    <string name="agregar_fotos">Agregar Fotos</string>
+    <string name="abrir_mapa">Abrir Mapa</string>
+    <string name="ubicacion_seleccionada_hint">Ubicacion Seleccionada</string>
+    <string name="mapa_icono_desc">Mapa</string>
+    <string name="ubicacion">Ubicacion</string>
+    <string name="descripcion_hint">Agrega una Descripcion</string>
+    <string name="objetos_perdidos">Objetos Perdidos</string>
+    <string name="recomendacion">Recomendacion</string>
+    <string name="categoria">Categoría</string>
+    <string name="crear_publicacion">Crear Publicacion</string>
+    <string name="fotos_hint">Toca para seleccionar hasta 4 imágenes</string>
+    <string name="fotos_label">Seccion de Fotos</string>
+    <string name="usuario_prueba">Prueba de usuario</string>
+    <string name="user_id_placeholder">Cargando ID de usuario</string>
+    <string name="cancelarpubli">Cancelar</string>
+    <string name="title_activity_maps">Seleccionar Ubicación</string>
+    <string name="seleccionar_ubicacion_text">Selecciona Sitio Cercano</string>
 </resources>
