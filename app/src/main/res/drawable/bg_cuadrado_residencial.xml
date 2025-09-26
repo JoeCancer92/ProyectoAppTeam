@@ -1,13 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:shape="rectangle"
     tools:ignore="ExtraText">
 
-    <corners android:radius="24dp" /> <!-- Bordes redondeados -->
-
+    <corners android:radius="24dp" /> <solid android:color="#00FFFFFF" />
 
     <stroke
         android:width="4dp"
-        android:color="#F0C76C" />       <!-- Borde beige claro -->
-
-</shape>
+        android:color="#F0C76C" />       </shape>

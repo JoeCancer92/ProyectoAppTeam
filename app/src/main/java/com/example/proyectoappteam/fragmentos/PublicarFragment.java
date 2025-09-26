@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,11 +45,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
@@ -64,7 +62,7 @@ public class PublicarFragment extends Fragment {
     private Button btnAbrirMapa;
     private Button btnAgregarFotos;
     private LinearLayout tipsLayout;
-    private TextView tvEmail;
+    // ELIMINADA: private TextView tvEmail;
 
     private List<Uri> selectedPhotoUris = new ArrayList<>();
     private double selectedLatitud = 0.0;
@@ -72,6 +70,10 @@ public class PublicarFragment extends Fragment {
     private String selectedAddressName;
     private Uri currentPhotoUri;
 
+    // *** SOLUCIÓN 1: Variable para persistir el valor de la categoría ***
+    private String categoriaSeleccionada = "";
+
+    // TAG de depuración para Logcat
     private static final String TAG = "PublicarFragment";
 
     // ActivityResultLauncher para el mapa
@@ -159,11 +161,41 @@ public class PublicarFragment extends Fragment {
         btnAbrirMapa = view.findViewById(R.id.btnAbrirMapa);
         btnAgregarFotos = view.findViewById(R.id.btnAgregarFotos);
         tipsLayout = view.findViewById(R.id.tips_layout);
-        tvEmail = view.findViewById(R.id.user_id_display);
+        // ELIMINADO: tvEmail = view.findViewById(R.id.user_id_display);
+
+        // *** INICIALIZACIÓN DE CATEGORÍA POR DEFECTO ***
+        // Esto asegura que 'categoriaSeleccionada' tiene un valor válido al iniciar,
+        // eliminando la posibilidad de que se quede vacía si el RadioGroup falla en el estado inicial.
+        RadioButton rbDefault = view.findViewById(R.id.rbObjetosPerdidos);
+        if (rbDefault != null) {
+            rbDefault.setChecked(true);
+            categoriaSeleccionada = rbDefault.getText().toString(); // Asigna "Objetos Perdidos"
+            Log.d(TAG, "Categoria inicial asignada: " + categoriaSeleccionada);
+        }
+        // ************************************************
 
         // Call methods to load data
         cargarDatosUsuario();
         cargarConsejos();
+
+        // *** SOLUCIÓN 2: Implementar el Listener para capturar la categoría inmediatamente al cambio ***
+        if (rgCategoria != null) {
+            rgCategoria.setOnCheckedChangeListener((group, checkedId) -> {
+                // Solo se ejecuta si hay una selección válida
+                if (checkedId != -1) {
+                    View selectedRadioButton = group.findViewById(checkedId);
+                    if (selectedRadioButton instanceof RadioButton) {
+                        // Actualiza la variable de clase inmediatamente
+                        categoriaSeleccionada = ((RadioButton) selectedRadioButton).getText().toString();
+                        Log.d(TAG, "Categoria seleccionada en tiempo real: " + categoriaSeleccionada);
+                    }
+                } else {
+                    // Aunque la inicialización previene esto, es buena práctica manejarlo
+                    categoriaSeleccionada = "";
+                }
+            });
+        }
+        // *********************************************************************************
 
         // Set up OnClickListeners for the buttons
         if (btnCancelarPublic != null) {
@@ -246,10 +278,9 @@ public class PublicarFragment extends Fragment {
      * Crea un archivo de imagen para la foto tomada por la cámara.
      */
     private File createImageFile() throws IOException {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
+        String uniqueFileName = "IMG_" + UUID.randomUUID().toString(); // Nombre único
         File storageDir = requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        return File.createTempFile(imageFileName, ".jpg", storageDir);
+        return File.createTempFile(uniqueFileName, ".jpg", storageDir);
     }
 
     /**
@@ -265,7 +296,6 @@ public class PublicarFragment extends Fragment {
 
     /**
      * Carga el nombre y apellido del usuario logueado desde Backendless y lo muestra en la UI.
-     * También muestra el correo electrónico del usuario.
      */
     private void cargarDatosUsuario() {
         try {
@@ -274,34 +304,27 @@ public class PublicarFragment extends Fragment {
                 if (tvUsuario != null) {
                     String nombre = (String) currentUser.getProperty("nombre");
                     String apellidos = (String) currentUser.getProperty("apellidos");
+                    // Ahora solo muestra el nombre y apellido
                     tvUsuario.setText(String.format("Bienvenido, %s %s", nombre, apellidos));
                 }
-                if (tvEmail != null) {
-                    String email = currentUser.getEmail();
-                    tvEmail.setText(String.format("Email: %s", email));
-                }
+                // ELIMINADO: Lógica relacionada con tvEmail
             } else {
                 if (tvUsuario != null) {
                     tvUsuario.setText("Usuario no autenticado");
                 }
-                if (tvEmail != null) {
-                    tvEmail.setText("");
-                }
+                // ELIMINADO: Lógica relacionada con tvEmail
             }
         } catch (Exception e) {
             Log.e(TAG, "Error al cargar datos del usuario: " + e.getMessage(), e);
             if (tvUsuario != null) {
                 tvUsuario.setText("Error al cargar usuario");
             }
-            if (tvEmail != null) {
-                tvEmail.setText("");
-            }
+            // ELIMINADO: Lógica relacionada con tvEmail
         }
     }
 
     /**
      * Carga los consejos de la base de datos de Backendless y los muestra en la UI.
-     * Esta versión está corregida para manejar la respuesta como una lista de mapas.
      */
     private void cargarConsejos() {
         if (tipsLayout == null) {
@@ -349,16 +372,19 @@ public class PublicarFragment extends Fragment {
      * Inicia el proceso de publicación, subiendo las fotos y luego guardando la publicación.
      */
     private void publicarInformacion() {
-        if (etDescripcion == null || rgCategoria == null || switchUrgente == null) {
+        if (etDescripcion == null || switchUrgente == null) {
             Toast.makeText(getContext(), "Error: No se pueden obtener los elementos de la interfaz de usuario.", Toast.LENGTH_SHORT).show();
             return;
         }
 
         String descripcion = etDescripcion.getText().toString().trim();
-        int categoriaId = rgCategoria.getCheckedRadioButtonId();
 
-        if (descripcion.isEmpty() || categoriaId == -1) {
+        // Usamos la variable de clase 'categoriaSeleccionada'
+        String categoria = categoriaSeleccionada;
+
+        if (descripcion.isEmpty() || categoria.isEmpty()) {
             Toast.makeText(getContext(), "Por favor, completa la descripción y selecciona una categoría.", Toast.LENGTH_SHORT).show();
+            Log.e(TAG, "FALLO AL PUBLICAR: Categoria vacia o Descripcion vacia.");
             return;
         }
 
@@ -395,10 +421,7 @@ public class PublicarFragment extends Fragment {
     }
 
     /**
-     * Sube un archivo a Backendless. Este método es compatible con la mayoría
-     * de las versiones del SDK, ya que utiliza un objeto File.
-     * @param uri La URI de la foto a subir.
-     * @param callback El callback para manejar la respuesta.
+     * Sube un archivo a Backendless.
      */
     private void uploadFileFromUri(Uri uri, AsyncCallback<String> callback) {
         try {
@@ -435,24 +458,21 @@ public class PublicarFragment extends Fragment {
 
     /**
      * Crea un archivo temporal a partir de una URI de contenido.
-     * @param context El contexto de la aplicación.
-     * @param uri La URI de la que se leerá el contenido.
-     * @return El objeto File del archivo temporal o null si falla.
      */
     private File createTempFileFromUri(Context context, Uri uri) throws IOException {
         InputStream inputStream = null;
         FileOutputStream fileOutputStream = null;
+
+        // Generar un nombre de archivo único con un UUID
+        String uniqueFileName = "temp_" + UUID.randomUUID().toString() + ".jpg";
+
         try {
             inputStream = context.getContentResolver().openInputStream(uri);
             if (inputStream == null) {
                 return null;
             }
 
-            String fileName = getFileName(uri);
-            if (fileName == null) {
-                fileName = "file_" + UUID.randomUUID().toString() + ".jpg";
-            }
-            File tempFile = new File(context.getCacheDir(), fileName);
+            File tempFile = new File(context.getCacheDir(), uniqueFileName);
 
             fileOutputStream = new FileOutputStream(tempFile);
             byte[] buffer = new byte[1024];
@@ -473,8 +493,6 @@ public class PublicarFragment extends Fragment {
 
     /**
      * Intenta obtener el nombre del archivo de una URI.
-     * @param uri La URI de la que se obtendrá el nombre.
-     * @return El nombre del archivo o null si no se puede obtener.
      */
     private String getFileName(Uri uri) {
         String result = null;
@@ -501,17 +519,16 @@ public class PublicarFragment extends Fragment {
 
     /**
      * Guarda la publicación en la base de datos de Backendless.
-     * Este método se llama después de que las fotos han sido subidas.
      */
     private void guardarPublicacion(List<String> uploadedUrls) {
         String descripcion = etDescripcion.getText().toString().trim();
-        int categoriaId = rgCategoria.getCheckedRadioButtonId();
-        String categoria = "";
-        if (categoriaId == R.id.rbObjetosPerdidos) {
-            categoria = "Objetos Perdidos";
-        } else if (categoriaId == R.id.rbRecomendacion) {
-            categoria = "Recomendacion";
-        }
+
+        // *** SOLUCIÓN 3: Usar la variable de clase que garantiza el valor ***
+        String categoria = categoriaSeleccionada;
+
+        // REGISTRO DE DEPURACIÓN FINAL
+        Log.d(TAG, "Categoria final a guardar: '" + categoria + "'");
+
 
         Publicaciones nuevaPublicacion = new Publicaciones();
         nuevaPublicacion.setDescripcion(descripcion);
@@ -521,7 +538,7 @@ public class PublicarFragment extends Fragment {
         nuevaPublicacion.setLongitud(selectedLongitud);
         nuevaPublicacion.setUbicacion(selectedAddressName);
 
-        // Concatenar las URLs de las fotos en una sola cadena separada por comas
+        // Concatenar las URLs de las fotos
         if (!uploadedUrls.isEmpty()) {
             String fotosUrls = String.join(",", uploadedUrls);
             nuevaPublicacion.setFotos(fotosUrls);
@@ -555,5 +572,17 @@ public class PublicarFragment extends Fragment {
         selectedLatitud = 0.0;
         selectedLongitud = 0.0;
         selectedAddressName = null;
+
+        // **Importante:** Limpiar y reasignar el valor del nuevo String Resource
+        // Esto es crucial para que el RadioButton por defecto tenga el valor correcto
+        categoriaSeleccionada = getString(R.string.objetos_perdidos);
+
+        // Opcional: Re-seleccionar visualmente el botón (aunque el código de onCreateView ya lo hace)
+        if (rgCategoria != null) {
+            RadioButton rbDefault = requireView().findViewById(R.id.rbObjetosPerdidos);
+            if (rbDefault != null) {
+                rbDefault.setChecked(true);
+            }
+        }
     }
 }

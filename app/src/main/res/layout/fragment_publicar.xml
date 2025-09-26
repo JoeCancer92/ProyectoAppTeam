@@ -6,13 +6,61 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/fondoofi1"
-tools:context=".fragmentos.PublicarFragment"
-    >
+tools:context=".fragmentos.PublicarFragment">
 
-    <ScrollView
+    <!-- Barra superior con título y botones -->
+    <LinearLayout
+        android:id="@+id/topBar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="16dp">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="5dp"
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <Button
+            android:id="@+id/btnCancelarPublic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cancelarpubli"
+            android:backgroundTint="#545353"
+            android:textColor="#FFFFFF" />
+
+        <TextView
+            android:id="@+id/txtTituloPublicar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/crear_publicacion"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textColor="#000000" />
+
+        <Button
+            android:id="@+id/btnPublicar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/publicar"
+            android:backgroundTint="#1976D2"
+            android:textColor="#FFFFFF" />
+    </LinearLayout>
+
+
+
+    <!-- Contenido desplazable -->
+    <ScrollView
+        android:id="@+id/scrollContenido"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:padding="16dp"
+        app:layout_constraintTop_toBottomOf="@id/topBar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">>
 
         <LinearLayout
             android:id="@+id/contenidoPublicar"
@@ -25,60 +73,60 @@ tools:context=".fragmentos.PublicarFragment"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
-            <!-- Encabezado -->
-            <TextView
-                android:id="@+id/txtTituloPublicar"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/headerUsuario"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/crear_publicacion"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="16dp"/>
+                android:layout_marginBottom="8dp"
+                android:padding="1dp">
 
-            <!-- Display User ID -->
-            <TextView
-                android:id="@+id/user_id_display"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/user_id_placeholder"
-                android:textSize="12sp"
-                android:layout_marginBottom="16dp"/>
+                <!-- Perfil del Usuario -->
+                <TextView
+                    android:id="@+id/Usuario"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/usuario_prueba"
+                    android:textSize="14sp"
+                    android:textColor="#000000"
+                    android:layout_marginBottom="16dp"/>
 
-            <!-- Perfil del Usuario -->
-            <TextView
-                android:id="@+id/Usuario"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/usuario_prueba"
-                android:textSize="14sp"
-                android:layout_marginBottom="16dp"/>
+
+
+            </LinearLayout>
 
             <!-- Categorías -->
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/categoria"
                 android:textStyle="bold"
+
+                android:textColor="#000000"
                 android:layout_marginBottom="8dp" />
+
+            <!-- Categorías -->
             <RadioGroup
                 android:id="@+id/rgCategoria"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="8dp">
 
                 <RadioButton
                     android:id="@+id/rbObjetosPerdidos"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/objetos_perdidos" />
+                    android:text="@string/objetos_perdidos"
+                    android:textColor="#000000"/>
 
                 <RadioButton
                     android:id="@+id/rbRecomendacion"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
                     android:text="@string/recomendacion"
-                    android:layout_marginStart="16dp" />
+                    android:textColor="#000000" />
             </RadioGroup>
 
             <!-- Descripción -->
@@ -93,6 +141,7 @@ tools:context=".fragmentos.PublicarFragment"
                     android:layout_height="wrap_content"
                     android:hint="@string/descripcion_hint"
                     android:inputType="textMultiLine"
+                    android:background="@color/teal_700"
                     android:minLines="4" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -159,7 +208,7 @@ tools:context=".fragmentos.PublicarFragment"
                 android:layout_height="wrap_content"
                 android:text="@string/fotos_hint"
                 android:textSize="12sp"
-                android:textColor="#888888"
+                android:textColor="#0D0C0C"
                 android:layout_marginBottom="16dp" />
 
             <!-- Anuncio urgente -->
@@ -168,14 +217,18 @@ tools:context=".fragmentos.PublicarFragment"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/fondo_tarjeta_redondeada"
+                android:padding="16dp"
+                android:elevation="2dp">
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/anuncio_urgente"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black" />
 
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/switchUrgente"
@@ -190,7 +243,7 @@ tools:context=".fragmentos.PublicarFragment"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="12dp"
-                android:background="#F5F5F5"
+                android:background="@color/teal_700"
                 android:layout_marginTop="24dp"
                 android:elevation="2dp"
                 android:layout_marginBottom="32dp">
@@ -207,34 +260,7 @@ tools:context=".fragmentos.PublicarFragment"
                 <!-- Los consejos se agregarán aquí dinámicamente -->
             </LinearLayout>
 
-            <!-- Botones de acción -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_horizontal"
-                android:layout_marginTop="24dp">
 
-                <Button
-                    android:id="@+id/btnCancelarPublic"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/cancelarpubli"
-                    android:backgroundTint="#CCCCCC"
-                    android:textColor="#FFFFFF"
-                    android:layout_marginEnd="8dp" />
-
-                <Button
-                    android:id="@+id/btnPublicar"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/publicar"
-                    android:backgroundTint="#1976D2"
-                    android:textColor="#FFFFFF"
-                    android:layout_marginStart="8dp" />
-            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>

@@ -1,21 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.proyectoappteam">
-
-    <!-- Permisos para acceder a internet (obligatorio para Backendless y Google Maps) -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-
-    <!-- Permisos para la cámara y el almacenamiento externo -->
-    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="28" />
-    <!-- Declaración de cámara como característica opcional -->
-    <uses-feature
-        android:name="android.hardware.camera"
-        android:required="false" />
+        android:maxSdkVersion="28" /> <uses-feature
+    android:name="android.hardware.camera"
+    android:required="false" />
 
     <application
         android:name=".ProyectoAppTeam"
@@ -28,7 +21,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ProyectoAppTeam">
 
-        <!-- Clave de la API de Google Maps -->
+        <activity
+            android:name=".actividades.PhotoSliderActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBQYSEmMr8rD3OCOhpQtt8EyrfF1ZJVWyU" />
@@ -36,23 +32,18 @@
         <activity
             android:name=".actividades.MapsActivity"
             android:exported="false"
-            android:label="@string/title_activity_maps" />
+            android:label="@string/title_activity_maps" /> <activity
+        android:name=".actividades.InicioActivity"
+        android:exported="true"
+        android:theme="@style/Theme.ProyectoAppTeam">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
 
-        <!-- Actividad de inicio institucional con logo VeciRed -->
-        <activity
-            android:name=".actividades.InicioActivity"
-            android:exported="true"
-            android:theme="@style/Theme.ProyectoAppTeam">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-        <!-- Otras actividades -->
-        <activity
-            android:name=".actividades.PrincipalActivity"
-            android:exported="false" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+    </activity> <activity
+        android:name=".actividades.PrincipalActivity"
+        android:exported="false" />
         <activity
             android:name=".actividades.RegistroActivity"
             android:exported="false" />
@@ -61,17 +52,15 @@
             android:exported="false" />
         <activity
             android:name=".actividades.RecuperarPassActivity"
-            android:exported="false" />
-
-        <!-- Proveedor de archivos para la cámara -->
-        <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="com.example.proyectoappteam.fileprovider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths" />
-        </provider>
+            android:exported="false" /> <provider
+        android:name="androidx.core.content.FileProvider"
+        android:authorities="com.example.proyectoappteam.fileprovider"
+        android:exported="false"
+        android:grantUriPermissions="true">
+        <meta-data
+            android:name="android.support.FILE_PROVIDER_PATHS"
+            android:resource="@xml/file_paths" />
+    </provider>
     </application>
+
 </manifest>

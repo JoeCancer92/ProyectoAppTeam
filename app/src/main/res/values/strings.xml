@@ -79,7 +79,7 @@
     <string name="descripcion_hint">Agrega una Descripcion</string>
     <string name="objetos_perdidos">Objetos Perdidos</string>
     <string name="recomendacion">Recomendacion</string>
-    <string name="categoria">Categoría</string>
+    <string name="categoria">Tipo de Publicacion</string>
     <string name="crear_publicacion">Crear Publicacion</string>
     <string name="fotos_hint">Toca para seleccionar hasta 4 imágenes</string>
     <string name="fotos_label">Seccion de Fotos</string>
@@ -92,4 +92,5 @@
     <string name="imagen_de_perfil">foto de usuario</string>
     <string name="comentar">Comentar</string>
     <string name="ver_fotos">Ver Fotos</string>
+    <string name="ver_ubicacion">Ubicacion</string>
 </resources>

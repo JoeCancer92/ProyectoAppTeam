@@ -5,7 +5,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton; // Importar ImageButton
 import android.widget.ProgressBar;
+import android.widget.TextView; // Importar TextView (para el título si se necesita)
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,6 +32,11 @@ public class InicioFragment extends Fragment {
     private PublicacionAdapter adapter;
     private List<Publicaciones> publicacionesList;
     private ProgressBar progressBar;
+    private ImageButton btnRefresh; // Declaración del ImageButton
+
+    // Si necesitas referenciar el título para algo, aunque no es necesario para el refresh
+    // private TextView tvNoticiasComunidad;
+
     private static final String TAG = "InicioFragment";
 
     public InicioFragment() {
@@ -43,14 +50,23 @@ public class InicioFragment extends Fragment {
 
         recyclerView = view.findViewById(R.id.recycler_view_publicaciones);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        // Inicializar el ProgressBar
         progressBar = view.findViewById(R.id.progressBar);
+
+        // 1. Enlazar el botón de refrescar
+        btnRefresh = view.findViewById(R.id.btn_refresh);
 
         // Inicializar el adaptador con una lista vacía
         publicacionesList = new ArrayList<>();
         adapter = new PublicacionAdapter(publicacionesList);
         recyclerView.setAdapter(adapter);
+
+        // 2. Asignar el listener de click al botón
+        if (btnRefresh != null) {
+            btnRefresh.setOnClickListener(v -> {
+                Toast.makeText(getContext(), "Actualizando publicaciones...", Toast.LENGTH_SHORT).show();
+                refreshPosts(); // Llama al método de recarga
+            });
+        }
 
         return view;
     }
@@ -59,6 +75,14 @@ public class InicioFragment extends Fragment {
     public void onResume() {
         super.onResume();
         // Cargar las publicaciones cada vez que el fragmento se hace visible
+        cargarPublicacionesDesdeBackendless();
+    }
+
+    /**
+     * Método público para ser llamado desde la Activity o PublicarFragment
+     * para forzar la recarga de la lista.
+     */
+    public void refreshPosts() {
         cargarPublicacionesDesdeBackendless();
     }
 
@@ -84,7 +108,9 @@ public class InicioFragment extends Fragment {
                     // Notificar al adaptador que los datos han cambiado
                     adapter.notifyDataSetChanged();
                 } else {
-                    // No se encontraron publicaciones
+                    // Limpiar la lista y mostrar mensaje si no hay publicaciones
+                    publicacionesList.clear();
+                    adapter.notifyDataSetChanged();
                     Toast.makeText(getContext(), "No hay publicaciones para mostrar.", Toast.LENGTH_SHORT).show();
                 }
             }
