@@ -13,7 +13,6 @@ public class Usuario implements Serializable {
     private String urlFoto;
     private String ownerId;
 
-    // --- NUEVO CAMPO AÑADIDO ---
     private String dni;
 
     public Usuario() {}
