@@ -5,15 +5,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton; // Importar ImageButton
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
-import android.widget.TextView; // Importar TextView (para el título si se necesita)
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.fragment.app.FragmentManager;
 
 import com.backendless.Backendless;
 import com.backendless.async.callback.AsyncCallback;
@@ -26,16 +26,15 @@ import com.example.proyectoappteam.clases.Publicaciones;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InicioFragment extends Fragment {
+// 🚨 Paso 1: Implementar la interfaz del diálogo
+public class InicioFragment extends Fragment
+        implements CrearCalificacionFragment.CalificacionListener {
 
     private RecyclerView recyclerView;
     private PublicacionAdapter adapter;
     private List<Publicaciones> publicacionesList;
     private ProgressBar progressBar;
-    private ImageButton btnRefresh; // Declaración del ImageButton
-
-    // Si necesitas referenciar el título para algo, aunque no es necesario para el refresh
-    // private TextView tvNoticiasComunidad;
+    private ImageButton btnRefresh;
 
     private static final String TAG = "InicioFragment";
 
@@ -52,23 +51,34 @@ public class InicioFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         progressBar = view.findViewById(R.id.progressBar);
 
-        // 1. Enlazar el botón de refrescar
         btnRefresh = view.findViewById(R.id.btn_refresh);
 
-        // Inicializar el adaptador con una lista vacía
         publicacionesList = new ArrayList<>();
-        adapter = new PublicacionAdapter(publicacionesList);
+
+        // Usamos getChildFragmentManager() para manejar los diálogos dentro de este Fragmento
+        // 🚨 Es crucial que el FragmentManager se pase junto con el listener 'this'
+        FragmentManager fragmentManager = getChildFragmentManager();
+        adapter = new PublicacionAdapter(publicacionesList, fragmentManager, this); // <-- ¡Modificado!
         recyclerView.setAdapter(adapter);
 
-        // 2. Asignar el listener de click al botón
+        // Asignar el listener de click al botón de refrescar
         if (btnRefresh != null) {
             btnRefresh.setOnClickListener(v -> {
                 Toast.makeText(getContext(), "Actualizando publicaciones...", Toast.LENGTH_SHORT).show();
-                refreshPosts(); // Llama al método de recarga
+                refreshPosts();
             });
         }
 
         return view;
+    }
+
+    // 🚨 Paso 2: Implementar el método del Listener
+    // Este método se llama automáticamente desde CrearCalificacionFragment cuando se guarda
+    @Override
+    public void onCalificacionEnviada() {
+        Log.d(TAG, "Calificación enviada, refrescando publicaciones.");
+        // Forzamos la recarga de la lista para ver el promedio actualizado
+        refreshPosts();
     }
 
     @Override
@@ -102,13 +112,10 @@ public class InicioFragment extends Fragment {
                 progressBar.setVisibility(View.GONE);
 
                 if (foundPublicaciones != null && !foundPublicaciones.isEmpty()) {
-                    // Limpiar la lista actual y añadir las nuevas publicaciones
                     publicacionesList.clear();
                     publicacionesList.addAll(foundPublicaciones);
-                    // Notificar al adaptador que los datos han cambiado
                     adapter.notifyDataSetChanged();
                 } else {
-                    // Limpiar la lista y mostrar mensaje si no hay publicaciones
                     publicacionesList.clear();
                     adapter.notifyDataSetChanged();
                     Toast.makeText(getContext(), "No hay publicaciones para mostrar.", Toast.LENGTH_SHORT).show();
@@ -117,7 +124,6 @@ public class InicioFragment extends Fragment {
 
             @Override
             public void handleFault(BackendlessFault fault) {
-                // Ocultar el ProgressBar en caso de error
                 progressBar.setVisibility(View.GONE);
                 Log.e(TAG, "Error al cargar publicaciones: " + fault.getMessage());
                 Toast.makeText(getContext(), "Error al cargar las publicaciones: " + fault.getMessage(), Toast.LENGTH_LONG).show();

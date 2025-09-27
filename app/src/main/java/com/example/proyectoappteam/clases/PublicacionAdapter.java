@@ -1,8 +1,7 @@
 package com.example.proyectoappteam.clases;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent; // <--- NUEVA IMPORTACIÓN NECESARIA
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -12,40 +11,50 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast; // Importar Toast para mensajes al usuario
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import androidx.fragment.app.FragmentManager;
+import com.example.proyectoappteam.fragmentos.CrearComentarioFragment;
+import com.example.proyectoappteam.fragmentos.CrearCalificacionFragment;
+import com.example.proyectoappteam.fragmentos.CrearCalificacionFragment.CalificacionListener;
+import com.example.proyectoappteam.actividades.MapsActivity;
+import com.example.proyectoappteam.actividades.VerComentariosActivity;
 
 import com.backendless.Backendless;
 import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
-import com.backendless.persistence.DataQueryBuilder; // Importar DataQueryBuilder para buscar calificaciones
+import com.backendless.persistence.DataQueryBuilder;
+// 🚨 IMPORTACIÓN CORREGIDA: Usamos el R de nuestra aplicación
 import com.example.proyectoappteam.R;
 import com.example.proyectoappteam.actividades.PhotoSliderActivity;
 
-// *******************************************************************
-// IMPORTACIONES NECESARIAS PARA MANEJAR Y FORMATEAR LA FECHA
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
-// *******************************************************************
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.List;
 
 public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.PublicacionViewHolder> {
 
     private static final String TAG = "PublicacionAdapter";
     private List<Publicaciones> publicaciones;
+    private final FragmentManager fragmentManager;
+    private final CalificacionListener calificacionListener;
 
-    public PublicacionAdapter(List<Publicaciones> publicaciones) {
+    /**
+     * Constructor modificado para recibir FragmentManager y CalificacionListener.
+     */
+    public PublicacionAdapter(List<Publicaciones> publicaciones, FragmentManager fragmentManager, CalificacionListener listener) {
         this.publicaciones = publicaciones;
+        this.fragmentManager = fragmentManager;
+        this.calificacionListener = listener;
     }
 
     @NonNull
@@ -59,23 +68,19 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
     @Override
     public void onBindViewHolder(@NonNull PublicacionViewHolder holder, int position) {
         Publicaciones publicacion = publicaciones.get(position);
+        final Context context = holder.itemView.getContext();
 
         holder.tvDescripcion.setText(publicacion.getDescripcion());
         holder.tvUbicacion.setText(publicacion.getUbicacion());
 
-        // *******************************************************************
         // LÓGICA DE LA FECHA
-        // *******************************************************************
         Date fechaCreacion = publicacion.getCreated();
-        Log.d("FECHA_DEBUG", "Fecha de publicación: " + (fechaCreacion != null ? fechaCreacion.toString() : "Fecha NULA"));
-
         if (fechaCreacion != null) {
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
             holder.tvFechaPublicacion.setText(sdf.format(fechaCreacion));
         } else {
             holder.tvFechaPublicacion.setText("Fecha no disponible");
         }
-        // *******************************************************************
 
         // Manejar el estado de urgencia
         if (publicacion.getEsUrgente() != null && publicacion.getEsUrgente()) {
@@ -84,159 +89,119 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
             holder.tvEsUrgente.setVisibility(View.GONE);
         }
 
-        // *******************************************************************
-        // Lógica para el botón "Ver Fotos" (Se mantiene)
-        // *******************************************************************
+        // Lógica para el botón "Ver Fotos"
         if (publicacion.getFotos() != null && !publicacion.getFotos().isEmpty()) {
             holder.btnVerFotos.setVisibility(View.VISIBLE);
             holder.btnVerFotos.setOnClickListener(v -> {
                 String fotosString = publicacion.getFotos();
-                Intent intent = new Intent(v.getContext(), PhotoSliderActivity.class);
+                Intent intent = new Intent(context, PhotoSliderActivity.class);
                 intent.putExtra(PhotoSliderActivity.EXTRA_PHOTO_URLS, fotosString);
-                v.getContext().startActivity(intent);
+                context.startActivity(intent);
             });
         } else {
             holder.btnVerFotos.setVisibility(View.GONE);
         }
-        // *******************************************************************
 
-        // *******************************************************************
-        // LÓGICA PARA EL BOTÓN "VER UBICACIÓN" (NUEVO CÓDIGO)
-        // *******************************************************************
-        // El botón debe ser visible solo si hay coordenadas válidas
+        // LÓGICA PARA EL BOTÓN "VER UBICACIÓN"
         if (publicacion.getLatitud() != null && publicacion.getLongitud() != null &&
                 publicacion.getLatitud() != 0.0 && publicacion.getLongitud() != 0.0) {
 
             holder.btnVerUbicacion.setVisibility(View.VISIBLE);
             holder.btnVerUbicacion.setOnClickListener(v -> {
-                // Crea un Intent para lanzar MapsActivity
-                Intent mapIntent = new Intent(v.getContext(), com.example.proyectoappteam.actividades.MapsActivity.class);
-
-                // Pasar las coordenadas y la ubicación/descripción al Intent
+                Intent mapIntent = new Intent(context, MapsActivity.class);
                 mapIntent.putExtra("latitud", publicacion.getLatitud());
                 mapIntent.putExtra("longitud", publicacion.getLongitud());
-
-                // Pasar la ubicación o descripción como título del marcador
                 String markerTitle = publicacion.getUbicacion() != null && !publicacion.getUbicacion().isEmpty() ?
                         publicacion.getUbicacion() :
                         publicacion.getDescripcion();
                 mapIntent.putExtra("markerTitle", markerTitle);
-
-                // Lanza la nueva Activity
-                v.getContext().startActivity(mapIntent);
+                context.startActivity(mapIntent);
             });
         } else {
-            // Oculta el botón si la publicación no tiene ubicación
             holder.btnVerUbicacion.setVisibility(View.GONE);
         }
-        // *******************************************************************
 
         cargarDatosUsuario(publicacion.getOwnerId(), holder.tvNombreUsuario, holder.tvCorreoUsuario, holder.ivImagenPerfil);
 
 
         // *******************************************************************
-        // LÓGICA DE CALIFICACIÓN: Cargar la calificación y configurar el Listener
+        // LÓGICA DE CALIFICACIÓN (Usando el botón dedicado)
         // *******************************************************************
+
+        // 🚨 ELIMINADO: Lógica de mostrar calificación (RatingBar y TextView)
+        // Ya que el RatingBar y el TextView fueron eliminados del XML.
+        // Las líneas que causaban el NullPointerException eran:
+        // float promedio = publicacion.getPromedioCalificacion() != null ? publicacion.getPromedioCalificacion() : 0.0f;
+        // holder.ratingBar.setRating(promedio); // <<--- ESTO FALLABA
+        // holder.tvPromedio.setText(String.format(Locale.getDefault(), "%.1f", promedio));
+
         final String currentUserId = Backendless.UserService.CurrentUser() != null ? Backendless.UserService.CurrentUser().getObjectId() : null;
 
         if (currentUserId != null) {
-            // 1. Cargar la calificación existente (o 0) para esta publicación
-            cargarCalificacionExistente(publicacion.getObjectId(), currentUserId, holder.ratingBar, holder.itemView.getContext());
+            holder.btnCalificar.setVisibility(View.VISIBLE);
 
-            // 2. Configurar el Listener para guardar/actualizar la calificación
-            holder.ratingBar.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> {
-                if (fromUser) {
-                    guardarCalificacion(publicacion, currentUserId, rating, holder.itemView.getContext());
-                    Log.i(TAG, "Nueva calificación enviada para " + publicacion.getObjectId() + ": " + rating);
-                }
+            // Asignamos el listener del diálogo al NUEVO BOTÓN
+            holder.btnCalificar.setOnClickListener(v -> {
+                Log.i(TAG, "Botón CALIFICAR clickeado para mostrar diálogo.");
+                mostrarDialogoCalificacion(publicacion.getObjectId(), context);
             });
-            holder.ratingBar.setIsIndicator(false); // Permite al usuario interactuar
+
         } else {
-            // Usuario no logueado: RatingBar solo lectura y rating 0
-            holder.ratingBar.setRating(0);
-            holder.ratingBar.setIsIndicator(true);
-            Log.w(TAG, "RatingBar deshabilitado: No hay usuario logueado.");
+            // Si no hay usuario logueado, ocultamos el botón de calificar
+            holder.btnCalificar.setVisibility(View.GONE);
+            Log.w(TAG, "Botón Calificar deshabilitado: No hay usuario logueado.");
         }
         // *******************************************************************
 
+        // LÓGICA PARA ABRIR EL DIÁLOGO DE CREAR COMENTARIO (btnComentar)
         holder.btnComentar.setOnClickListener(v -> {
-            Log.i(TAG, "Botón de comentar clickeado para: " + publicacion.getOwnerId());
-            // Lógica para abrir la pantalla de comentarios aquí
-        });
-    }
+            String publicacionId = publicacion.getObjectId();
+            Log.i(TAG, "Botón de comentar clickeado para Publicación ID: " + publicacionId);
 
-    // *******************************************************************
-    // MÉTODOS DE CALIFICACIÓN (se mantienen igual)
-    // *******************************************************************
-
-    private void cargarCalificacionExistente(String publicacionId, String userId, RatingBar ratingBar, Context context) {
-        // ... (código existente) ...
-        String whereClause = "ownerId = '" + userId + "' AND publicacion.objectId = '" + publicacionId + "'";
-        DataQueryBuilder queryBuilder = DataQueryBuilder.create();
-        queryBuilder.setWhereClause(whereClause);
-        Backendless.Data.of(Calificaciones.class).find(queryBuilder, new AsyncCallback<List<Calificaciones>>() {
-            @Override
-            public void handleResponse(List<Calificaciones> foundCalificaciones) {
-                if (foundCalificaciones != null && !foundCalificaciones.isEmpty()) {
-                    Calificaciones calificacion = foundCalificaciones.get(0);
-                    ratingBar.setRating(calificacion.getPuntuacion());
-                } else {
-                    ratingBar.setRating(0);
-                }
-                ratingBar.setIsIndicator(false);
+            if (fragmentManager != null && publicacionId != null && !publicacionId.isEmpty()) {
+                CrearComentarioFragment dialog = CrearComentarioFragment.newInstance(publicacionId);
+                dialog.show(fragmentManager, "CrearComentarioDialog");
+            } else {
+                Toast.makeText(context, "Error: No se puede comentar (Falta FragmentManager o Publicación ID).", Toast.LENGTH_LONG).show();
             }
+        });
 
-            @Override
-            public void handleFault(BackendlessFault fault) {
-                Log.e(TAG, "Error al cargar calificación existente: " + fault.getMessage());
-                Toast.makeText(context, "Error al cargar tu calificación: " + fault.getMessage(), Toast.LENGTH_SHORT).show();
-                ratingBar.setIsIndicator(true);
+        // LÓGICA PARA EL BOTÓN DE VER COMENTARIOS (btnVerComentarios)
+        holder.btnVerComentarios.setOnClickListener(v -> {
+            String publicacionId = publicacion.getObjectId();
+            Log.i(TAG, "Botón de ver comentarios clickeado para Publicación ID: " + publicacionId);
+
+            if (publicacionId != null && !publicacionId.isEmpty()) {
+                Intent intent = new Intent(context, VerComentariosActivity.class);
+                // Usamos la constante definida en VerComentariosActivity para la clave
+                intent.putExtra(VerComentariosActivity.EXTRA_PUBLICACION_ID, publicacionId);
+                context.startActivity(intent);
+            } else {
+                Toast.makeText(context, "Error: ID de publicación no disponible para ver comentarios.", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void guardarCalificacion(Publicaciones publicacion, String userId, float rating, Context context) {
+    /**
+     * Muestra el diálogo de calificación.
+     * @param publicacionId El objectId de la publicación a calificar.
+     */
+    private void mostrarDialogoCalificacion(String publicacionId, Context context) {
+        if (fragmentManager == null || publicacionId == null || calificacionListener == null) {
+            Toast.makeText(context, "Error al lanzar la calificación. Inténtalo de nuevo.", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-        String whereClause = "ownerId = '" + userId + "' AND publicacion.objectId = '" + publicacion.getObjectId() + "'";
-        DataQueryBuilder queryBuilder = DataQueryBuilder.create();
-        queryBuilder.setWhereClause(whereClause);
-        Backendless.Data.of(Calificaciones.class).find(queryBuilder, new AsyncCallback<List<Calificaciones>>() {
-            @Override
-            public void handleResponse(List<Calificaciones> existingCalificaciones) {
-                Calificaciones calificacionToSave;
-                if (existingCalificaciones != null && !existingCalificaciones.isEmpty()) {
-                    calificacionToSave = existingCalificaciones.get(0);
-                } else {
-                    calificacionToSave = new Calificaciones();
-                    calificacionToSave.setPublicacion(publicacion);
-                    // *******************************************************************
-                    // LÍNEA DE LÓGICA FALTANTE:
-                    // Asignar el ownerId explícitamente al crear una nueva calificación
-                    calificacionToSave.setOwnerId(userId); // <--- ¡CORREGIDO!
-                    // *******************************************************************
-                }
-                calificacionToSave.setPuntuacion((int) rating);
-                Backendless.Data.of(Calificaciones.class).save(calificacionToSave, new AsyncCallback<Calificaciones>() {
-                    @Override
-                    public void handleResponse(Calificaciones savedCalificacion) {
-                        Log.i(TAG, "Calificación guardada/actualizada exitosamente.");
-                        Toast.makeText(context, "Calificación guardada: " + (int)rating + " estrellas.", Toast.LENGTH_SHORT).show();
-                    }
-                    @Override
-                    public void handleFault(BackendlessFault fault) {
-                        Log.e(TAG, "Error al guardar calificación: " + fault.getMessage());
-                        Toast.makeText(context, "Error al guardar calificación: " + fault.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                });
-            }
-            @Override
-            public void handleFault(BackendlessFault fault) {
-                Log.e(TAG, "Error de búsqueda antes de guardar: " + fault.getMessage());
-                Toast.makeText(context, "Error de conexión al calificar: " + fault.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
+        // Crear una nueva instancia del fragmento de diálogo, pasándole el ID
+        CrearCalificacionFragment dialogFragment = CrearCalificacionFragment.newInstance(publicacionId);
+
+        // Asignar el listener del InicioFragment al diálogo para la recarga
+        dialogFragment.setCalificacionListener(calificacionListener);
+
+        // Mostrar el diálogo usando el FragmentManager
+        dialogFragment.show(fragmentManager, "CrearCalificacionTag");
+        Log.d(TAG, "Lanzando diálogo de calificación para ID: " + publicacionId);
     }
-
 
     @Override
     public int getItemCount() {
@@ -245,7 +210,6 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
 
 
     private void cargarDatosUsuario(String userId, TextView tvNombreUsuario, TextView tvCorreoUsuario, ImageView ivImagenPerfil) {
-        // ... (código existente) ...
         Backendless.Data.of(BackendlessUser.class).findById(userId, new AsyncCallback<BackendlessUser>() {
             @Override
             public void handleResponse(BackendlessUser user) {
@@ -318,11 +282,14 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
         TextView tvCorreoUsuario;
         TextView tvUbicacion;
         public TextView tvFechaPublicacion;
-        RatingBar ratingBar;
+        // 🚨 ELIMINADO: RatingBar ratingBar;
+        // 🚨 ELIMINADO: public TextView tvPromedio;
 
         public ImageButton btnComentar;
         public ImageButton btnVerFotos;
         public ImageButton btnVerUbicacion;
+        public ImageButton btnVerComentarios;
+        public ImageButton btnCalificar;
 
         TextView tvEsUrgente;
 
@@ -334,11 +301,16 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
             tvCorreoUsuario = itemView.findViewById(R.id.tv_user_email);
             tvUbicacion = itemView.findViewById(R.id.tv_ubicacion_publicacion);
             tvFechaPublicacion = itemView.findViewById(R.id.tv_fecha_publicacion);
-            ratingBar = itemView.findViewById(R.id.rating_bar_publicacion);
+
+            // 🚨 ELIMINADO: ratingBar = itemView.findViewById(R.id.rating_bar_publicacion);
+            // 🚨 ELIMINADO: tvPromedio = itemView.findViewById(R.id.tv_promedio_calificacion);
 
             btnComentar = itemView.findViewById(R.id.btn_comentar);
             btnVerFotos = itemView.findViewById(R.id.btn_ver_fotos);
             btnVerUbicacion = itemView.findViewById(R.id.btn_ver_ubicacion);
+            btnCalificar = itemView.findViewById(R.id.btn_calificar);
+
+            btnVerComentarios = itemView.findViewById(R.id.btn_ver_comentarios);
 
             tvEsUrgente = itemView.findViewById(R.id.tv_es_urgente);
         }

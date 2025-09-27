@@ -67,6 +67,7 @@
             app:layout_constraintStart_toEndOf="@+id/iv_user_profile"
             app:layout_constraintTop_toBottomOf="@+id/tv_ubicacion_publicacion"
             tools:text="26/09/2025 04:00 AM" />
+
         <TextView
             android:id="@+id/tv_descripcion_publicacion"
             android:layout_width="0dp"
@@ -91,28 +92,16 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_descripcion_publicacion"
             android:visibility="gone"/>
 
-        <RatingBar
-            android:id="@+id/rating_bar_publicacion"
-            style="?android:attr/ratingBarStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:numStars="5"
-            android:stepSize="1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_es_urgente" />
-
         <ImageButton
             android:id="@+id/btn_comentar"
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:src="@drawable/comentar1"
             android:background="?attr/selectableItemBackground"
             android:contentDescription="Botón para comentar"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rating_bar_publicacion" />
-
+            app:layout_constraintTop_toBottomOf="@+id/tv_es_urgente" />
         <ImageButton
             android:id="@+id/btn_ver_fotos"
             android:layout_width="36dp"
@@ -135,5 +124,26 @@
             app:layout_constraintStart_toEndOf="@+id/btn_ver_fotos"
             app:layout_constraintTop_toTopOf="@+id/btn_ver_fotos" />
 
+        <ImageButton
+            android:id="@+id/btn_calificar"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginStart="8dp"
+            android:src="@android:drawable/btn_star"
+            android:background="?attr/selectableItemBackground"
+            android:contentDescription="Botón para calificar la publicación"
+            app:layout_constraintStart_toEndOf="@+id/btn_ver_ubicacion"
+            app:layout_constraintTop_toTopOf="@+id/btn_ver_ubicacion" />
+
+        <ImageButton
+            android:id="@+id/btn_ver_comentarios"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/vercomentario"
+            android:background="?attr/selectableItemBackground"
+            android:contentDescription="Botón para ver comentarios"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/btn_comentar" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

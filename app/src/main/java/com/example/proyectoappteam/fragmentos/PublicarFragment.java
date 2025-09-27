@@ -1,6 +1,5 @@
 package com.example.proyectoappteam.fragmentos;
 
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -164,12 +163,13 @@ public class PublicarFragment extends Fragment {
         // ELIMINADO: tvEmail = view.findViewById(R.id.user_id_display);
 
         // *** INICIALIZACIÓN DE CATEGORÍA POR DEFECTO ***
-        // Esto asegura que 'categoriaSeleccionada' tiene un valor válido al iniciar,
-        // eliminando la posibilidad de que se quede vacía si el RadioGroup falla en el estado inicial.
+        // Esto asegura que 'categoriaSeleccionada' tiene un valor válido al iniciar.
         RadioButton rbDefault = view.findViewById(R.id.rbObjetosPerdidos);
         if (rbDefault != null) {
+            // Utilizamos R.string.objetos_perdidos para obtener el valor del recurso string
+            String defaultCategory = getResources().getString(R.string.objetos_perdidos);
             rbDefault.setChecked(true);
-            categoriaSeleccionada = rbDefault.getText().toString(); // Asigna "Objetos Perdidos"
+            categoriaSeleccionada = defaultCategory; // Asigna el valor del recurso
             Log.d(TAG, "Categoria inicial asignada: " + categoriaSeleccionada);
         }
         // ************************************************
@@ -190,7 +190,7 @@ public class PublicarFragment extends Fragment {
                         Log.d(TAG, "Categoria seleccionada en tiempo real: " + categoriaSeleccionada);
                     }
                 } else {
-                    // Aunque la inicialización previene esto, es buena práctica manejarlo
+                    // Si por alguna razón no hay check (caso raro), limpia la variable
                     categoriaSeleccionada = "";
                 }
             });
@@ -388,6 +388,9 @@ public class PublicarFragment extends Fragment {
             return;
         }
 
+        // Deshabilitar el botón para evitar clics duplicados mientras se suben los archivos
+        btnPublicar.setEnabled(false);
+
         if (selectedPhotoUris.isEmpty()) {
             // Si no hay fotos, guardar la publicación directamente
             guardarPublicacion(new ArrayList<>());
@@ -396,6 +399,9 @@ public class PublicarFragment extends Fragment {
             final List<String> uploadedPhotoUrls = new ArrayList<>();
             final int[] fotosSubidasCount = {0};
             final int totalFotos = selectedPhotoUris.size();
+
+            // Mostrar un Toast indicando que la subida ha comenzado
+            Toast.makeText(getContext(), "Iniciando subida de " + totalFotos + " foto(s)...", Toast.LENGTH_LONG).show();
 
             // Bucle para subir cada foto de la lista
             for (Uri photoUri : selectedPhotoUris) {
@@ -406,6 +412,7 @@ public class PublicarFragment extends Fragment {
                         fotosSubidasCount[0]++;
                         // Comprobar si todas las fotos han sido subidas
                         if (fotosSubidasCount[0] == totalFotos) {
+                            // Todas las fotos subidas, proceder a guardar la publicación
                             guardarPublicacion(uploadedPhotoUrls);
                         }
                     }
@@ -413,7 +420,9 @@ public class PublicarFragment extends Fragment {
                     @Override
                     public void handleFault(BackendlessFault fault) {
                         Log.e(TAG, "Error al subir la foto: " + fault.getMessage());
+                        // Mostrar Toast y re-habilitar el botón en caso de fallo
                         Toast.makeText(getContext(), "Error al subir una de las fotos: " + fault.getMessage(), Toast.LENGTH_LONG).show();
+                        btnPublicar.setEnabled(true);
                     }
                 });
             }
@@ -433,6 +442,7 @@ public class PublicarFragment extends Fragment {
             }
 
             // Define la ruta en Backendless donde se guardará el archivo
+            // Usamos un subdirectorio "fotos" y el nombre único del archivo temporal
             String filePath = "fotos/" + tempFile.getName();
 
             // Utilizar el método de subida para objetos File
@@ -494,6 +504,7 @@ public class PublicarFragment extends Fragment {
     /**
      * Intenta obtener el nombre del archivo de una URI.
      */
+    // Este método ya no es esencial para el flujo de guardado, pero se mantiene.
     private String getFileName(Uri uri) {
         String result = null;
         if (uri.getScheme().equals("content")) {
@@ -553,12 +564,16 @@ public class PublicarFragment extends Fragment {
                 Toast.makeText(getContext(), "Publicación guardada exitosamente.", Toast.LENGTH_SHORT).show();
                 Log.i(TAG, "Publicación guardada con objectId: " + response.getObjectId());
                 limpiarCampos();
+                // Re-habilitar el botón de publicar después de un éxito
+                btnPublicar.setEnabled(true);
             }
 
             @Override
             public void handleFault(BackendlessFault fault) {
                 Toast.makeText(getContext(), "Error al guardar: " + fault.getMessage(), Toast.LENGTH_LONG).show();
                 Log.e(TAG, "Error saving the post: " + fault.getMessage());
+                // Re-habilitar el botón de publicar después de un fallo
+                btnPublicar.setEnabled(true);
             }
         });
     }
@@ -573,11 +588,12 @@ public class PublicarFragment extends Fragment {
         selectedLongitud = 0.0;
         selectedAddressName = null;
 
-        // **Importante:** Limpiar y reasignar el valor del nuevo String Resource
+        // *** SOLUCIÓN 4: Limpiar y reasignar el valor del String Resource ***
         // Esto es crucial para que el RadioButton por defecto tenga el valor correcto
-        categoriaSeleccionada = getString(R.string.objetos_perdidos);
+        // Se obtiene el valor del recurso string, no el nombre del ID.
+        categoriaSeleccionada = getResources().getString(R.string.objetos_perdidos);
 
-        // Opcional: Re-seleccionar visualmente el botón (aunque el código de onCreateView ya lo hace)
+        // Re-seleccionar visualmente el botón
         if (rgCategoria != null) {
             RadioButton rbDefault = requireView().findViewById(R.id.rbObjetosPerdidos);
             if (rbDefault != null) {

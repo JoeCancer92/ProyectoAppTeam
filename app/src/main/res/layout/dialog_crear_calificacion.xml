@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@android:color/white">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Calificar Publicación"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/colorPrimary"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Selecciona la puntuación de 1 a 5 estrellas:"
+        android:textSize="14sp"
+        android:layout_marginBottom="16dp"/>
+
+
+    <EditText
+        android:id="@+id/et_calificacion_valor"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        android:inputType="number"
+        android:maxLength="1" />
+
+    <!-- RATING BAR: El control visual donde el usuario selecciona la puntuación -->
+    <RatingBar
+        android:id="@+id/rating_bar_input"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:numStars="5"
+        android:stepSize="1.0"
+        android:rating="0.0"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="24dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <!-- BOTÓN CANCELAR -->
+        <Button
+            android:id="@+id/btn_calificacion_cancelar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cancelar1"
+            android:textColor="@android:color/white"
+            android:backgroundTint="#AAAAAA"
+            android:layout_marginEnd="8dp"/>
+
+        <!-- BOTÓN ENVIAR -->
+        <Button
+            android:id="@+id/btn_calificacion_enviar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/enviar"
+            android:backgroundTint="@color/colorPrimary"/>
+
+    </LinearLayout>
+</LinearLayout>

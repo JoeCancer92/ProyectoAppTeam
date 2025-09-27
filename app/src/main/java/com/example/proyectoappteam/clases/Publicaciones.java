@@ -1,6 +1,7 @@
 package com.example.proyectoappteam.clases;
 
-import java.util.Date; // IMPORTANTE: Necesario para manejar las fechas de Backendless
+import java.util.Date;
+import java.util.List;
 
 /**
  * Clase de Mapeo para la tabla 'Publicaciones' en Backendless.
@@ -16,25 +17,59 @@ public class Publicaciones {
     private Boolean esUrgente;
     private Double latitud;
     private Double longitud;
-
     private String categoria;
+
+    // 🚨 PROPIEDAD AÑADIDA: Promedio de calificaciones
+    // Backendless devolverá el promedio de la relación 'calificaciones' en este campo.
+    private Float promedioCalificacion;
 
     // *******************************************************************
     // PROPIEDADES DE FECHA/HORA AUTOMÁTICAS DE BACKENDLESS (DATETIME)
     // *******************************************************************
     private Date created; // Columna 'created' de Backendless
     private Date updated; // Columna 'updated' de Backendless
-    // *******************************************************************
 
+    // *******************************************************************
+    // RELACIONES INVERSAS
+    // *******************************************************************
+    private List<Comentarios> comentarios;
+    // Nota: Puedes añadir List<Calificaciones> calificaciones si necesitas la lista de objetos Calificaciones
+    // private List<Calificaciones> calificaciones;
+
+    // *******************************************************************
     // Constructor vacío (requerido por el SDK de Backendless)
+    // *******************************************************************
     public Publicaciones() {
     }
 
     // ===================================================================
-    // GETTERS Y SETTERS PARA FECHA (created)
+    // GETTERS Y SETTERS PARA EL PROMEDIO DE CALIFICACIÓN 🚨
     // ===================================================================
 
-    // Necesario para que PublicacionAdapter pueda leer la fecha.
+    public Float getPromedioCalificacion() {
+        return promedioCalificacion;
+    }
+
+    public void setPromedioCalificacion(Float promedioCalificacion) {
+        this.promedioCalificacion = promedioCalificacion;
+    }
+
+    // ===================================================================
+    // GETTERS Y SETTERS PARA COMENTARIOS (Relación Inversa)
+    // ===================================================================
+
+    public List<Comentarios> getComentarios() {
+        return comentarios;
+    }
+
+    public void setComentarios(List<Comentarios> comentarios) {
+        this.comentarios = comentarios;
+    }
+
+    // ===================================================================
+    // GETTERS Y SETTERS PARA FECHA (created/updated)
+    // ===================================================================
+
     public Date getCreated() {
         return created;
     }
@@ -65,13 +100,14 @@ public class Publicaciones {
 
     // ===================================================================
     // GETTERS Y SETTERS PARA LATITUD Y LONGITUD
+    // (Asegúrate de que los setters aceptan Double para coincidir con el campo)
     // ===================================================================
 
     public Double getLatitud() {
         return latitud;
     }
 
-    public void setLatitud(double selectedLatitud) {
+    public void setLatitud(Double selectedLatitud) { // Cambiado a Double
         this.latitud = selectedLatitud;
     }
 
@@ -79,7 +115,7 @@ public class Publicaciones {
         return longitud;
     }
 
-    public void setLongitud(double selectedLongitud) {
+    public void setLongitud(Double selectedLongitud) { // Cambiado a Double
         this.longitud = selectedLongitud;
     }
 

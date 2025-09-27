@@ -93,4 +93,8 @@
     <string name="comentar">Comentar</string>
     <string name="ver_fotos">Ver Fotos</string>
     <string name="ver_ubicacion">Ubicacion</string>
+    <string name="aceptar">Aceptar</string>
+    <string name="cancelar1">Cancelar</string>
+    <string name="escribecomentario">Escribe tu Comentario</string>
+    <string name="enviar">Enviar</string>
 </resources>
