@@ -12,8 +12,8 @@ public class ProyectoAppTeam extends Application {
         super.onCreate();
         // Inicialización con las nuevas credenciales del proyecto.
         Backendless.initApp(this,
-                "FF8096CC-3E75-470C-BA38-0B499C3562F5", // NUEVO Application ID
-                "4EE0AA48-E31D-40E1-8F01-1D147B8699DE"); // NUEVA Android API Key
+                "2906A990-ECAF-493D-9F00-E932ADACD43B", // NUEVO Application ID
+                "85E30BE6-D555-4E5D-AF57-DCA6C06FF3A5"); // NUEVA Android API Key
 
 
         Backendless.Data.mapTableToClass("calificaciones", Calificaciones.class);
