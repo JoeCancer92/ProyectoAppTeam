@@ -6,9 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/fondoofi1"
-tools:context=".fragmentos.PublicarFragment">
+    tools:context=".fragmentos.PublicarFragment">
 
-    <!-- Barra superior con título y botones -->
     <LinearLayout
         android:id="@+id/topBar"
         android:layout_width="match_parent"
@@ -50,7 +49,6 @@ tools:context=".fragmentos.PublicarFragment">
 
 
 
-    <!-- Contenido desplazable -->
     <ScrollView
         android:id="@+id/scrollContenido"
         android:layout_width="match_parent"
@@ -60,7 +58,7 @@ tools:context=".fragmentos.PublicarFragment">
         app:layout_constraintTop_toBottomOf="@id/topBar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">>
+        app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
             android:id="@+id/contenidoPublicar"
@@ -80,7 +78,6 @@ tools:context=".fragmentos.PublicarFragment">
                 android:layout_marginBottom="8dp"
                 android:padding="1dp">
 
-                <!-- Perfil del Usuario -->
                 <TextView
                     android:id="@+id/Usuario"
                     android:layout_width="0dp"
@@ -90,22 +87,16 @@ tools:context=".fragmentos.PublicarFragment">
                     android:textSize="14sp"
                     android:textColor="#000000"
                     android:layout_marginBottom="16dp"/>
-
-
-
             </LinearLayout>
 
-            <!-- Categorías -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/categoria"
                 android:textStyle="bold"
-
                 android:textColor="#000000"
                 android:layout_marginBottom="8dp" />
 
-            <!-- Categorías -->
             <RadioGroup
                 android:id="@+id/rgCategoria"
                 android:layout_width="match_parent"
@@ -129,7 +120,6 @@ tools:context=".fragmentos.PublicarFragment">
                     android:textColor="#000000" />
             </RadioGroup>
 
-            <!-- Descripción -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -145,7 +135,6 @@ tools:context=".fragmentos.PublicarFragment">
                     android:minLines="4" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Ubicación -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -188,7 +177,6 @@ tools:context=".fragmentos.PublicarFragment">
                     android:layout_marginStart="8dp" />
             </LinearLayout>
 
-            <!-- Fotos -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -211,7 +199,6 @@ tools:context=".fragmentos.PublicarFragment">
                 android:textColor="#0D0C0C"
                 android:layout_marginBottom="16dp" />
 
-            <!-- Anuncio urgente -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -236,7 +223,16 @@ tools:context=".fragmentos.PublicarFragment">
                     android:layout_height="wrap_content" />
             </LinearLayout>
 
-            <!-- Contenedor para los consejos cargados desde la base de datos -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/titulo_consejos"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="#333333"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="12dp" />
+
             <LinearLayout
                 android:id="@+id/tips_layout"
                 android:layout_width="match_parent"
@@ -244,20 +240,9 @@ tools:context=".fragmentos.PublicarFragment">
                 android:orientation="vertical"
                 android:padding="12dp"
                 android:background="@color/teal_700"
-                android:layout_marginTop="24dp"
                 android:elevation="2dp"
                 android:layout_marginBottom="32dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/titulo_consejos"
-                    android:textStyle="bold"
-                    android:textSize="16sp"
-                    android:textColor="#333333"
-                    android:layout_marginBottom="12dp" />
-
-                <!-- Los consejos se agregarán aquí dinámicamente -->
             </LinearLayout>
 
 

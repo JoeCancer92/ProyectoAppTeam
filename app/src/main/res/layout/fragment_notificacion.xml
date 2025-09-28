@@ -5,41 +5,84 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragmentos.NotificacionFragment"
-    >
+    android:background="@color/colorBackground"
+    tools:context=".fragmentos.NotificacionFragment">
 
-    <!-- Contenedor de contenido alineado institucionalmente -->
-    <LinearLayout
-        android:id="@+id/contenidoNotificacion"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/header_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:padding="24dp"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="8dp">
+
+        <TextView
+            android:id="@+id/tv_notificaciones_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/notificaciones_title"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimaryDark"
+            android:gravity="center_vertical"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btn_refresh"
+            android:layout_marginEnd="8dp" />
+
+        <ImageButton
+            android:id="@+id/btn_refresh"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/refresh1"
+            android:contentDescription="@string/refresh_button_desc"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:scaleType="fitCenter"
+            android:padding="8dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <ProgressBar
+            android:id="@+id/pb_loading"
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="@id/btn_refresh"
+            app:layout_constraintBottom_toBottomOf="@id/btn_refresh"
+            app:layout_constraintEnd_toEndOf="@id/btn_refresh"
+            app:layout_constraintStart_toStartOf="@id/btn_refresh" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_notificaciones"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        app:layout_constraintTop_toBottomOf="@id/header_container"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginStart="96dp">
+        tools:listitem="@layout/list_item_notificacion" />
 
-        <TextView
-            android:id="@+id/txtTituloNotificacion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Notificaciones - avisos comunitarios"
-            android:textSize="20sp"
-            android:textColor="#000000"
-            android:layout_marginBottom="32dp" />
-
-        <Button
-            android:id="@+id/btnVolverMenu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="VOLVER AL MENÚ"
-            android:backgroundTint="#FFE680"
-            android:textColor="#000000"
-            android:padding="12dp"
-            android:elevation="4dp" />
-    </LinearLayout>
+    <TextView
+        android:id="@+id/tv_notificaciones_vacio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/notificaciones_vacias_message"
+        android:textColor="@color/colorTextSecondary"
+        android:textSize="16sp"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="@id/rv_notificaciones"
+        app:layout_constraintBottom_toBottomOf="@id/rv_notificaciones"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

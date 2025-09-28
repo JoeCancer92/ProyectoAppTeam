@@ -48,4 +48,7 @@
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
 
+    <color name="colorUnreadBackground">#FFF3E0</color>
+    <color name="colorCardBackground">#FFFFFF</color>
+
 </resources>

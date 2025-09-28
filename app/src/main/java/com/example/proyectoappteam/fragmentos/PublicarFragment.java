@@ -325,12 +325,17 @@ public class PublicarFragment extends Fragment {
 
     /**
      * Carga los consejos de la base de datos de Backendless y los muestra en la UI.
+     * La modificación principal es que el título de los consejos ahora es un elemento estático
+     * en el XML, por lo que 'removeAllViews()' solo afecta a los consejos dinámicos.
      */
     private void cargarConsejos() {
         if (tipsLayout == null) {
             Log.e(TAG, "Error: tipsLayout es null. No se pueden cargar los consejos.");
             return;
         }
+
+        // Limpiar solo los consejos dinámicos (el título estático en el XML permanece)
+        tipsLayout.removeAllViews();
 
         DataQueryBuilder queryBuilder = DataQueryBuilder.create();
         queryBuilder.setSortBy("orden");
@@ -339,7 +344,7 @@ public class PublicarFragment extends Fragment {
             @Override
             public void handleResponse(List<Map> consejosData) {
                 if (tipsLayout == null) return;
-                tipsLayout.removeAllViews();
+
                 if (consejosData != null && !consejosData.isEmpty()) {
                     for (Map consejoMap : consejosData) {
                         TextView tvConsejo = new TextView(getContext());
@@ -347,12 +352,15 @@ public class PublicarFragment extends Fragment {
                         if (descripcion != null) {
                             tvConsejo.setText(descripcion);
                             tvConsejo.setPadding(0, 8, 0, 8);
+                            // Se recomienda cambiar el color de texto a blanco para el fondo teal_700
+                            tvConsejo.setTextColor(ContextCompat.getColor(getContext(), android.R.color.white));
                             tipsLayout.addView(tvConsejo);
                         }
                     }
                 } else {
                     TextView tvNoConsejos = new TextView(getContext());
                     tvNoConsejos.setText("No hay consejos disponibles en este momento.");
+                    tvNoConsejos.setTextColor(ContextCompat.getColor(getContext(), android.R.color.white));
                     tipsLayout.addView(tvNoConsejos);
                 }
             }
@@ -362,6 +370,7 @@ public class PublicarFragment extends Fragment {
                 if (tipsLayout == null) return;
                 TextView tvError = new TextView(getContext());
                 tvError.setText("Error al cargar consejos: " + fault.getMessage());
+                tvError.setTextColor(ContextCompat.getColor(getContext(), android.R.color.white));
                 tipsLayout.addView(tvError);
                 Log.e(TAG, "Error loading tips: " + fault.getMessage());
             }

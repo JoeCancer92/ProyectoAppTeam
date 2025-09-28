@@ -97,4 +97,19 @@
     <string name="cancelar1">Cancelar</string>
     <string name="escribecomentario">Escribe tu Comentario</string>
     <string name="enviar">Enviar</string>
+    <string name="notificaciones_title">Centro de Notificaciones</string>
+
+
+    <string name="time_minutes_ago">Hace %1$d minutos</string>
+    <string name="time_hours_ago">Hace %1$d horas</string>
+    <string name="time_days_ago">Hace %1$d días</string>
+    <string name="time_months_ago">Hace %1$d meses</string>
+    <string name="notificaciones_vacias_message">Notificaciones Vacias</string>
+    <string name="time_now">Justo ahora</string>
+    <string name="refresh_button_desc">Actualizar</string>
+    <string name="detalle_publicacion_title">Detalle de la Publicacion</string>
+    <string name="comentarios_title">Comentarios</string>
+    <string name="interaccion">Ver Interacciones</string>
+    <string name="icono_interaccion">interaccion</string>
+
 </resources>

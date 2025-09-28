@@ -302,8 +302,6 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
             tvUbicacion = itemView.findViewById(R.id.tv_ubicacion_publicacion);
             tvFechaPublicacion = itemView.findViewById(R.id.tv_fecha_publicacion);
 
-            // 🚨 ELIMINADO: ratingBar = itemView.findViewById(R.id.rating_bar_publicacion);
-            // 🚨 ELIMINADO: tvPromedio = itemView.findViewById(R.id.tv_promedio_calificacion);
 
             btnComentar = itemView.findViewById(R.id.btn_comentar);
             btnVerFotos = itemView.findViewById(R.id.btn_ver_fotos);

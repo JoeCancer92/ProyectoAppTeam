@@ -39,7 +39,7 @@ dependencies {
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
-    implementation(libs.constraintlayout)
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
 
     // Backendless
     implementation("com.backendless:backendless:6.2.0")
