@@ -19,11 +19,15 @@ import com.backendless.Backendless;
 import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
+import com.backendless.messaging.EmailEnvelope;
+import com.backendless.messaging.MessageStatus;
 import com.backendless.persistence.DataQueryBuilder;
 import com.example.proyectoappteam.R;
 import com.example.proyectoappteam.clases.Seguridad;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -186,25 +190,19 @@ public class RecuperarPassActivity extends AppCompatActivity {
     }
 
     private void cambiarContrasenaEnAmbasTablas(String correo, String nuevaClave) {
-        // Obtenemos el usuario autenticado con la clave temporal
         BackendlessUser currentUser = Backendless.UserService.CurrentUser();
         if (currentUser == null) {
             Toast.makeText(this, "Error de sesión. Por favor, reinicie el proceso.", Toast.LENGTH_LONG).show();
             return;
         }
 
-        // 1. Actualizamos la contraseña del usuario en la tabla 'Users'
         currentUser.setPassword(nuevaClave);
         Backendless.UserService.update(currentUser, new AsyncCallback<BackendlessUser>() {
             @Override
             public void handleResponse(BackendlessUser updatedUser) {
-                // 2. Si la actualización en 'Users' fue exitosa, procedemos a actualizar la tabla 'Usuario'.
-                // Realizamos un login con la nueva contraseña para obtener un token de sesión con permisos completos
                 Backendless.UserService.login(correo, nuevaClave, new AsyncCallback<BackendlessUser>() {
                     @Override
                     public void handleResponse(BackendlessUser finalUser) {
-                        // 3. Con el nuevo token de sesión, buscamos y actualizamos el registro en la tabla 'Usuario'.
-                        // Usamos el ownerId para asegurarnos de que el registro pertenece al usuario.
                         String whereClause = "ownerId = '" + finalUser.getObjectId() + "'";
                         DataQueryBuilder queryBuilder = DataQueryBuilder.create().setWhereClause(whereClause);
 
@@ -216,17 +214,21 @@ public class RecuperarPassActivity extends AppCompatActivity {
                                     String claveHasheada = Seguridad.hashClave(nuevaClave);
                                     usuarioMap.put("clave", claveHasheada);
 
-                                    // Guardar el registro actualizado.
                                     Backendless.Data.of("Usuario").save(usuarioMap, new AsyncCallback<Map>() {
                                         @Override
                                         public void handleResponse(Map updatedMap) {
                                             Toast.makeText(RecuperarPassActivity.this, "Contraseña actualizada con éxito.", Toast.LENGTH_LONG).show();
+
+                                            // 📩 Enviar correo de confirmación con plantilla
+                                            enviarCorreoConfirmacion(finalUser);
+
                                             Backendless.UserService.logout(new AsyncCallback<Void>() {
                                                 @Override
                                                 public void handleResponse(Void aVoid) {
                                                     startActivity(new Intent(RecuperarPassActivity.this, PrincipalActivity.class));
                                                     finish();
                                                 }
+
                                                 @Override
                                                 public void handleFault(BackendlessFault backendlessFault) {
                                                     startActivity(new Intent(RecuperarPassActivity.this, PrincipalActivity.class));
@@ -244,12 +246,14 @@ public class RecuperarPassActivity extends AppCompatActivity {
                                     Toast.makeText(RecuperarPassActivity.this, "Error: No se encontró el registro de usuario en la tabla 'Usuario'.", Toast.LENGTH_LONG).show();
                                 }
                             }
+
                             @Override
                             public void handleFault(BackendlessFault fault) {
                                 Toast.makeText(RecuperarPassActivity.this, "Error al buscar el usuario en la tabla 'Usuario': " + fault.getMessage(), Toast.LENGTH_LONG).show();
                             }
                         });
                     }
+
                     @Override
                     public void handleFault(BackendlessFault fault) {
                         Toast.makeText(RecuperarPassActivity.this, "Error al iniciar sesión con la nueva contraseña: " + fault.getMessage(), Toast.LENGTH_LONG).show();
@@ -262,6 +266,38 @@ public class RecuperarPassActivity extends AppCompatActivity {
                 Toast.makeText(RecuperarPassActivity.this, "Error al actualizar la contraseña en la tabla 'Users': " + fault.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    /** 📩 Método para enviar el correo con la plantilla personalizada */
+    private void enviarCorreoConfirmacion(BackendlessUser usuario) {
+        EmailEnvelope envelope = new EmailEnvelope();
+
+        // Destinatario
+        HashSet<String> to = new HashSet<>();
+        to.add(usuario.getEmail());
+        envelope.setTo(to);
+
+        // Variables que la plantilla usará
+        HashMap<String, String> templateValues = new HashMap<>();
+        templateValues.put("Users.nombre", (String) usuario.getProperty("nombre"));
+        templateValues.put("Users.apellidos", (String) usuario.getProperty("apellidos"));
+
+        // Enviar usando plantilla de Backendless
+        Backendless.Messaging.sendEmailFromTemplate(
+                "PasswordChangedSuccess",   // Nombre de la plantilla
+                envelope,
+                templateValues,
+                new AsyncCallback<MessageStatus>() {
+                    @Override
+                    public void handleResponse(MessageStatus response) {
+                        android.util.Log.d("RecuperarPass", "Correo de confirmación enviado correctamente.");
+                    }
+
+                    @Override
+                    public void handleFault(BackendlessFault fault) {
+                        android.util.Log.e("RecuperarPass", "Error al enviar correo: " + fault.getMessage());
+                    }
+                });
     }
 
     private void mostrarMensajeCorreoNoExiste() {
