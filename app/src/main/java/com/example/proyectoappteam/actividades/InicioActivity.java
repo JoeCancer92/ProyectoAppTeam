@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
@@ -16,6 +17,10 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.proyectoappteam.R;
 
 public class InicioActivity extends AppCompatActivity {
+
+    private ProgressBar progressBar;
+    private int progressStatus = 0;
+    private Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,21 +35,39 @@ public class InicioActivity extends AppCompatActivity {
         });
 
         ImageView logoApp = findViewById(R.id.logoApp);
-        ProgressBar progressBar = findViewById(R.id.progressBar);
+        progressBar = findViewById(R.id.progressBar);
 
-        // Activar animación y aplicar color institucional al ProgressBar
-        progressBar.setIndeterminate(true);
-        progressBar.setIndeterminateTintList(ColorStateList.valueOf(Color.parseColor("#032E45")));
+        // Configurar ProgressBar en modo determinate (barra de progreso que avanza de 0 a 100)
+        progressBar.setIndeterminate(false);
+        progressBar.setProgress(0);
+        progressBar.setMax(100);
+        progressBar.setProgressTintList(ColorStateList.valueOf(Color.parseColor("#032E45")));
 
-        // Animación del logo y transición
+        // Animación del logo
         logoApp.setAlpha(0f);
         logoApp.animate()
                 .alpha(1f)
-                .setDuration(1500)
-                .withEndAction(() -> {
-                    Intent intent = new Intent(InicioActivity.this, PrincipalActivity.class);
-                    startActivity(intent);
-                    finish();
-                });
+                .setDuration(1000);
+
+        // Simulación de carga del ProgressBar
+        new Thread(() -> {
+            while (progressStatus < 100) {
+                progressStatus += 2; // Incrementa de 2 en 2
+                handler.post(() -> progressBar.setProgress(progressStatus));
+
+                try {
+                    Thread.sleep(50); // Velocidad de carga (más alto = más lento)
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            // Cuando termine la "carga", pasar a la siguiente actividad
+            runOnUiThread(() -> {
+                Intent intent = new Intent(InicioActivity.this, PrincipalActivity.class);
+                startActivity(intent);
+                finish();
+            });
+        }).start();
     }
 }
