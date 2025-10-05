@@ -219,7 +219,7 @@ public class RecuperarPassActivity extends AppCompatActivity {
                                         public void handleResponse(Map updatedMap) {
                                             Toast.makeText(RecuperarPassActivity.this, "Contraseña actualizada con éxito.", Toast.LENGTH_LONG).show();
 
-                                            // 📩 Enviar correo de confirmación con plantilla
+                                            // Enviar correo de confirmación con plantilla
                                             enviarCorreoConfirmacion(finalUser);
 
                                             Backendless.UserService.logout(new AsyncCallback<Void>() {
@@ -268,7 +268,7 @@ public class RecuperarPassActivity extends AppCompatActivity {
         });
     }
 
-    /** 📩 Método para enviar el correo con la plantilla personalizada */
+    /**  Metodo para enviar el correo con la plantilla personalizada */
     private void enviarCorreoConfirmacion(BackendlessUser usuario) {
         EmailEnvelope envelope = new EmailEnvelope();
 

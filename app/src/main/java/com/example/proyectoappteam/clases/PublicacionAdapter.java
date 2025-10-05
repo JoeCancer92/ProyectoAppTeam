@@ -128,7 +128,7 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
         // LÓGICA DE CALIFICACIÓN (Usando el botón dedicado)
         // *******************************************************************
 
-        // 🚨 ELIMINADO: Lógica de mostrar calificación (RatingBar y TextView)
+        // ELIMINADO: Lógica de mostrar calificación (RatingBar y TextView)
         // Ya que el RatingBar y el TextView fueron eliminados del XML.
         // Las líneas que causaban el NullPointerException eran:
         // float promedio = publicacion.getPromedioCalificacion() != null ? publicacion.getPromedioCalificacion() : 0.0f;
@@ -282,8 +282,8 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
         TextView tvCorreoUsuario;
         TextView tvUbicacion;
         public TextView tvFechaPublicacion;
-        // 🚨 ELIMINADO: RatingBar ratingBar;
-        // 🚨 ELIMINADO: public TextView tvPromedio;
+        // ELIMINADO: RatingBar ratingBar;
+        // ELIMINADO: public TextView tvPromedio;
 
         public ImageButton btnComentar;
         public ImageButton btnVerFotos;

@@ -28,7 +28,7 @@ public class Comentarios implements Serializable {
     public String getObjectId() { return objectId; }
     public void setObjectId(String objectId) { this.objectId = objectId; }
 
-    public String getOwnerId() { return ownerId; }         // ✅ Necesario para el adapter
+    public String getOwnerId() { return ownerId; }         // Necesario para el adapter
     public void setOwnerId(String ownerId) { this.ownerId = ownerId; }
 
     public Date getCreated() { return created; }

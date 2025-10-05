@@ -86,7 +86,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
 
-        // ✅ habilitar controles de zoom y gestos
+        // habilitar controles de zoom y gestos
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.getUiSettings().setZoomGesturesEnabled(true);
 
@@ -122,7 +122,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             });
 
-            // 📌 Evento de click en el mapa
+            // Evento de click en el mapa
             mMap.setOnMapClickListener(latLng -> {
                 selectedLocation = latLng;
                 fetchPlaceOrAddress(latLng);
@@ -130,7 +130,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    /** 🔥 Obtiene nombre del lugar + dirección usando Geocoder */
+    /** Obtiene nombre del lugar + dirección usando Geocoder */
     private void fetchPlaceOrAddress(LatLng latLng) {
         mMap.clear();
 
@@ -143,7 +143,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 String name = address.getFeatureName(); // puede ser negocio, edificio o número
                 String fullAddress = address.getAddressLine(0);
 
-                // ✅ combinación más legible
+                // combinación más legible
                 if (name != null && fullAddress != null && !fullAddress.contains(name)) {
                     selectedAddressName = name + " - " + fullAddress;
                 } else if (fullAddress != null) {

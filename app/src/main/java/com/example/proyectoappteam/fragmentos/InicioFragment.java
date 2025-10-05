@@ -26,7 +26,7 @@ import com.example.proyectoappteam.clases.Publicaciones;
 import java.util.ArrayList;
 import java.util.List;
 
-// 🚨 Paso 1: Implementar la interfaz del diálogo
+// Paso 1: Implementar la interfaz del diálogo
 public class InicioFragment extends Fragment
         implements CrearCalificacionFragment.CalificacionListener {
 
@@ -56,7 +56,7 @@ public class InicioFragment extends Fragment
         publicacionesList = new ArrayList<>();
 
         // Usamos getChildFragmentManager() para manejar los diálogos dentro de este Fragmento
-        // 🚨 Es crucial que el FragmentManager se pase junto con el listener 'this'
+        // Es crucial que el FragmentManager se pase junto con el listener 'this'
         FragmentManager fragmentManager = getChildFragmentManager();
         adapter = new PublicacionAdapter(publicacionesList, fragmentManager, this); // <-- ¡Modificado!
         recyclerView.setAdapter(adapter);
@@ -72,8 +72,8 @@ public class InicioFragment extends Fragment
         return view;
     }
 
-    // 🚨 Paso 2: Implementar el método del Listener
-    // Este método se llama automáticamente desde CrearCalificacionFragment cuando se guarda
+    // Paso 2: Implementar el metodo del Listener
+    // Este metodo se llama automáticamente desde CrearCalificacionFragment cuando se guarda
     @Override
     public void onCalificacionEnviada() {
         Log.d(TAG, "Calificación enviada, refrescando publicaciones.");
@@ -89,7 +89,7 @@ public class InicioFragment extends Fragment
     }
 
     /**
-     * Método público para ser llamado desde la Activity o PublicarFragment
+     * Metodo público para ser llamado desde la Activity o PublicarFragment
      * para forzar la recarga de la lista.
      */
     public void refreshPosts() {

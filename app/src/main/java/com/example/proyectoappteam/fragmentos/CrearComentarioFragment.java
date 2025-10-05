@@ -171,7 +171,7 @@ public class CrearComentarioFragment extends DialogFragment {
                 notificacion.setTipoNotificacion("COMENTARIO");
                 notificacion.setLeida(false);
 
-                // 🔒 EVITAR TRUNCATION: NO guardar timestamp grande (usa created para ordenar)
+                //  EVITAR TRUNCATION: NO guardar timestamp grande (usa created para ordenar)
                 notificacion.setTimestamposimulado(0.0);
 
                 Backendless.Data.of(Notificaciones.class).save(notificacion, new AsyncCallback<Notificaciones>() {
