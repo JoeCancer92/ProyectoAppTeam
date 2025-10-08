@@ -10,7 +10,7 @@ public class Comentarios implements Serializable {
 
     // Metadatos
     private String objectId;
-    private String ownerId;  // ✅ Faltaba este campo
+    private String ownerId;
     private Date created;
     private Date updated;
 

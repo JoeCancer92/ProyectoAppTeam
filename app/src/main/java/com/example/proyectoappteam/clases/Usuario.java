@@ -83,7 +83,6 @@ public class Usuario implements Serializable {
         this.ownerId = ownerId;
     }
 
-    // --- NUEVOS MÉTODOS AÑADIDOS ---
     public String getDni() {
         return dni;
     }

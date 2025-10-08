@@ -29,7 +29,6 @@ import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.persistence.DataQueryBuilder;
-// 🚨 IMPORTACIÓN CORREGIDA: Usamos el R de nuestra aplicación
 import com.example.proyectoappteam.R;
 import com.example.proyectoappteam.actividades.PhotoSliderActivity;
 
@@ -124,16 +123,7 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
         cargarDatosUsuario(publicacion.getOwnerId(), holder.tvNombreUsuario, holder.tvCorreoUsuario, holder.ivImagenPerfil);
 
 
-        // *******************************************************************
-        // LÓGICA DE CALIFICACIÓN (Usando el botón dedicado)
-        // *******************************************************************
 
-        // ELIMINADO: Lógica de mostrar calificación (RatingBar y TextView)
-        // Ya que el RatingBar y el TextView fueron eliminados del XML.
-        // Las líneas que causaban el NullPointerException eran:
-        // float promedio = publicacion.getPromedioCalificacion() != null ? publicacion.getPromedioCalificacion() : 0.0f;
-        // holder.ratingBar.setRating(promedio); // <<--- ESTO FALLABA
-        // holder.tvPromedio.setText(String.format(Locale.getDefault(), "%.1f", promedio));
 
         final String currentUserId = Backendless.UserService.CurrentUser() != null ? Backendless.UserService.CurrentUser().getObjectId() : null;
 

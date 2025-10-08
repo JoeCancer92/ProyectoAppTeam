@@ -27,7 +27,6 @@ android {
         }
     }
 
-    // ✅ Compatibilidad Java/Kotlin con AGP 8.x
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -46,7 +45,6 @@ dependencies {
     implementation(libs.appcompat)
     implementation(libs.material)
 
-    // ✅ versión estable de activity (evita conflictos con targetSdk 34)
     implementation("androidx.activity:activity:1.7.2")
 
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")

@@ -29,7 +29,6 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Menu {
     private MenuFragment menuFragment;
     private LinearLayout contenedorBotonesInferior;
 
-    // Usuario activo disponible para todo el flujo institucional
     public static Usuario usuarioActivo;
 
     @Override
