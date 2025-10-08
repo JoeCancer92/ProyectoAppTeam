@@ -156,7 +156,7 @@ public class PublicarFragment extends Fragment {
         btnAgregarFotos = view.findViewById(R.id.btnAgregarFotos);
         tipsLayout = view.findViewById(R.id.tips_layout);
 
-        // ✅ Inicializar categoría por defecto con el texto del RadioButton
+        //  Inicializar categoría por defecto con el texto del RadioButton
         RadioButton rbDefault = view.findViewById(R.id.rbReportes);
         if (rbDefault != null) {
             rbDefault.setChecked(true);
@@ -472,7 +472,7 @@ public class PublicarFragment extends Fragment {
         selectedLongitud = 0.0;
         selectedAddressName = null;
 
-        // ✅ Re-seleccionamos la categoría por defecto
+        //  Re-seleccionamos la categoría por defecto
         RadioButton rbDefault = requireView().findViewById(R.id.rbReportes);
         if (rbDefault != null) {
             rbDefault.setChecked(true);

@@ -269,7 +269,7 @@ public class RegistroActivity extends AppCompatActivity {
         }
     }
 
-    // Método para enviar el correo de bienvenida
+    // Metodo para enviar el correo de bienvenida
     private void enviarCorreoBienvenida(String email, String nombre) {
         String templateName = "User Made Registration";
 

@@ -20,8 +20,8 @@ public class Calificaciones implements Serializable {
     public String getObjectId() { return objectId; }
     public void setObjectId(String objectId) { this.objectId = objectId; }
 
-    public String getOwnerId() { return ownerId; }       // ✅ Getter agregado
-    public void setOwnerId(String ownerId) { this.ownerId = ownerId; } // ✅ Setter agregado
+    public String getOwnerId() { return ownerId; }       // Getter agregado
+    public void setOwnerId(String ownerId) { this.ownerId = ownerId; } //  Setter agregado
 
     public int getPuntuacion() { return puntuacion; }
     public void setPuntuacion(int puntuacion) { this.puntuacion = puntuacion; }

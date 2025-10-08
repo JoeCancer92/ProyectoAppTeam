@@ -59,7 +59,7 @@ public class VerComentariosActivity extends AppCompatActivity
         }
     }
 
-    // Método de la interfaz: Se llama desde el Fragmento para forzar la recarga
+    // Metodo de la interfaz: Se llama desde el Fragmento para forzar la recarga
     @Override
     public void onComentarioEnviado() {
         Log.i(TAG, "Notificación de envío recibida. Recargando comentarios...");
@@ -71,7 +71,7 @@ public class VerComentariosActivity extends AppCompatActivity
     private void cargarComentarios(String publicacionId) {
         progressBar.setVisibility(View.VISIBLE);
 
-        // 🚨 CORRECCIÓN CRÍTICA DE CONSULTA (WHERE CLAUSE):
+        // CORRECCIÓN CRÍTICA DE CONSULTA (WHERE CLAUSE):
         // Se usa 'publicacion.objectId' para filtrar correctamente por el puntero de relación.
         String whereClause = "publicacion.objectId = '" + publicacionId + "'";
 

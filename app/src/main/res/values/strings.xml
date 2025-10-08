@@ -112,7 +112,7 @@
     <string name="interaccion">Ver Interacciones</string>
     <string name="icono_interaccion">interaccion</string>
 
-    <!-- 🔑 Tu API Key para Google Maps -->
+    <!--  Tu API Key para Google Maps -->
     <string name="google_maps_key">AIzaSyBQYSEmMr8rD3OCOhpQtt8EyrfF1ZJVWyU</string>
 
 </resources>

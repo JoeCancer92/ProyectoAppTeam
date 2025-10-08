@@ -91,7 +91,7 @@ public class CrearCalificacionFragment extends DialogFragment {
         String whereClause = "owner.objectId = '" + userId + "' AND publicacion.objectId = '" + publicacionId + "'";
         DataQueryBuilder queryBuilder = DataQueryBuilder.create();
         queryBuilder.setWhereClause(whereClause);
-        queryBuilder.setRelated(new String[]{"owner"}); // ✅ necesario para traer el usuario
+        queryBuilder.setRelated(new String[]{"owner"}); //necesario para traer el usuario
 
         Backendless.Data.of(Calificaciones.class).find(queryBuilder, new AsyncCallback<List<Calificaciones>>() {
             @Override
@@ -205,7 +205,7 @@ public class CrearCalificacionFragment extends DialogFragment {
                 n.setTipoNotificacion("CALIFICACION");
                 n.setLeida(false);
 
-                // 🔒 usar 0.0 o Backendless "created" para ordenar, no System.currentTimeMillis()
+                // usar 0.0 o Backendless "created" para ordenar, no System.currentTimeMillis()
                 n.setTimestamposimulado(0.0);
 
                 Backendless.Data.of(Notificaciones.class).save(n, new AsyncCallback<Notificaciones>() {
