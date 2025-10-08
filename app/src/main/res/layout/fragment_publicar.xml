@@ -24,6 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/cancelarpubli"
+            android:textAllCaps="false"
             android:backgroundTint="#545353"
             android:textColor="#FFFFFF" />
 
@@ -43,6 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/publicar"
+            android:textAllCaps="false"
             android:backgroundTint="#1976D2"
             android:textColor="#FFFFFF" />
     </LinearLayout>
@@ -189,6 +191,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/agregar_fotos"
+                android:textAllCaps="false"
                 android:layout_marginBottom="4dp" />
 
             <TextView
