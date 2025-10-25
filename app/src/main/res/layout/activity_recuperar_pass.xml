@@ -6,16 +6,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/fondoofi1"
+    android:background="@drawable/fondo5"
     android:padding="24dp"
     tools:context=".actividades.RecuperarPassActivity">
 
     <ImageView
         android:id="@+id/logoRecuperar"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_marginTop="32dp"
-        android:src="@drawable/icono5"
+        android:src="@drawable/logomp1"
         android:contentDescription="@string/icono_app"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"

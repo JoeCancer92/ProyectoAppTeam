@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/fondoofi1"
+    android:background="@drawable/fondo5"
     tools:context="actividades.MenuPrincipalActivity">
 
     <!-- Contenedor dinámico para fragmentos -->
@@ -22,45 +22,66 @@
     <LinearLayout
         android:id="@+id/contenedorBotonesInferior"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="70dp"
         android:gravity="center"
         android:padding="12dp"
-        android:background="@drawable/bg_cuadrado_residencial"
+        android:background="@drawable/bg_cuadrado"
         android:orientation="horizontal">
 
-        <ImageButton
-            android:id="@+id/lateralBtnMiPerfil"
-            android:layout_width="78dp"
-            android:layout_height="72dp"
-            android:layout_marginEnd="12dp"
-            android:background="@drawable/bg_boton_redondo"
-            android:scaleType="centerInside"
-            android:src="@drawable/perf902" />
 
         <ImageButton
             android:id="@+id/lateralBtnInicio"
-            android:layout_width="74dp"
-            android:layout_height="72dp"
-            android:layout_marginEnd="12dp"
-            android:background="@drawable/bg_boton_redondo"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="10dp"
+            android:background="#00FFFFFF"
             android:scaleType="centerInside"
-            android:src="@drawable/inic902" />
-
-        <ImageButton
-            android:id="@+id/lateralBtnPublicar"
-            android:layout_width="73dp"
-            android:layout_height="72dp"
-            android:layout_marginEnd="12dp"
-            android:background="@drawable/bg_boton_redondo"
-            android:scaleType="centerInside"
-            android:src="@drawable/public901" />
+            android:src="@drawable/home4"
+            app:tint="@color/icon_color_selector"/>
 
         <ImageButton
             android:id="@+id/lateralBtnNotificaciones"
-            android:layout_width="78dp"
-            android:layout_height="72dp"
-            android:background="@drawable/bg_boton_redondo"
+            android:layout_width="49dp"
+            android:layout_height="49dp"
+            android:layout_marginEnd="10dp"
+            android:background="#00FFFFFF"
             android:scaleType="centerInside"
-            android:src="@drawable/noti92" />
+            android:src="@drawable/notificacion3"
+            app:tint="@color/icon_color_selector"/>
+
+        <ImageButton
+            android:id="@+id/lateralBtnPublicar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="10dp"
+            android:background="#00FFFFFF"
+            android:scaleType="centerInside"
+            android:src="@drawable/publicar3"
+            app:tint="@color/icon_color_selector"/>
+
+        <ImageButton
+            android:id="@+id/lateralBtnMiPerfil"
+            android:layout_width="49dp"
+            android:layout_height="49dp"
+            android:layout_marginEnd="10dp"
+            android:background="#00FFFFFF"
+            android:scaleType="centerInside"
+            android:src="@drawable/perfil3"
+            app:tint="@color/icon_color_selector"/>
+
+        <ImageButton
+            android:id="@+id/BtnSalir"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="0dp"
+            android:background="#00FFFFFF"
+            android:scaleType="centerInside"
+            android:src="@drawable/cerrar"/>
+
+
+
+
+
+
     </LinearLayout>
 </LinearLayout>

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,7 +29,7 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Menu {
     private Fragment[] fragments;
     private MenuFragment menuFragment;
     private LinearLayout contenedorBotonesInferior;
-
+    private ImageButton lastSelectedButton=null;
     public static Usuario usuarioActivo;
 
     @Override
@@ -57,10 +58,10 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Menu {
             usuarioActivo = null;
         }
 
-        // Ocultar botones inferiores al iniciar
+        // Ocultar botones inferiores al iniciar (AHORA MUESTRA)
         contenedorBotonesInferior = findViewById(R.id.contenedorBotonesInferior);
         if (contenedorBotonesInferior != null) {
-            contenedorBotonesInferior.setVisibility(View.GONE);
+            contenedorBotonesInferior.setVisibility(View.VISIBLE);
         }
 
         // Inicializar fragmento de menú lateral
@@ -68,7 +69,7 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Menu {
         FragmentTransaction ft = fm.beginTransaction();
         menuFragment = new MenuFragment();
         ft.add(R.id.priRelContenedor, menuFragment, "menu");
-        ft.commit();
+        // ft.commit();
 
         // Inicializar fragmentos principales
         fragments = new Fragment[]{
@@ -78,11 +79,20 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Menu {
                 new NotificacionFragment()  // 3
         };
 
+        Fragment inicioFragment = fragments[1];
+        ft.add(R.id.priRelContenedor, inicioFragment);
+        ft.hide(menuFragment);
+        ft.commit();
+
+        updateButtonSelection(1);
+
+
         // Configurar navegación lateral
         configurarBotonLateral(R.id.lateralBtnMiPerfil, 0);
         configurarBotonLateral(R.id.lateralBtnInicio, 1);
         configurarBotonLateral(R.id.lateralBtnPublicar, 2);
         configurarBotonLateral(R.id.lateralBtnNotificaciones, 3);
+        configurarBotonLateral(R.id.BtnSalir, 4);
     }
 
     private void configurarBotonLateral(int idBoton, int idFragmento) {
@@ -92,8 +102,41 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Menu {
         }
     }
 
+    // Metodo para obtener la referencia del boton
+    private ImageButton getButtonFromId(int idBoton) {
+        return findViewById(idBoton);
+    }
+
+    // Metodo para gestionar la seleccion de botones
+    private void updateButtonSelection(int idFragmento) {
+        int buttonIds[] = new int[]{
+                R.id.lateralBtnMiPerfil,
+                R.id.lateralBtnInicio,
+                R.id.lateralBtnPublicar,
+                R.id.lateralBtnNotificaciones
+        };
+        if (idFragmento >= 0 && idFragmento <= 3) {
+            ImageButton currentButton = getButtonFromId(buttonIds[idFragmento]);
+
+            if (currentButton != null) {
+                if (lastSelectedButton != null) {
+                    lastSelectedButton.setSelected(false);
+                }
+                currentButton.setSelected(true);
+                lastSelectedButton = currentButton;
+            }
+        }
+    }
+
     @Override
     public void onClickMenu(int id) {
+
+        if (id==4){
+            Toast.makeText(this, "Saliendo de la aplicación", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
 
@@ -120,6 +163,7 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Menu {
             if (contenedorBotonesInferior != null) {
                 contenedorBotonesInferior.setVisibility(View.VISIBLE);
             }
+            updateButtonSelection(id);
         }
 
         ft.commit();

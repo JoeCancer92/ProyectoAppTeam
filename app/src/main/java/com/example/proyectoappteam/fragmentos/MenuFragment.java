@@ -46,6 +46,7 @@ public class MenuFragment extends Fragment {
         configurarBoton(view, R.id.fragImbInicio, 1);
         configurarBoton(view, R.id.fragImbPublicar, 2);
         configurarBoton(view, R.id.fragImbNotificaciones, 3);
+        configurarBoton(view, R.id.BtnSalir, 4);
     }
 
     private void configurarBoton(View view, int botonId, int menuId) {

@@ -8,7 +8,6 @@
     android:background="@drawable/fondo5"
     tools:context=".fragmentos.InicioFragment">
 
-    <!-- Contenedor para el título y el botón de refrescar -->
     <LinearLayout
         android:id="@+id/header_layout"
         android:layout_width="0dp"
@@ -34,39 +33,32 @@
             android:textStyle="bold" />
 
         <ImageButton
-            android:id="@+id/btn_refresh"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/refresh1"
+            android:id="@+id/btn_search"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/search_icon"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Botón para refrescar las publicaciones"
             android:layout_marginStart="8dp" />
 
+        <ImageButton
+            android:id="@+id/btn_refresh"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/update_not"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Botón para refrescar las publicaciones"
+            android:layout_marginStart="8dp" />
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view_publicaciones"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/header_layout"
-        app:layout_constraintVertical_bias="1.0"
-        tools:listitem="@layout/list_item_publicacion" />
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+
+
+
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
