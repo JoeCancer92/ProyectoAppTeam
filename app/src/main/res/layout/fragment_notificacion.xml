@@ -39,7 +39,7 @@
             android:id="@+id/btn_refresh"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:src="@drawable/refresh1"
+            android:src="@drawable/update_not"
             android:contentDescription="@string/refresh_button_desc"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:scaleType="fitCenter"

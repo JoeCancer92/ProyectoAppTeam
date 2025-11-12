@@ -15,7 +15,7 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginTop="32dp"
-        android:src="@drawable/logomp1"
+        android:src="@drawable/logova1"
         android:contentDescription="@string/icono_app"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
