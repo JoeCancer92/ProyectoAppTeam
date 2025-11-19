@@ -34,7 +34,8 @@
     <string name="recuperar_contraseña">Reestablece tu Contraseña</string>
     <string name="instruccion_recuperacion">Envia un enlace al correo con el que registraste tu cuenta</string>
     <string name="enviar_enlace">Enviar Enlace</string>
-    <string name="Bienvenido">Bienvenido a VeciRed:\nConecta, colabora y transforma tu comunidad</string>
+    <string name="Bienvenido">Bienvenido a VeciRed:
+Conecta, colabora y transforma tu comunidad</string>
     <string name="seleccionarFecha">Selecciona Fecha</string>
     <string name="aceptarTerminos">Aceptar Terminos y Condiciones</string>
     <string name="Regitrarse">Registrarse</string>
@@ -99,7 +100,6 @@
     <string name="enviar">Enviar</string>
     <string name="notificaciones_title">Centro de Notificaciones</string>
 
-
     <string name="time_minutes_ago">Hace %1$d minutos</string>
     <string name="time_hours_ago">Hace %1$d horas</string>
     <string name="time_days_ago">Hace %1$d días</string>
@@ -113,6 +113,36 @@
     <string name="icono_interaccion">interaccion</string>
 
     <!--  Tu API Key para Google Maps -->
-    <string name="google_maps_key">AIzaSyBQYSEmMr8rD3OCOhpQtt8EyrfF1ZJVWyU</string>
+    <string name="google_maps_key" translatable="false">AIzaSyBQYSEmMr8rD3OCOhpQtt8EyrfF1ZJVWyU</string>
+    <string name="frgCfgLblPreferencias">Preferencias de Configuracion</string>
+    <string name="frgCfgChkNotificaciones">Activar/Desactivar Notificaciones</string>
+    <string name="frgCfgLblSonido">Sonido</string>
+    <string name="frgCfgBtnAplicar">Aplicar</string>
+    <string name="frgCfgBtnRestaurar">Restaurar</string>
+    <string name="frgCfgLblConfiguracion">Configuracion</string>
+    <string name="frgCfgTxtCorreo">Correo:</string>
+    <string name="frgCfgBtnActualizar">Actualizar</string>
+    <string name="frgCfgBtnCerrar">Cerrar Sesion</string>
+    <string name="frgCfgLblIdioma">Idioma de la aplicacion</string>
+    <string name="frgCfgLblVolumen">Volumen de Notificaciones</string>
+    <string name="frgCfgLblTemaOscuro">Tema de la aplicación</string>
+    <string name="bienvenida">Bienvenido a tu Comunidad</string>
+    <string name="correoelectronico">Correo Electronico</string>
+    <string name="clave">Contraseña</string>
+    <string name="cuenta">Recordar cuenta</string>
+    <string name="ingresa">Iniciar Sesion</string>
+    <string name="iniciar_sesion">Iniciar Sesion</string>
+    <string name="clave_olvidada">Olvide mi contraseña</string>
+    <string name="nuevo_registro">No tienes cuenta? Registrate</string>
+    <string name="noticias">Noticias sobre tu Comunidad</string>
+
+    <string-array name="idiomas_opciones">
+        <item>es</item> <item>en</item> </string-array>
+
+    <string-array name="temas_opciones">
+        <item>Sistema</item>
+        <item>Claro</item>
+        <item>Oscuro</item>
+    </string-array>
 
 </resources>

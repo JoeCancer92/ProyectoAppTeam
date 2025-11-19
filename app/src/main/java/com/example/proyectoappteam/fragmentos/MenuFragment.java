@@ -1,6 +1,7 @@
 package com.example.proyectoappteam.fragmentos;
 
 import android.content.Context;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -46,7 +47,7 @@ public class MenuFragment extends Fragment {
         configurarBoton(view, R.id.fragImbInicio, 1);
         configurarBoton(view, R.id.fragImbPublicar, 2);
         configurarBoton(view, R.id.fragImbNotificaciones, 3);
-        configurarBoton(view, R.id.BtnSalir, 4);
+        configurarBoton(view, R.id.lateralBtnConfig, 4);
     }
 
     private void configurarBoton(View view, int botonId, int menuId) {

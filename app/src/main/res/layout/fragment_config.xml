@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragmentos.ConfigFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="10dp"
+            app:cardUseCompatPadding="true"
+            app:cardElevation="5dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_marginVertical="15dp"
+                    android:textSize="25sp"
+                    android:text="@string/frgCfgLblPreferencias"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/frgCfgLblIdioma"/>
+                <Spinner
+                    android:id="@+id/frgCfgCboIdiomas"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:minHeight="48dp"
+                    android:entries="@array/idiomas_opciones"
+                    tools:listitem="@android:layout/simple_spinner_dropdown_item"/>
+
+                <CheckBox
+                    android:id="@+id/frgCfgChkNotificaciones"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/frgCfgChkNotificaciones"
+                    android:layout_marginBottom="10dp"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/frgCfgLblVolumen"/>
+                <SeekBar
+                    android:id="@+id/frgCfgBarSonido"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:max="100"
+                    android:progress="100"
+                    android:layout_marginBottom="10dp"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/frgCfgLblTemaOscuro"/>
+                <Spinner
+                    android:id="@+id/frgCfgCboTema"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:minHeight="48dp"
+                    android:entries="@array/temas_opciones"
+                    tools:listitem="@android:layout/simple_spinner_dropdown_item"/>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="5dp"
+                    android:orientation="horizontal">
+                    <Button
+                        android:id="@+id/frgCfgBtnAplicar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="5dp"
+                        android:layout_weight="1"
+                        android:textAllCaps="false"
+                        android:text="@string/frgCfgBtnAplicar"/>
+                    <Button
+                        android:id="@+id/frgCfgBtnRestaurar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="5dp"
+                        android:layout_weight="1"
+                        android:textAllCaps="false"
+                        android:text="@string/frgCfgBtnRestaurar"/>
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/frgCfgBtnCerrar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginHorizontal="5dp"
+                    android:textAllCaps="false"
+                    android:text="@string/frgCfgBtnCerrar"/>
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+</FrameLayout>

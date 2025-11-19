@@ -6,6 +6,13 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import android.content.Context; // Necesario para Context y attachBaseContext
+import android.content.SharedPreferences; // Necesario para SharedPreferences
+import android.content.res.Configuration; // Necesario para Configuration
+import java.util.Locale; // Necesario para Locale
+// Agrega esta si usaste la versión de LocaleHelper con verificación de SDK
+import android.os.Build;
+
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -18,11 +25,15 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.proyectoappteam.R;
 import com.example.proyectoappteam.clases.Menu;
 import com.example.proyectoappteam.clases.Usuario;
+
+import com.example.proyectoappteam.fragmentos.ConfigFragment;
 import com.example.proyectoappteam.fragmentos.InicioFragment;
 import com.example.proyectoappteam.fragmentos.MenuFragment;
 import com.example.proyectoappteam.fragmentos.NotificacionFragment;
 import com.example.proyectoappteam.fragmentos.PerfilFragment;
 import com.example.proyectoappteam.fragmentos.PublicarFragment;
+
+import com.example.proyectoappteam.clases.LocaleHelper;
 
 public class MenuPrincipalActivity extends AppCompatActivity implements Menu {
 
@@ -31,6 +42,49 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Menu {
     private LinearLayout contenedorBotonesInferior;
     private ImageButton lastSelectedButton=null;
     public static Usuario usuarioActivo;
+
+    private Context updateResources(Context context, String language) {
+        Locale locale = new Locale(language);
+        Locale.setDefault(locale);
+
+        Configuration configuration = context.getResources().getConfiguration();
+
+        // Compatibilidad: Usamos createConfigurationContext a partir de API 24
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            configuration.setLocale(locale);
+            // Este metodo crea un nuevo contexto con la configuración aplicada, el metodo más moderno.
+            return context.createConfigurationContext(configuration);
+        } else {
+            // Metodo deprecated, pero necesario para versiones anteriores a Android 7.0
+            configuration.locale = locale;
+            context.getResources().updateConfiguration(configuration,
+                    context.getResources().getDisplayMetrics());
+            return context; // Devolvemos el contexto original que fue modificado.
+        }
+    }
+
+    private Context applyLanguage(Context context) {
+        // Estas constantes DEBEN COINCIDIR con las de ConfigFragment
+        final String PREFS_NAME = "AppConfigPrefs";
+        final String KEY_IDIOMA_CODE = "idioma_code";
+
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+
+        // Cargar el idioma guardado. Usar "es" como valor por defecto.
+        String idiomaCode = prefs.getString(KEY_IDIOMA_CODE, "es");
+
+        return updateResources(context, idiomaCode);
+    }
+
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        // 1. Aplicar el idioma guardado justo antes de que la Activity se inicialice.
+        Context contextWithLanguage = applyLanguage(newBase);
+
+        // 2. Pasar el nuevo contexto a la implementación base.
+        super.attachBaseContext(contextWithLanguage);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +130,8 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Menu {
                 new PerfilFragment(),       // 0
                 new InicioFragment(),       // 1
                 new PublicarFragment(),     // 2
-                new NotificacionFragment()  // 3
+                new NotificacionFragment(),  // 3
+                new ConfigFragment()        // 4
         };
 
         Fragment inicioFragment = fragments[1];
@@ -92,7 +147,7 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Menu {
         configurarBotonLateral(R.id.lateralBtnInicio, 1);
         configurarBotonLateral(R.id.lateralBtnPublicar, 2);
         configurarBotonLateral(R.id.lateralBtnNotificaciones, 3);
-        configurarBotonLateral(R.id.BtnSalir, 4);
+        configurarBotonLateral(R.id.lateralBtnConfig, 4);
     }
 
     private void configurarBotonLateral(int idBoton, int idFragmento) {
@@ -108,42 +163,81 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Menu {
     }
 
     // Metodo para gestionar la seleccion de botones
+//    private void updateButtonSelection(int idFragmento) {
+//        int buttonIds[] = new int[]{
+//                R.id.lateralBtnMiPerfil,
+//                R.id.lateralBtnInicio,
+//                R.id.lateralBtnPublicar,
+//                R.id.lateralBtnNotificaciones,
+//                R.id.lateralBtnConfig
+//        };
+//        if (idFragmento >= 0 && idFragmento <= 4) {
+//            ImageButton currentButton = getButtonFromId(buttonIds[idFragmento]);
+//
+//            if (currentButton != null) {
+//                if (lastSelectedButton != null) {
+//                    lastSelectedButton.setSelected(false);
+//                }
+//                currentButton.setSelected(true);
+//                lastSelectedButton = currentButton;
+//            }
+//        }else if(idFragmento == 4){
+//            // Deselecciona el botón anterior si existe
+//            if (lastSelectedButton != null) {
+//                lastSelectedButton.setSelected(false);
+//                lastSelectedButton = null; // No hay un botón de configuración que mantener seleccionado
+//            }
+//        }
+//    }
+
+    // Metodo para gestionar la seleccion de botones
     private void updateButtonSelection(int idFragmento) {
+        // Array que mapea el ID de fragmento (0-4) al ID del botón (lateralBtn...)
         int buttonIds[] = new int[]{
                 R.id.lateralBtnMiPerfil,
                 R.id.lateralBtnInicio,
                 R.id.lateralBtnPublicar,
-                R.id.lateralBtnNotificaciones
+                R.id.lateralBtnNotificaciones,
+                R.id.lateralBtnConfig // ID del botón de Configuración (posición 4)
         };
-        if (idFragmento >= 0 && idFragmento <= 3) {
+
+        // Aseguramos que el ID del fragmento esté dentro del rango del array (0 a 4)
+        if (idFragmento >= 0 && idFragmento < buttonIds.length) {
+
             ImageButton currentButton = getButtonFromId(buttonIds[idFragmento]);
 
             if (currentButton != null) {
+                // 1. Deseleccionar el botón anterior (si existe)
                 if (lastSelectedButton != null) {
                     lastSelectedButton.setSelected(false);
                 }
+
+                // 2. Seleccionar el botón actual (¡Esto lo "pinta"!)
                 currentButton.setSelected(true);
+
+                // 3. Almacenar el botón para la próxima deselección
                 lastSelectedButton = currentButton;
             }
         }
+        // ¡Se elimina el bloque 'else if (idFragmento == 4)' que causaba la deselección!
     }
+
+
+
+
 
     @Override
     public void onClickMenu(int id) {
 
-        if (id==4){
-            Toast.makeText(this, "Saliendo de la aplicación", Toast.LENGTH_SHORT).show();
-            finish();
-            return;
-        }
-
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
 
-        // Ocultar todos los fragmentos activos
+//        // Ocultar todos los fragmentos activos
         for (Fragment f : fragments) {
-            if (f.isAdded()) ft.hide(f);
+            if (f.isAdded() && f.isVisible()) ft.hide(f);
         }
+
+        if (menuFragment.isAdded() && menuFragment.isVisible()) ft.hide(menuFragment);
 
         if (id == -1) {
             // Mostrar menú lateral
@@ -152,7 +246,14 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Menu {
                 contenedorBotonesInferior.setVisibility(View.GONE);
             }
         } else {
-            // Mostrar fragmento seleccionado
+            // Mostrar fragmento seleccionado (incluye id 4 para ConfigFragment)
+
+            // Verifica que el ID esté dentro del límite del array (0 a 4)
+            if (id < 0 || id >= fragments.length) {
+                // Manejo de error si se presiona un ID fuera de rango
+                return;
+            }
+
             Fragment target = fragments[id];
             if (target.isAdded()) {
                 ft.show(target);
@@ -160,12 +261,17 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Menu {
                 ft.add(R.id.priRelContenedor, target);
             }
             ft.hide(menuFragment);
-            if (contenedorBotonesInferior != null) {
-                contenedorBotonesInferior.setVisibility(View.VISIBLE);
-            }
-            updateButtonSelection(id);
-        }
 
+//            if (id==4){
+//                if (contenedorBotonesInferior != null) {
+//                    contenedorBotonesInferior.setVisibility(View.GONE);
+//                }
+//            }else{
+                if(contenedorBotonesInferior != null){
+                    contenedorBotonesInferior.setVisibility(View.VISIBLE);
+                }
+                updateButtonSelection(id);
+            }
         ft.commit();
     }
 }

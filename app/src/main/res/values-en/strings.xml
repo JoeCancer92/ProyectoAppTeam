@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ProyectoAppTeam</string>
+    <string name="menu_principal">Main Menu - DentConnect</string>
+    <string name="buscar_clinicas">Find your nearest dental clinic</string>
+    <string name="calendario_visitas">Organize your appointments</string>
+    <string name="mi_perfil">Who I Am</string>
+    <string name="contrase_a">Password</string>
+    <string name="correo_electr_nico">Email</string>
+    <string name="ingresar">Login</string>
+    <string name="no_tienes_cuenta_reg_strate">Don\'t have an account? Sign up</string>
+    <string name="bienvenido_a_tu_comunidad">Welcome to Your Community</string>
+    <string name="no_tienes_cuenta_registrate">Don\'t have an account? Sign up</string>
+    <string name="logo_app">app_icon</string>
+    <string name="correo_electronico">Email</string>
+    <string name="contraseña">Password</string>
+    <string name="recordar_cuenta">Remember account</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="todo">TODO</string>
+    <string name="mispreferencias">My Preferences</string>
+    <string name="eventos">My Events</string>
+    <string name="miperfil">My Profile - Basic Settings</string>
+    <string name="mapas">View Map</string>
+    <string name="olvide_mi_contraseña">Forgot your password?</string>
+    <string name="Registro">Be part of the community!</string>
+    <string name="continuar_google">Continue with Google</string>
+    <string name="registrar">Register</string>
+    <string name="confirmar_pass">Confirm Password</string>
+    <string name="password">Password</string>
+    <string name="nombrecompleto">Full Name</string>
+    <string name="icono_google">GOOGLE</string>
+    <string name="icono_app">APP ICON</string>
+    <string name="volver">Go Back</string>
+    <string name="recuperar_contraseña">Reset your Password</string>
+    <string name="instruccion_recuperacion">Send a link to the email you registered your account with</string>
+    <string name="enviar_enlace">Send Link</string>
+    <string name="Bienvenido">Welcome to VeciRed:
+Connect, collaborate and transform your community</string>
+    <string name="seleccionarFecha">Select Date</string>
+    <string name="aceptarTerminos">Accept Terms and Conditions</string>
+    <string name="Regitrarse">Sign Up</string>
+    <string name="regresar">Return to Home</string>
+    <string name="verTerminos">View Terms and Conditions</string>
+    <string name="tomarfoto">Take Photo</string>
+    <string name="registrarse">Sign Up</string>
+    <string name="fecha_nacimiento">Date of Birth</string>
+    <string name="apellidos">Surnames</string>
+    <string name="publicar">Publish</string>
+    <string name="inicio">Welcome to Home, Find out what your community posts</string>
+    <string name="Perfil">Profile Section - main settings</string>
+    <string name="notificaciones">Notifications Section</string>
+    <string name="mensaje_equipo_desarrollo">The email is not registered. Please contact the Vecired development team.</string>
+    <string name="cambiar_contraseña">Change Password</string>
+    <string name="confirmar_contraseña">Confirm Password</string>
+    <string name="verificar">Verify</string>
+    <string name="nueva_contraseña">New Password</string>
+    <string name="completa_campos">Complete all fields</string>
+    <string name="claves_no_coinciden">Passwords do not match</string>
+    <string name="contrasena_actualizada">Password updated successfully</string>
+    <string name="volverPrincipal">Go Back</string>
+    <string name="cerrarsesion">Log Out</string>
+    <string name="codigo_recuperacion">Temporary Key</string>
+    <string name="comprobar_clave">Check Key</string>
+    <string name="dni">ID</string>
+    <string name="guardar">Save</string>
+    <string name="editar">Edit</string>
+    <string name="cambiar_contrasena">Change Password</string>
+    <string name="cancelar">Cancel</string>
+    <string name="cambiar_foto">Change Photo</string>
+    <string name="modificar_fecha">Modify Date of Birth</string>
+    <string name="nueva_contrasena">New Password</string>
+    <string name="confirmar_contrasena">Confirm Password</string>
+    <string name="titulo_consejos">Tips to keep in mind</string>
+    <string name="anuncio_urgente">Urgent Announcement</string>
+    <string name="agregar_fotos">Add Photos</string>
+    <string name="abrir_mapa">Open Map</string>
+    <string name="ubicacion_seleccionada_hint">Selected Location</string>
+    <string name="mapa_icono_desc">Map</string>
+    <string name="ubicacion">Location</string>
+    <string name="descripcion_hint">Add a Description</string>
+    <string name="reportes">Reports</string>
+    <string name="recomendacion">Recommendation</string>
+    <string name="categoria">Publication Type</string>
+    <string name="crear_publicacion">Create Post</string>
+    <string name="fotos_hint">Touch to select up to 4 images</string>
+    <string name="fotos_label">Photos Section</string>
+    <string name="usuario_prueba">User test</string>
+    <string name="user_id_placeholder">Loading user ID</string>
+    <string name="cancelarpubli">Cancel</string>
+    <string name="title_activity_maps">Select Location</string>
+    <string name="seleccionar_ubicacion_text">Select Nearby Place</string>
+    <string name="noticias_comunidad">News About Your Community</string>
+    <string name="imagen_de_perfil">user photo</string>
+    <string name="comentar">Comment</string>
+    <string name="ver_fotos">View Photos</string>
+    <string name="ver_ubicacion">Location</string>
+    <string name="aceptar">Accept</string>
+    <string name="cancelar1">Cancel</string>
+    <string name="escribecomentario">Write your Comment</string>
+    <string name="enviar">Send</string>
+    <string name="notificaciones_title">Notification Center</string>
+
+    <string name="time_minutes_ago">%1$d minutes ago</string>
+    <string name="time_hours_ago">%1$d hours ago</string>
+    <string name="time_days_ago">%1$d days ago</string>
+    <string name="time_months_ago">%1$d months ago</string>
+    <string name="notificaciones_vacias_message">Empty Notifications</string>
+    <string name="time_now">Just now</string>
+    <string name="refresh_button_desc">Refresh</string>
+    <string name="detalle_publicacion_title">Post Detail</string>
+    <string name="comentarios_title">Comments</string>
+    <string name="interaccion">View Interactions</string>
+    <string name="icono_interaccion">interaction</string>
+
+    <!--  Your API Key for Google Maps -->
+    <string name="google_maps_key" translatable="false">AIzaSyBQYSEmMr8rD3OCOhpQtt8EyrfF1ZJVWyU</string>
+    <string name="frgCfgLblPreferencias">Configuration Preferences</string>
+    <string name="frgCfgChkNotificaciones">Enable/Disable Notifications</string>
+    <string name="frgCfgLblSonido">Sound</string>
+    <string name="frgCfgBtnAplicar">Apply</string>
+    <string name="frgCfgBtnRestaurar">Restore</string>
+    <string name="frgCfgLblConfiguracion">Configuration</string>
+    <string name="frgCfgTxtCorreo">Email:</string>
+    <string name="frgCfgBtnActualizar">Update</string>
+    <string name="frgCfgBtnCerrar">Log Out</string>
+    <string name="frgCfgLblIdioma">Application Language</string>
+    <string name="frgCfgLblVolumen">Notification Volume</string>
+    <string name="frgCfgLblTemaOscuro">Application Theme</string>
+    <string name="bienvenida">Welcome to your Community</string>
+    <string name="correoelectronico">Email</string>
+    <string name="clave">Password</string>
+    <string name="cuenta">Remember account</string>
+    <string name="ingresa">Log In</string>
+    <string name="iniciar_sesion">Log In</string>
+    <string name="clave_olvidada">I forgot my password</string>
+    <string name="nuevo_registro">Don\'t have an account? Sign up</string>
+    <string name="noticias">News about your Community</string>
+
+    <string-array name="idiomas_opciones">
+        <item>es</item>
+        <item>en</item>
+    </string-array>
+
+    <string-array name="temas_opciones">
+        <item>System</item>
+        <item>Light</item>
+        <item>Dark</item>
+    </string-array>
+
+</resources>
