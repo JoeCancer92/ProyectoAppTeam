@@ -36,7 +36,6 @@ public class ConfigFragment extends Fragment {
     private SeekBar frgCfgBarSonido;
     private Button frgCfgBtnAplicar;
     private Button frgCfgBtnRestaurar;
-    private Button frgCfgBtnCerrar;
 
     private static final String PREFS_NAME = "AppConfigPrefs";
     private static final String KEY_IDIOMA_CODE = "idioma_code";
@@ -65,7 +64,6 @@ public class ConfigFragment extends Fragment {
         frgCfgBarSonido = view.findViewById(R.id.frgCfgBarSonido);
         frgCfgBtnAplicar = view.findViewById(R.id.frgCfgBtnAplicar);
         frgCfgBtnRestaurar = view.findViewById(R.id.frgCfgBtnRestaurar);
-        frgCfgBtnCerrar = view.findViewById(R.id.frgCfgBtnCerrar);
 
         // 2. Cargar preferencias guardadas y configurar vistas
         cargarPreferencias();
@@ -73,7 +71,6 @@ public class ConfigFragment extends Fragment {
         // 3. Configurar listeners
         frgCfgBtnAplicar.setOnClickListener(v -> aplicarPreferencias());
         frgCfgBtnRestaurar.setOnClickListener(v -> restaurarPreferencias());
-        frgCfgBtnCerrar.setOnClickListener(v -> cerrarSesion());
 
         // Listener para la barra de sonido
         frgCfgBarSonido.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -209,13 +206,6 @@ public class ConfigFragment extends Fragment {
         Toast.makeText(getContext(), "Preferencias restauradas a valores por defecto.", Toast.LENGTH_SHORT).show();
     }
 
-    private void cerrarSesion() {
-        // Lógica de cierre de sesión (borrar tokens, limpiar SharedPreferences, navegar a Login)
-        Toast.makeText(getContext(), "Cerrando sesión...", Toast.LENGTH_SHORT).show();
-        if (getActivity() != null) {
-            // Aquí iría el Intent para ir a la Activity de Login
-            getActivity().finish();
-        }
-    }
+
 
 }

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Paleta institucional para modo oscuro -->
+    <color name="colorPrimary">#64B5F6</color>
+    <color name="colorPrimaryDark">#2196F3</color>
+    <color name="colorAccent">#80DEEA</color>
+
+    <!-- Fondo y superficies -->
+    <color name="colorBackground">#121212</color>
+    <color name="colorSurface">#1E1E1E</color>
+    <color name="fondoResidencial">#1A237E</color>
+
+    <!-- Texto -->
+    <color name="colorTextPrimary">#E0E0E0</color>
+    <color name="colorTextoPrincipal">#F5F5F5</color>
+    <color name="colorTextSecondary">#BDBDBD</color>
+    <color name="colorTextoSecundario">@color/white</color>
+    <color name="colorTextoInput">#FFFFFF</color>
+
+    <!-- Estados -->
+    <color name="colorError">#EF9A9A</color>
+    <color name="colorSuccess">#A5D6A7</color>
+
+    <!-- Botones -->
+    <color name="colorButton">#42A5F5</color>
+    <color name="colorButtonPressed">#64B5F6</color>
+    <color name="colorButtonText">#000000</color>
+    <color name="colorBotonPrincipal">#81C784</color>
+    <color name="colorBotonSecundario">#616161</color>
+    <color name="colorBotonDesactivado">#424242</color>
+
+    <!-- Campos de entrada -->
+    <color name="colorInput">#2C2C2C</color>
+
+    <!-- Compatibilidad Material Theme -->
+    <color name="purple_200">#BB86FC</color>
+    <color name="purple_500">#6200EE</color>
+    <color name="purple_700">#3700B3</color>
+    <color name="teal_200">#03DAC5</color>
+    <color name="teal_700">#018786</color>
+
+    <!-- Colores base -->
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+
+    <!-- Tarjetas y elementos sin leer -->
+    <color name="colorUnreadBackground">#034064</color>
+    <color name="colorCardBackground">#2C2C2C</color>
+
+</resources>

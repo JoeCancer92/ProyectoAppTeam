@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/fondo5"
+    android:background="@color/colorUnreadBackground"
     tools:context=".fragmentos.PublicarFragment">
 
     <LinearLayout
@@ -25,8 +25,8 @@
             android:layout_height="wrap_content"
             android:text="@string/cancelarpubli"
             android:textAllCaps="false"
-            android:backgroundTint="#545353"
-            android:textColor="#FFFFFF" />
+            android:backgroundTint="?attr/colorSurface"
+            android:textColor="?attr/colorOnSurface" />
 
         <TextView
             android:id="@+id/txtTituloPublicar"
@@ -37,7 +37,7 @@
             android:textSize="18sp"
             android:textStyle="bold"
             android:gravity="center"
-            android:textColor="#000000" />
+            android:textColor="?android:textColorPrimary" />
 
         <Button
             android:id="@+id/btnPublicar"
@@ -45,8 +45,8 @@
             android:layout_height="wrap_content"
             android:text="@string/publicar"
             android:textAllCaps="false"
-            android:backgroundTint="#1976D2"
-            android:textColor="#FFFFFF" />
+            android:backgroundTint="?attr/colorPrimary"
+            android:textColor="?attr/colorOnPrimary" />
     </LinearLayout>
 
 
@@ -87,7 +87,7 @@
                     android:layout_weight="1"
                     android:text="@string/usuario_prueba"
                     android:textSize="14sp"
-                    android:textColor="#000000"
+                    android:textColor="?android:textColorPrimary"
                     android:layout_marginBottom="16dp"/>
             </LinearLayout>
 
@@ -96,7 +96,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/categoria"
                 android:textStyle="bold"
-                android:textColor="#000000"
+                android:textColor="?android:textColorPrimary"
                 android:layout_marginBottom="8dp" />
 
             <RadioGroup
@@ -111,7 +111,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/reportes"
-                    android:textColor="#000000"/>
+                    android:textColor="?android:textColorPrimary"/>
 
                 <RadioButton
                     android:id="@+id/rbRecomendacion"
@@ -119,7 +119,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:text="@string/recomendacion"
-                    android:textColor="#000000" />
+                    android:textColor="?android:textColorPrimary" />
             </RadioGroup>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -133,7 +133,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/descripcion_hint"
                     android:inputType="textMultiLine"
-                    android:background="@color/white"
+                    android:background="?attr/colorSurface"
                     android:minLines="4" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -159,7 +159,7 @@
                     android:layout_height="24dp"
                     android:src="@android:drawable/ic_dialog_map"
                     android:contentDescription="@string/mapa_icono_desc"
-                    app:tint="@color/colorBotonPrincipal" />
+                    app:tint="?attr/colorPrimary" />
                 <TextView
                     android:id="@+id/tvUbicacionSeleccionada"
                     android:layout_width="0dp"
@@ -167,15 +167,15 @@
                     android:layout_weight="1"
                     android:layout_marginStart="8dp"
                     android:text="@string/ubicacion_seleccionada_hint"
-                    android:textColor="@color/colorTextoPrincipal" />
+                    android:textColor="?android:textColorPrimary" />
                 <Button
                     android:id="@+id/btnAbrirMapa"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/abrir_mapa"
                     android:textAllCaps="false"
-                    android:backgroundTint="@color/colorBotonPrincipal"
-                    android:textColor="@color/white"
+                    android:backgroundTint="?attr/colorPrimary"
+                    android:textColor="?attr/colorOnPrimary"
                     android:layout_marginStart="8dp" />
             </LinearLayout>
 
@@ -199,7 +199,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/fotos_hint"
                 android:textSize="12sp"
-                android:textColor="#0D0C0C"
+                android:textColor="?android:textColorSecondary"
                 android:layout_marginBottom="16dp" />
 
             <LinearLayout
@@ -218,7 +218,7 @@
                     android:layout_weight="1"
                     android:text="@string/anuncio_urgente"
                     android:textStyle="bold"
-                    android:textColor="@android:color/black" />
+                    android:textColor="?android:textColorPrimary" />
 
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/switchUrgente"
@@ -232,7 +232,7 @@
                 android:text="@string/titulo_consejos"
                 android:textStyle="bold"
                 android:textSize="16sp"
-                android:textColor="#333333"
+                android:textColor="?android:textColorPrimary"
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="12dp" />
 
@@ -242,7 +242,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="12dp"
-                android:background="@color/teal_700"
+                android:background="?attr/colorSecondary"
                 android:elevation="2dp"
                 android:layout_marginBottom="32dp">
 

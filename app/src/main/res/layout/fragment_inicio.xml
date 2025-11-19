@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/fondo5"
+    android:background="?android:colorBackground"
     tools:context=".fragmentos.InicioFragment">
 
     <!-- Contenedor para el título y el botón de refrescar -->
@@ -29,7 +29,7 @@
             android:layout_weight="1"
             android:text="@string/noticias"
             android:textAlignment="center"
-            android:textColor="@color/black"
+            android:textColor="?android:textColorPrimary"
             android:textSize="24sp"
             android:textStyle="bold" />
 
@@ -55,7 +55,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/header_layout"
+        app:layout_constraintTop_toBottomOf="@id/header_layout"
         app:layout_constraintVertical_bias="1.0"
         tools:listitem="@layout/list_item_publicacion" />
 

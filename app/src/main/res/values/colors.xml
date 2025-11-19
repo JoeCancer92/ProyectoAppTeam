@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <!-- Paleta institucional -->
+    <!-- Paleta institucional para modo claro -->
     <color name="colorPrimary">#1976D2</color>
     <color name="colorPrimaryDark">#115293</color>
     <color name="colorAccent">#00BCD4</color>
@@ -10,10 +9,6 @@
     <color name="colorBackground">#F4F6F8</color>
     <color name="colorSurface">#FFFFFF</color>
     <color name="fondoResidencial">#5EA1DE</color>
-
-    <!-- Combinación matizada equivalente -->
-    <color name="fondoBase1">#216290</color>
-    <color name="fondoBase2">#C1D9EB</color>
 
     <!-- Texto -->
     <color name="colorTextPrimary">#212121</color>
@@ -44,14 +39,12 @@
     <color name="teal_200">#03DAC5</color>
     <color name="teal_700">#018786</color>
 
-    <!-- Colores heredados -->
+    <!-- Colores base -->
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
 
-    <color name="colorUnreadBackground">#FFF3E0</color>
+    <!-- Tarjetas y elementos sin leer -->
+    <color name="colorUnreadBackground">#FAF7F4</color>
     <color name="colorCardBackground">#FFFFFF</color>
-
-
-
 
 </resources>
