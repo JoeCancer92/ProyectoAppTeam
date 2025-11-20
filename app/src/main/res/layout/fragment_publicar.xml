@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorUnreadBackground"
+    android:background="?android:colorBackground"
     tools:context=".fragmentos.PublicarFragment">
 
     <LinearLayout
@@ -138,10 +138,11 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/ubicacion"
                 android:textStyle="bold"
+                android:textColor="?android:textColorPrimary"
                 android:layout_marginBottom="8dp" />
 
             <LinearLayout
@@ -180,10 +181,11 @@
             </LinearLayout>
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/fotos_label"
                 android:textStyle="bold"
+                android:textColor="?android:textColorPrimary"
                 android:layout_marginBottom="8dp" />
 
             <Button

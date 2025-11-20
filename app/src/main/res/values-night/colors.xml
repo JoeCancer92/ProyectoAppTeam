@@ -46,5 +46,7 @@
     <!-- Tarjetas y elementos sin leer -->
     <color name="colorUnreadBackground">#034064</color>
     <color name="colorCardBackground">#2C2C2C</color>
+    <color name="comment_box_background">#424242</color>
+    <color name="colorCardStroke">#444444</color>
 
 </resources>

@@ -1,58 +1,56 @@
-package com.example.proyectoappteam.clases; // O el paquete donde tengas tus clases de utilidad
+package com.example.proyectoappteam.clases;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.os.Build;
+import android.content.res.Resources;
 
 import java.util.Locale;
 
 public class LocaleHelper {
 
-    private static final String PREFS_NAME = "AppConfigPrefs";
-    private static final String KEY_IDIOMA_CODE = "idioma_code";
-    private static final String DEFAULT_LANGUAGE = "es"; // Idioma por defecto
+    private static final String SELECTED_LANGUAGE = "Locale.Helper.Selected.Language";
 
-    /**
-     * Aplica el idioma guardado al contexto de la aplicación.
-     * Este método debe ser llamado en el attachBaseContext de la Activity.
-     */
-    public static Context onAttach(Context context) {
-        String language = getPersistedData(context);
-        return setLocale(context, language);
+    public static void setLocale(Context context, String language) {
+        persist(context, language);
+        updateResources(context, language);
     }
 
-    /**
-     * Devuelve el código de idioma persistente de SharedPreferences.
-     */
-    public static String getPersistedData(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        return prefs.getString(KEY_IDIOMA_CODE, DEFAULT_LANGUAGE);
+    private static void persist(Context context, String language) {
+        SharedPreferences preferences = context.getSharedPreferences("AppConfigPrefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(SELECTED_LANGUAGE, language);
+        editor.apply();
     }
 
-    /**
-     * Establece el nuevo idioma en el contexto.
-     */
-    public static Context setLocale(Context context, String language) {
-        return updateResources(context, language);
-    }
-
-    private static Context updateResources(Context context, String language) {
+    public static void updateResources(Context context, String language) {
         Locale locale = new Locale(language);
         Locale.setDefault(locale);
 
-        Configuration configuration = context.getResources().getConfiguration();
+        Resources resources = context.getResources();
 
-        // Usa métodos modernos para actualizar la configuración
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            configuration.setLocale(locale);
-            return context.createConfigurationContext(configuration);
-        } else {
-            // Métodos antiguos para versiones anteriores a N (Android 7.0)
-            configuration.locale = locale;
-            context.getResources().updateConfiguration(configuration,
-                    context.getResources().getDisplayMetrics());
-            return context;
-        }
+        Configuration configuration = resources.getConfiguration();
+        configuration.setLocale(locale);
+
+        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
+    }
+
+    public static void onAttach(Context context) {
+        String lang = getPersistedData(context, Locale.getDefault().getLanguage());
+        setLocale(context, lang);
+    }
+
+    public static void onAttach(Context context, String defaultLanguage) {
+        String lang = getPersistedData(context, defaultLanguage);
+        setLocale(context, lang);
+    }
+
+    public static String getLanguage(Context context) {
+        return getPersistedData(context, Locale.getDefault().getLanguage());
+    }
+
+    private static String getPersistedData(Context context, String defaultLanguage) {
+        SharedPreferences preferences = context.getSharedPreferences("AppConfigPrefs", Context.MODE_PRIVATE);
+        return preferences.getString(SELECTED_LANGUAGE, defaultLanguage);
     }
 }

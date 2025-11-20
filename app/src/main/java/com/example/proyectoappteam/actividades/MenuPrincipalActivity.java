@@ -43,47 +43,10 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Menu {
     private ImageButton lastSelectedButton=null;
     public static Usuario usuarioActivo;
 
-    private Context updateResources(Context context, String language) {
-        Locale locale = new Locale(language);
-        Locale.setDefault(locale);
-
-        Configuration configuration = context.getResources().getConfiguration();
-
-        // Compatibilidad: Usamos createConfigurationContext a partir de API 24
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            configuration.setLocale(locale);
-            // Este metodo crea un nuevo contexto con la configuración aplicada, el metodo más moderno.
-            return context.createConfigurationContext(configuration);
-        } else {
-            // Metodo deprecated, pero necesario para versiones anteriores a Android 7.0
-            configuration.locale = locale;
-            context.getResources().updateConfiguration(configuration,
-                    context.getResources().getDisplayMetrics());
-            return context; // Devolvemos el contexto original que fue modificado.
-        }
-    }
-
-    private Context applyLanguage(Context context) {
-        // Estas constantes DEBEN COINCIDIR con las de ConfigFragment
-        final String PREFS_NAME = "AppConfigPrefs";
-        final String KEY_IDIOMA_CODE = "idioma_code";
-
-        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-
-        // Cargar el idioma guardado. Usar "es" como valor por defecto.
-        String idiomaCode = prefs.getString(KEY_IDIOMA_CODE, "es");
-
-        return updateResources(context, idiomaCode);
-    }
-
-
     @Override
     protected void attachBaseContext(Context newBase) {
-        // 1. Aplicar el idioma guardado justo antes de que la Activity se inicialice.
-        Context contextWithLanguage = applyLanguage(newBase);
-
-        // 2. Pasar el nuevo contexto a la implementación base.
-        super.attachBaseContext(contextWithLanguage);
+        super.attachBaseContext(newBase);
+        LocaleHelper.onAttach(newBase, "es");
     }
 
     @Override

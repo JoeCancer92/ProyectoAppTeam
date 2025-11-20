@@ -7,14 +7,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/colorUnreadBackground"
+    android:background="?android:colorBackground"
     tools:context="actividades.MenuPrincipalActivity">
 
     <!-- Contenedor dinámico para fragmentos -->
     <FrameLayout
         android:id="@+id/priRelContenedor"
         android:layout_width="match_parent"
-        android:layout_height="635dp"
+        android:layout_height="0dp"
         android:layout_weight="1"
         tools:layout="@layout/fragment_menu" />
 
@@ -25,7 +25,7 @@
         android:layout_height="70dp"
         android:gravity="center"
         android:padding="12dp"
-        android:background="@drawable/bg_cuadrado"
+        android:background="?attr/colorSurface"
         android:orientation="horizontal">
 
 

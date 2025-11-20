@@ -17,7 +17,8 @@
     android:id="@+id/cl_notification_content"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="12dp">
+    android:padding="12dp"
+    >
 
     <ImageView
         android:id="@+id/iv_notificacion_icon"

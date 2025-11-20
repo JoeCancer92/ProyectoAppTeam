@@ -6,8 +6,8 @@
     <color name="colorAccent">#00BCD4</color>
 
     <!-- Fondo y superficies -->
-    <color name="colorBackground">#F4F6F8</color>
-    <color name="colorSurface">#FFFFFF</color>
+    <color name="colorBackground">#F9F7F3</color>
+    <color name="colorSurface">#F9F7F3</color>
     <color name="fondoResidencial">#5EA1DE</color>
 
     <!-- Texto -->
@@ -46,5 +46,7 @@
     <!-- Tarjetas y elementos sin leer -->
     <color name="colorUnreadBackground">#FAF7F4</color>
     <color name="colorCardBackground">#FFFFFF</color>
+    <color name="comment_box_background">#FFFFFF</color>
+    <color name="colorCardStroke">#CCCCCC</color>
 
 </resources>

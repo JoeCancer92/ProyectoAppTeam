@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?android:colorBackground"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragmentos.ConfigFragment">
 
@@ -16,6 +17,7 @@
             android:layout_height="wrap_content"
             app:cardCornerRadius="10dp"
             app:cardUseCompatPadding="true"
+            app:cardBackgroundColor="?attr/colorSurface"
             app:cardElevation="5dp">
             <LinearLayout
                 android:layout_width="match_parent"
@@ -29,11 +31,13 @@
                     android:gravity="center"
                     android:layout_marginVertical="15dp"
                     android:textSize="25sp"
+                    android:textColor="?android:textColorPrimary"
                     android:text="@string/frgCfgLblPreferencias"/>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textColor="?android:textColorPrimary"
                     android:text="@string/frgCfgLblIdioma"/>
                 <Spinner
                     android:id="@+id/frgCfgCboIdiomas"
@@ -49,11 +53,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/frgCfgChkNotificaciones"
+                    android:textColor="?android:textColorPrimary"
                     android:layout_marginBottom="10dp"/>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                     android:textColor="?android:textColorPrimary"
                     android:text="@string/frgCfgLblVolumen"/>
                 <SeekBar
                     android:id="@+id/frgCfgBarSonido"
@@ -66,6 +72,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                     android:textColor="?android:textColorPrimary"
                     android:text="@string/frgCfgLblTemaOscuro"/>
                 <Spinner
                     android:id="@+id/frgCfgCboTema"

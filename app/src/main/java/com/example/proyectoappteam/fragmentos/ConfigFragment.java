@@ -24,6 +24,8 @@ import androidx.fragment.app.Fragment;
 
 import com.example.proyectoappteam.R;
 import com.example.proyectoappteam.actividades.MenuPrincipalActivity;
+import com.example.proyectoappteam.clases.LocaleHelper;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -38,7 +40,7 @@ public class ConfigFragment extends Fragment {
     private Button frgCfgBtnRestaurar;
 
     private static final String PREFS_NAME = "AppConfigPrefs";
-    private static final String KEY_IDIOMA_CODE = "idioma_code";
+    private static final String KEY_IDIOMA_CODE = "Locale.Helper.Selected.Language";
     private static final String KEY_TEMA = "tema";
     private static final String KEY_NOTIFICACIONES = "notificaciones";
     private static final String KEY_SONIDO = "volumen_sonido";
@@ -137,8 +139,7 @@ public class ConfigFragment extends Fragment {
         // 1. Guardar Idioma y aplicarlo (requiere reiniciar Activity)
         String[] idiomaCodes = getResources().getStringArray(R.array.idiomas_opciones);
         String idiomaSeleccionado = idiomaCodes[frgCfgCboIdiomas.getSelectedItemPosition()];
-        editor.putString(KEY_IDIOMA_CODE, idiomaSeleccionado);
-        //cambiarIdioma(idiomaSeleccionado); // Aplica el cambio y notifica al usuario
+        LocaleHelper.setLocale(getContext(), idiomaSeleccionado);
 
         // 2. Guardar Notificaciones
         boolean notifEstado = frgCfgChkNotificaciones.isChecked();
@@ -147,7 +148,6 @@ public class ConfigFragment extends Fragment {
         // 3. Guardar Sonido
         int volumen = frgCfgBarSonido.getProgress();
         editor.putInt(KEY_SONIDO, volumen);
-        // La lógica para cambiar el volumen del sistema se haría aquí usando AudioManager
 
         // 4. Guardar y Aplicar Tema Oscuro
         int temaPos = frgCfgCboTema.getSelectedItemPosition();
@@ -160,7 +160,6 @@ public class ConfigFragment extends Fragment {
             nuevoModoTema = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
         }
         editor.putInt(KEY_TEMA, nuevoModoTema);
-        // Aplicar el tema inmediatamente (no requiere reiniciar la Activity)
         AppCompatDelegate.setDefaultNightMode(nuevoModoTema);
 
 
@@ -168,31 +167,13 @@ public class ConfigFragment extends Fragment {
         Toast.makeText(getContext(), "Preferencias aplicadas y guardadas.", Toast.LENGTH_SHORT).show();
 
         if (getActivity() != null) {
-            // 1. Obtiene el Intent para reiniciar la actividad actual
-            Intent intent = getActivity().getIntent();
-
-            // 2. Cierra la actividad actual
-            getActivity().finish();
-
-            // 3. Inicia la actividad de nuevo. Al reiniciarse, cargará el nuevo Locale guardado.
+            Intent intent = new Intent(getActivity(), MenuPrincipalActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
+            getActivity().finish();
         }
 
     }
-
-    // Función para cambiar el Locale (Idioma)
-//    private void cambiarIdioma(String langCode) {
-//        Locale locale = new Locale(langCode);
-//        Locale.setDefault(locale);
-//        Configuration config = new Configuration();
-//        config.locale = locale;
-//
-//        // Actualiza el contexto y el contexto de la aplicación
-//        requireContext().getResources().updateConfiguration(config, requireContext().getResources().getDisplayMetrics());
-//        requireActivity().getApplicationContext().getResources().updateConfiguration(config, requireContext().getResources().getDisplayMetrics());
-//
-//        Toast.makeText(getContext(), "Idioma cambiado a: " + langCode + ". Reinicie la aplicación para ver todos los cambios.", Toast.LENGTH_LONG).show();
-//    }
 
     private void restaurarPreferencias() {
         // Restaurar a valores por defecto
