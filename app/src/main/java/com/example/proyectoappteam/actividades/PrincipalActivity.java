@@ -1,5 +1,6 @@
 package com.example.proyectoappteam.actividades;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.util.Log;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -23,6 +25,7 @@ import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.persistence.DataQueryBuilder;
 import com.example.proyectoappteam.R;
+import com.example.proyectoappteam.clases.LocaleHelper;
 import com.example.proyectoappteam.clases.Seguridad;
 
 import java.util.List;
@@ -38,10 +41,33 @@ public class PrincipalActivity extends AppCompatActivity {
     CheckBox checkboxRecordarCuenta;
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(newBase);
+        LocaleHelper.onAttach(newBase, "es");
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+
+        // Aplicar el tema
+        SharedPreferences prefs = getSharedPreferences("AppConfigPrefs", MODE_PRIVATE);
+        int tema = prefs.getInt("tema", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        AppCompatDelegate.setDefaultNightMode(tema);
+
         setContentView(R.layout.activity_principal);
+
+        // Aplicar el tamaño de la fuente
+        int tamanoFuente = prefs.getInt("tamano_fuente", 1); // 1 es mediano
+        float scale = 1.0f;
+        if (tamanoFuente == 0) {
+            scale = 0.85f;
+        } else if (tamanoFuente == 2) {
+            scale = 1.15f;
+        }
+        getResources().getConfiguration().fontScale = scale;
+        getResources().updateConfiguration(getResources().getConfiguration(), getResources().getDisplayMetrics());
 
         View rootView = findViewById(android.R.id.content);
         ViewCompat.setOnApplyWindowInsetsListener(rootView, (v, insets) -> {
@@ -57,7 +83,6 @@ public class PrincipalActivity extends AppCompatActivity {
         textoOlvidePassword = findViewById(R.id.textoOlvidePassword);
         checkboxRecordarCuenta = findViewById(R.id.checkboxRecordarCuenta);
 
-        SharedPreferences prefs = getSharedPreferences("VeciRedPrefs", MODE_PRIVATE);
         String correoGuardado = prefs.getString("correoRecordado", "");
         if (!correoGuardado.isEmpty()) {
             inputUsuario.setText(correoGuardado);

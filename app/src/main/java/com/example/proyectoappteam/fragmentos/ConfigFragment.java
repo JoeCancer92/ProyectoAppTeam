@@ -34,16 +34,14 @@ public class ConfigFragment extends Fragment {
 
     private Spinner frgCfgCboIdiomas;
     private Spinner frgCfgCboTema;
-    private CheckBox frgCfgChkNotificaciones;
-    private SeekBar frgCfgBarSonido;
+    private Spinner frgCfgCboTamanoFuente;
     private Button frgCfgBtnAplicar;
     private Button frgCfgBtnRestaurar;
 
     private static final String PREFS_NAME = "AppConfigPrefs";
     private static final String KEY_IDIOMA_CODE = "Locale.Helper.Selected.Language";
     private static final String KEY_TEMA = "tema";
-    private static final String KEY_NOTIFICACIONES = "notificaciones";
-    private static final String KEY_SONIDO = "volumen_sonido";
+    private static final String KEY_TAMANO_FUENTE = "tamano_fuente";
 
     public ConfigFragment() {
         // Constructor vacío requerido
@@ -62,8 +60,7 @@ public class ConfigFragment extends Fragment {
         // 1. Inicializar vistas
         frgCfgCboIdiomas = view.findViewById(R.id.frgCfgCboIdiomas);
         frgCfgCboTema = view.findViewById(R.id.frgCfgCboTema);
-        frgCfgChkNotificaciones = view.findViewById(R.id.frgCfgChkNotificaciones);
-        frgCfgBarSonido = view.findViewById(R.id.frgCfgBarSonido);
+        frgCfgCboTamanoFuente = view.findViewById(R.id.frgCfgCboTamanoFuente);
         frgCfgBtnAplicar = view.findViewById(R.id.frgCfgBtnAplicar);
         frgCfgBtnRestaurar = view.findViewById(R.id.frgCfgBtnRestaurar);
 
@@ -73,18 +70,6 @@ public class ConfigFragment extends Fragment {
         // 3. Configurar listeners
         frgCfgBtnAplicar.setOnClickListener(v -> aplicarPreferencias());
         frgCfgBtnRestaurar.setOnClickListener(v -> restaurarPreferencias());
-
-        // Listener para la barra de sonido
-        frgCfgBarSonido.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                // Puedes mostrar el valor del volumen en un Toast o TextView si lo deseas
-            }
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {}
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {}
-        });
     }
 
     private SharedPreferences getPrefs() {
@@ -94,7 +79,7 @@ public class ConfigFragment extends Fragment {
     private void cargarPreferencias() {
         SharedPreferences prefs = getPrefs();
 
-        // Idioma (usando los códigos de idioma del array en strings.xml)
+        // Idioma
         String idiomaGuardado = prefs.getString(KEY_IDIOMA_CODE, "es");
         String[] idiomaCodes = getResources().getStringArray(R.array.idiomas_opciones);
         int idiomaPos = 0;
@@ -108,7 +93,7 @@ public class ConfigFragment extends Fragment {
 
         // Tema
         int temaGuardado = prefs.getInt(KEY_TEMA, AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-        int temaPos = 0; // 0: Sistema, 1: Claro, 2: Oscuro (según el array de strings)
+        int temaPos = 0;
         switch (temaGuardado) {
             case AppCompatDelegate.MODE_NIGHT_NO: // Tema Claro
                 temaPos = 1;
@@ -123,33 +108,20 @@ public class ConfigFragment extends Fragment {
         }
         frgCfgCboTema.setSelection(temaPos);
 
-        // Notificaciones
-        boolean notifHabilitadas = prefs.getBoolean(KEY_NOTIFICACIONES, true);
-        frgCfgChkNotificaciones.setChecked(notifHabilitadas);
-
-        // Sonido
-        int volumenSonido = prefs.getInt(KEY_SONIDO, 75); // Valor por defecto: 75
-        frgCfgBarSonido.setProgress(volumenSonido);
+        // Tamaño de fuente
+        int tamanoFuenteGuardado = prefs.getInt(KEY_TAMANO_FUENTE, 1); // 0: Pequeño, 1: Mediano, 2: Grande
+        frgCfgCboTamanoFuente.setSelection(tamanoFuenteGuardado);
     }
 
-    // Metodo clave para aplicar los cambios y guardarlos
     private void aplicarPreferencias() {
         SharedPreferences.Editor editor = getPrefs().edit();
 
-        // 1. Guardar Idioma y aplicarlo (requiere reiniciar Activity)
+        // Guardar Idioma
         String[] idiomaCodes = getResources().getStringArray(R.array.idiomas_opciones);
         String idiomaSeleccionado = idiomaCodes[frgCfgCboIdiomas.getSelectedItemPosition()];
         LocaleHelper.setLocale(getContext(), idiomaSeleccionado);
 
-        // 2. Guardar Notificaciones
-        boolean notifEstado = frgCfgChkNotificaciones.isChecked();
-        editor.putBoolean(KEY_NOTIFICACIONES, notifEstado);
-
-        // 3. Guardar Sonido
-        int volumen = frgCfgBarSonido.getProgress();
-        editor.putInt(KEY_SONIDO, volumen);
-
-        // 4. Guardar y Aplicar Tema Oscuro
+        // Guardar y Aplicar Tema Oscuro
         int temaPos = frgCfgCboTema.getSelectedItemPosition();
         int nuevoModoTema;
         if (temaPos == 1) { // Claro
@@ -162,6 +134,9 @@ public class ConfigFragment extends Fragment {
         editor.putInt(KEY_TEMA, nuevoModoTema);
         AppCompatDelegate.setDefaultNightMode(nuevoModoTema);
 
+        // Guardar Tamaño de Fuente
+        int tamanoFuentePos = frgCfgCboTamanoFuente.getSelectedItemPosition();
+        editor.putInt(KEY_TAMANO_FUENTE, tamanoFuentePos);
 
         editor.apply();
         Toast.makeText(getContext(), "Preferencias aplicadas y guardadas.", Toast.LENGTH_SHORT).show();
@@ -172,21 +147,16 @@ public class ConfigFragment extends Fragment {
             startActivity(intent);
             getActivity().finish();
         }
-
     }
 
     private void restaurarPreferencias() {
         // Restaurar a valores por defecto
         frgCfgCboIdiomas.setSelection(0); // Español ("es")
         frgCfgCboTema.setSelection(0); // Sistema
-        frgCfgChkNotificaciones.setChecked(true);
-        frgCfgBarSonido.setProgress(75);
+        frgCfgCboTamanoFuente.setSelection(1); // Mediano
 
         // Aplicar los valores restaurados y guardarlos en SharedPreferences
         aplicarPreferencias();
         Toast.makeText(getContext(), "Preferencias restauradas a valores por defecto.", Toast.LENGTH_SHORT).show();
     }
-
-
-
 }

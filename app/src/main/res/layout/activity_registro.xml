@@ -4,7 +4,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorUnreadBackground">
+    android:background="?android:colorBackground">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,7 +19,7 @@
             android:text="@string/Registro"
             android:textSize="22sp"
             android:textStyle="bold"
-            android:textColor="@color/colorTextoPrincipal"
+            android:textColor="?android:textColorPrimary"
             android:gravity="center"
             android:layout_marginBottom="16dp" />
 
@@ -50,8 +50,8 @@
                     android:layout_height="wrap_content"
                     android:text="@string/tomarfoto"
                     android:textAllCaps="false"
-                    android:backgroundTint="@color/colorBotonPrincipal"
-                    android:textColor="@color/white" />
+                    android:backgroundTint="?attr/colorPrimary"
+                    android:textColor="?attr/colorOnPrimary" />
             </LinearLayout>
 
             <LinearLayout
@@ -128,8 +128,8 @@
             android:layout_height="wrap_content"
             android:text="@string/seleccionarFecha"
             android:textAllCaps="false"
-            android:backgroundTint="@color/colorBotonSecundario"
-            android:textColor="@color/colorTextoPrincipal"
+            android:backgroundTint="?attr/colorSecondary"
+            android:textColor="?attr/colorOnSecondary"
             android:layout_marginBottom="16dp" />
 
         <com.google.android.material.textfield.TextInputLayout
@@ -161,6 +161,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/aceptarTerminos"
+            android:textColor="?android:textColorPrimary"
             android:layout_marginTop="16dp" />
 
         <Button
@@ -169,8 +170,8 @@
             android:layout_height="wrap_content"
             android:text="@string/verTerminos"
             android:textAllCaps="false"
-            android:backgroundTint="@color/colorBotonSecundario"
-            android:textColor="@color/colorTextoPrincipal"
+            android:backgroundTint="?attr/colorSecondary"
+            android:textColor="?attr/colorOnSecondary"
             android:layout_marginBottom="8dp" />
 
         <Button
@@ -179,8 +180,8 @@
             android:layout_height="wrap_content"
             android:text="@string/registrarse"
             android:textAllCaps="false"
-            android:background="@drawable/boton_registro"
-            android:textColor="@color/white"
+            android:background="?attr/colorPrimary"
+            android:textColor="?attr/colorOnPrimary"
             android:layout_marginBottom="8dp" />
 
         <Button
@@ -189,8 +190,8 @@
             android:layout_height="wrap_content"
             android:text="@string/regresar"
             android:textAllCaps="false"
-            android:backgroundTint="@color/colorBotonSecundario"
-            android:textColor="@color/colorTextoPrincipal" />
+            android:backgroundTint="?attr/colorSecondary"
+            android:textColor="?attr/colorOnSecondary" />
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

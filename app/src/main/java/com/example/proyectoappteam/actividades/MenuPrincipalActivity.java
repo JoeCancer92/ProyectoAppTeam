@@ -15,6 +15,7 @@ import android.os.Build;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -53,7 +54,24 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Menu {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+
+        // Aplicar el tema
+        SharedPreferences prefs = getSharedPreferences("AppConfigPrefs", MODE_PRIVATE);
+        int tema = prefs.getInt("tema", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        AppCompatDelegate.setDefaultNightMode(tema);
+
         setContentView(R.layout.activity_menu_principal);
+
+        // Aplicar el tamaño de la fuente
+        int tamanoFuente = prefs.getInt("tamano_fuente", 1); // 1 es mediano
+        float scale = 1.0f;
+        if (tamanoFuente == 0) {
+            scale = 0.85f;
+        } else if (tamanoFuente == 2) {
+            scale = 1.15f;
+        }
+        getResources().getConfiguration().fontScale = scale;
+        getResources().updateConfiguration(getResources().getConfiguration(), getResources().getDisplayMetrics());
 
         // Aplicar márgenes del sistema
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {

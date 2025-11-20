@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorUnreadBackground">
+    android:background="?android:colorBackground">
 
     <!-- Logo o ícono del aplicativo -->
     <ImageView
@@ -25,7 +25,7 @@
         android:text="@string/bienvenida"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:textColor="@color/colorTextoPrincipal"
+        android:textColor="?android:textColorPrimary"
         app:layout_constraintTop_toBottomOf="@id/logoApp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -38,8 +38,8 @@
         android:layout_height="wrap_content"
         android:hint="@string/correoelectronico"
         android:inputType="textEmailAddress"
-        android:backgroundTint="@color/colorInput"
-        android:textColor="@color/colorTextoInput"
+        android:backgroundTint="?attr/colorSurface"
+        android:textColor="?android:textColorPrimary"
         app:layout_constraintTop_toBottomOf="@id/tituloLogin"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -59,7 +59,7 @@
         android:layout_marginEnd="32dp"
         android:layout_marginTop="16dp"
         app:endIconMode="password_toggle"
-        app:endIconTint="@color/colorTextoSecundario">
+        app:endIconTint="?android:textColorSecondary">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/inputPassword"
@@ -67,8 +67,8 @@
             android:layout_height="wrap_content"
             android:hint="@string/clave"
             android:inputType="textPassword"
-            android:textColor="@color/colorTextoInput"
-            android:backgroundTint="@color/colorInput" />
+            android:textColor="?android:textColorPrimary"
+            android:backgroundTint="?attr/colorSurface" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Checkbox: Recordar cuenta -->
@@ -77,7 +77,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/cuenta"
-        android:textColor="@color/black"
+        android:textColor="?android:textColorPrimary"
         app:layout_constraintTop_toBottomOf="@id/contenedorPassword"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="32dp"
@@ -89,8 +89,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/iniciar_sesion"
-        android:textColor="@color/white"
-        android:backgroundTint="@color/colorBotonPrincipal"
+        android:textColor="?attr/colorOnPrimary"
+        android:backgroundTint="?attr/colorPrimary"
         android:textAllCaps="false"
         app:layout_constraintTop_toBottomOf="@id/checkboxRecordarCuenta"
         app:layout_constraintStart_toStartOf="parent"
@@ -109,7 +109,7 @@
         android:layout_marginTop="24dp"
         android:layout_marginEnd="136dp"
         android:text="@string/clave_olvidada"
-        android:textColor="@color/black"
+        android:textColor="?android:textColorPrimary"
         android:textSize="14sp"
         android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="parent"
@@ -122,7 +122,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="@string/nuevo_registro"
-        android:textColor="@color/black"
+        android:textColor="?android:textColorPrimary"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

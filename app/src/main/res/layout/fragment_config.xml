@@ -48,26 +48,19 @@
                     android:entries="@array/idiomas_opciones"
                     tools:listitem="@android:layout/simple_spinner_dropdown_item"/>
 
-                <CheckBox
-                    android:id="@+id/frgCfgChkNotificaciones"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/frgCfgChkNotificaciones"
-                    android:textColor="?android:textColorPrimary"
-                    android:layout_marginBottom="10dp"/>
-
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                     android:textColor="?android:textColorPrimary"
-                    android:text="@string/frgCfgLblVolumen"/>
-                <SeekBar
-                    android:id="@+id/frgCfgBarSonido"
+                    android:textColor="?android:textColorPrimary"
+                    android:text="@string/frgCfgLblTamanoFuente"/>
+                <Spinner
+                    android:id="@+id/frgCfgCboTamanoFuente"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:max="100"
-                    android:progress="100"
-                    android:layout_marginBottom="10dp"/>
+                    android:layout_marginBottom="10dp"
+                    android:minHeight="48dp"
+                    android:entries="@array/tamanos_fuente_opciones"
+                    tools:listitem="@android:layout/simple_spinner_dropdown_item"/>
 
                 <TextView
                     android:layout_width="match_parent"
