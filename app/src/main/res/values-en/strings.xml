@@ -116,8 +116,6 @@ Connect, collaborate and transform your community</string>
     <!--  Your API Key for Google Maps -->
     <string name="google_maps_key" translatable="false">AIzaSyBQYSEmMr8rD3OCOhpQtt8EyrfF1ZJVWyU</string>
     <string name="frgCfgLblPreferencias">Configuration Preferences</string>
-    <string name="frgCfgChkNotificaciones">Enable/Disable Notifications</string>
-    <string name="frgCfgLblSonido">Sound</string>
     <string name="frgCfgBtnAplicar">Apply</string>
     <string name="frgCfgBtnRestaurar">Restore</string>
     <string name="frgCfgLblConfiguracion">Configuration</string>
@@ -125,8 +123,8 @@ Connect, collaborate and transform your community</string>
     <string name="frgCfgBtnActualizar">Update</string>
     <string name="frgCfgBtnCerrar">Log Out</string>
     <string name="frgCfgLblIdioma">Application Language</string>
-    <string name="frgCfgLblVolumen">Notification Volume</string>
     <string name="frgCfgLblTemaOscuro">Application Theme</string>
+    <string name="frgCfgLblTamanoFuente">Font Size</string>
     <string name="bienvenida">Welcome to your Community</string>
     <string name="correoelectronico">Email</string>
     <string name="clave">Password</string>
@@ -146,6 +144,12 @@ Connect, collaborate and transform your community</string>
         <item>System</item>
         <item>Light</item>
         <item>Dark</item>
+    </string-array>
+
+    <string-array name="tamanos_fuente_opciones">
+        <item>Small</item>
+        <item>Medium</item>
+        <item>Large</item>
     </string-array>
 
 </resources>

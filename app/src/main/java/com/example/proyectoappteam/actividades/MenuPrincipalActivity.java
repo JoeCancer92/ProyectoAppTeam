@@ -55,6 +55,18 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Menu {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_menu_principal);
 
+        // Aplicar el tamaño de la fuente
+        SharedPreferences prefs = getSharedPreferences("AppConfigPrefs", MODE_PRIVATE);
+        int tamanoFuente = prefs.getInt("tamano_fuente", 1); // 1 es mediano
+        float scale = 1.0f;
+        if (tamanoFuente == 0) {
+            scale = 0.85f;
+        } else if (tamanoFuente == 2) {
+            scale = 1.15f;
+        }
+        getResources().getConfiguration().fontScale = scale;
+        getResources().updateConfiguration(getResources().getConfiguration(), getResources().getDisplayMetrics());
+
         // Aplicar márgenes del sistema
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
