@@ -1,6 +1,8 @@
 package com.example.proyectoappteam.actividades;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -11,6 +13,7 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -23,6 +26,7 @@ import com.backendless.messaging.EmailEnvelope;
 import com.backendless.messaging.MessageStatus;
 import com.backendless.persistence.DataQueryBuilder;
 import com.example.proyectoappteam.R;
+import com.example.proyectoappteam.clases.LocaleHelper;
 import com.example.proyectoappteam.clases.Seguridad;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -39,9 +43,20 @@ public class RecuperarPassActivity extends AppCompatActivity {
     TextInputLayout layoutCodigoRecuperacion, layoutNuevaClave, layoutConfirmarClave;
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleHelper.onAttach(newBase, "es"));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+
+        // Aplicar el tema
+        SharedPreferences prefs = getSharedPreferences("AppConfigPrefs", MODE_PRIVATE);
+        int tema = prefs.getInt("tema", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        AppCompatDelegate.setDefaultNightMode(tema);
+
         setContentView(R.layout.activity_recuperar_pass);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {

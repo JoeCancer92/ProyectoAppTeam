@@ -3,17 +3,11 @@ package com.example.proyectoappteam.fragmentos;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -25,10 +19,6 @@ import androidx.fragment.app.Fragment;
 import com.example.proyectoappteam.R;
 import com.example.proyectoappteam.actividades.MenuPrincipalActivity;
 import com.example.proyectoappteam.clases.LocaleHelper;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
 
 public class ConfigFragment extends Fragment {
 
@@ -116,10 +106,11 @@ public class ConfigFragment extends Fragment {
     private void aplicarPreferencias() {
         SharedPreferences.Editor editor = getPrefs().edit();
 
-        // Guardar Idioma
+        // Guardar Idioma y Tamaño de Fuente
         String[] idiomaCodes = getResources().getStringArray(R.array.idiomas_opciones);
         String idiomaSeleccionado = idiomaCodes[frgCfgCboIdiomas.getSelectedItemPosition()];
-        LocaleHelper.setLocale(getContext(), idiomaSeleccionado);
+        int tamanoFuentePos = frgCfgCboTamanoFuente.getSelectedItemPosition();
+        LocaleHelper.setLocale(getContext(), idiomaSeleccionado, tamanoFuentePos);
 
         // Guardar y Aplicar Tema Oscuro
         int temaPos = frgCfgCboTema.getSelectedItemPosition();
@@ -133,10 +124,6 @@ public class ConfigFragment extends Fragment {
         }
         editor.putInt(KEY_TEMA, nuevoModoTema);
         AppCompatDelegate.setDefaultNightMode(nuevoModoTema);
-
-        // Guardar Tamaño de Fuente
-        int tamanoFuentePos = frgCfgCboTamanoFuente.getSelectedItemPosition();
-        editor.putInt(KEY_TAMANO_FUENTE, tamanoFuentePos);
 
         editor.apply();
         Toast.makeText(getContext(), "Preferencias aplicadas y guardadas.", Toast.LENGTH_SHORT).show();
