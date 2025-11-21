@@ -14,7 +14,6 @@ import android.util.Log;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -50,15 +49,10 @@ public class PrincipalActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-
-        // Aplicar el tema
-        SharedPreferences prefs = getSharedPreferences("AppConfigPrefs", MODE_PRIVATE);
-        int tema = prefs.getInt("tema", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-        AppCompatDelegate.setDefaultNightMode(tema);
-
         setContentView(R.layout.activity_principal);
 
         // Aplicar el tamaño de la fuente
+        SharedPreferences prefs = getSharedPreferences("AppConfigPrefs", MODE_PRIVATE);
         int tamanoFuente = prefs.getInt("tamano_fuente", 1); // 1 es mediano
         float scale = 1.0f;
         if (tamanoFuente == 0) {
