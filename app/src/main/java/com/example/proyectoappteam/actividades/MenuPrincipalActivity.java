@@ -15,7 +15,6 @@ import android.os.Build;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -53,12 +52,6 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Menu {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-
-        // Aplicar el tema
-        SharedPreferences prefs = getSharedPreferences("AppConfigPrefs", MODE_PRIVATE);
-        int tema = prefs.getInt("tema", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-        AppCompatDelegate.setDefaultNightMode(tema);
-
         setContentView(R.layout.activity_menu_principal);
 
         // Aplicar márgenes del sistema
