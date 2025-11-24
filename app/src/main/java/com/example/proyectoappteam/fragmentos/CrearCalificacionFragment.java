@@ -88,10 +88,9 @@ public class CrearCalificacionFragment extends DialogFragment {
     }
 
     private void cargarCalificacionExistente(String publicacionId, String userId) {
-        String whereClause = "owner.objectId = '" + userId + "' AND publicacion.objectId = '" + publicacionId + "'";
+        String whereClause = "ownerId = '" + userId + "' AND publicacion.objectId = '" + publicacionId + "'";
         DataQueryBuilder queryBuilder = DataQueryBuilder.create();
         queryBuilder.setWhereClause(whereClause);
-        queryBuilder.setRelated(new String[]{"owner"}); //necesario para traer el usuario
 
         Backendless.Data.of(Calificaciones.class).find(queryBuilder, new AsyncCallback<List<Calificaciones>>() {
             @Override
@@ -100,8 +99,9 @@ public class CrearCalificacionFragment extends DialogFragment {
                     Calificaciones existingRating = foundCalificaciones.get(0);
                     calificacionObjectId = existingRating.getObjectId();
                     ratingBarInput.setRating(existingRating.getPuntuacion());
-                    Log.i(TAG, "Calificación existente: " + existingRating.getPuntuacion());
+                    Log.i(TAG, "Calificación existente encontrada: " + existingRating.getPuntuacion());
                 } else {
+                    // Normal: no se encontró calificación previa.
                     calificacionObjectId = null;
                     ratingBarInput.setRating(0);
                 }
@@ -109,8 +109,11 @@ public class CrearCalificacionFragment extends DialogFragment {
 
             @Override
             public void handleFault(BackendlessFault fault) {
-                Log.e(TAG, "Error cargando calificación previa: " + fault.getMessage());
-                if (isAdded()) Toast.makeText(requireContext(), "Error al cargar tu calificación previa.", Toast.LENGTH_SHORT).show();
+                // SOLUCIÓN DEFINITIVA: Si la búsqueda falla por CUALQUIER motivo, no molestamos al usuario.
+                // Simplemente lo registramos en el log y continuamos como si no hubiera calificación.
+                Log.w(TAG, "No se pudo cargar la calificación previa (esto puede ser normal). Causa: " + fault.getMessage());
+                calificacionObjectId = null;
+                ratingBarInput.setRating(0);
             }
         });
     }

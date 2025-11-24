@@ -2,7 +2,9 @@ package com.example.proyectoappteam.actividades;
 
 import android.Manifest;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -20,6 +22,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
@@ -35,6 +38,7 @@ import com.backendless.messaging.EmailEnvelope;
 import com.backendless.messaging.MessageStatus;
 import com.backendless.persistence.DataQueryBuilder;
 import com.example.proyectoappteam.R;
+import com.example.proyectoappteam.clases.LocaleHelper;
 import com.example.proyectoappteam.clases.Seguridad;
 import com.example.proyectoappteam.clases.Usuario;
 
@@ -60,9 +64,20 @@ public class RegistroActivity extends AppCompatActivity {
     private boolean fotoTomadaCorrectamente = false;
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleHelper.onAttach(newBase, "es"));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+
+        // Aplicar el tema
+        SharedPreferences prefs = getSharedPreferences("AppConfigPrefs", MODE_PRIVATE);
+        int tema = prefs.getInt("tema", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        AppCompatDelegate.setDefaultNightMode(tema);
+
         setContentView(R.layout.activity_registro);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {

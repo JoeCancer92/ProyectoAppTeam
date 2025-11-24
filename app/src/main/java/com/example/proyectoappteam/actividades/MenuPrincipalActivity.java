@@ -1,31 +1,22 @@
 package com.example.proyectoappteam.actividades;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
-import android.content.Context; // Necesario para Context y attachBaseContext
-import android.content.SharedPreferences; // Necesario para SharedPreferences
-import android.content.res.Configuration; // Necesario para Configuration
-import java.util.Locale; // Necesario para Locale
-// Agrega esta si usaste la versión de LocaleHelper con verificación de SDK
-import android.os.Build;
-
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.proyectoappteam.R;
+import com.example.proyectoappteam.clases.LocaleHelper;
 import com.example.proyectoappteam.clases.Menu;
 import com.example.proyectoappteam.clases.Usuario;
-
 import com.example.proyectoappteam.fragmentos.ConfigFragment;
 import com.example.proyectoappteam.fragmentos.InicioFragment;
 import com.example.proyectoappteam.fragmentos.MenuFragment;
@@ -33,14 +24,12 @@ import com.example.proyectoappteam.fragmentos.NotificacionFragment;
 import com.example.proyectoappteam.fragmentos.PerfilFragment;
 import com.example.proyectoappteam.fragmentos.PublicarFragment;
 
-import com.example.proyectoappteam.clases.LocaleHelper;
-
 public class MenuPrincipalActivity extends AppCompatActivity implements Menu {
 
     private Fragment[] fragments;
     private MenuFragment menuFragment;
     private LinearLayout contenedorBotonesInferior;
-    private ImageButton lastSelectedButton=null;
+    private ImageButton lastSelectedButton = null;
     public static Usuario usuarioActivo;
 
     @Override
@@ -51,15 +40,13 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Menu {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_menu_principal);
 
-        // Aplicar márgenes del sistema
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        // Aplicar el tema
+        SharedPreferences prefs = getSharedPreferences("AppConfigPrefs", MODE_PRIVATE);
+        int tema = prefs.getInt("tema", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        AppCompatDelegate.setDefaultNightMode(tema);
+
+        setContentView(R.layout.activity_menu_principal);
 
         // Recuperar usuario desde el Intent y validar estructura
         Object recibido = getIntent().getSerializableExtra("usuario");
@@ -185,9 +172,6 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Menu {
     }
 
 
-
-
-
     @Override
     public void onClickMenu(int id) {
 
@@ -229,11 +213,11 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Menu {
 //                    contenedorBotonesInferior.setVisibility(View.GONE);
 //                }
 //            }else{
-                if(contenedorBotonesInferior != null){
-                    contenedorBotonesInferior.setVisibility(View.VISIBLE);
-                }
-                updateButtonSelection(id);
+            if (contenedorBotonesInferior != null) {
+                contenedorBotonesInferior.setVisibility(View.VISIBLE);
             }
+            updateButtonSelection(id);
+        }
         ft.commit();
     }
 }
