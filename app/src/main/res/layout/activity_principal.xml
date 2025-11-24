@@ -9,11 +9,22 @@
     <!-- Logo o ícono del aplicativo -->
     <ImageView
         android:id="@+id/logoApp"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:src="@drawable/logova1"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/isotipo"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="50dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ImageView
+        android:id="@+id/nombreApp"
+        android:layout_width="150dp"
+        android:layout_height="30dp"
+        android:src="@drawable/logo_letras"
+        app:tint="?android:textColorPrimary"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="150dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -29,7 +40,7 @@
         app:layout_constraintTop_toBottomOf="@id/logoApp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="50dp" />
 
     <!-- Campo: Usuario -->
     <EditText

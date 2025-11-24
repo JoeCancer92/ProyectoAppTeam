@@ -12,12 +12,23 @@
 
     <ImageView
         android:id="@+id/logoRecuperar"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_marginTop="32dp"
-        android:src="@drawable/logova1"
+        android:src="@drawable/isotipo"
         android:contentDescription="@string/icono_app"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ImageView
+        android:id="@+id/nombreApp"
+        android:layout_width="150dp"
+        android:layout_height="30dp"
+        android:src="@drawable/logo_letras"
+        app:tint="?android:textColorPrimary"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/logoRecuperar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -29,8 +40,8 @@
         android:textSize="20sp"
         android:textStyle="bold"
         android:textColor="?android:textColorPrimary"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/logoRecuperar"
+        android:layout_marginTop="24dp"
+        app:layout_constraintTop_toBottomOf="@id/nombreApp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
