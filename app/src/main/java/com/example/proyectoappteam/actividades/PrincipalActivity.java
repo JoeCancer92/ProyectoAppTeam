@@ -24,6 +24,7 @@ import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.persistence.DataQueryBuilder;
+import com.example.proyectoappteam.ProyectoAppTeam;
 import com.example.proyectoappteam.R;
 import com.example.proyectoappteam.clases.LocaleHelper;
 import com.example.proyectoappteam.clases.Seguridad;
@@ -50,7 +51,6 @@ public class PrincipalActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
 
-        // Aplicar el tema
         SharedPreferences prefs = getSharedPreferences("AppConfigPrefs", MODE_PRIVATE);
         int tema = prefs.getInt("tema", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
         AppCompatDelegate.setDefaultNightMode(tema);
@@ -86,11 +86,9 @@ public class PrincipalActivity extends AppCompatActivity {
                 return;
             }
 
-            // Usar Backendless.UserService.login() para iniciar sesión de forma segura
             Backendless.UserService.login(correo, clave, new AsyncCallback<BackendlessUser>() {
                 @Override
                 public void handleResponse(BackendlessUser user) {
-                    // El inicio de sesión fue exitoso.
                     Toast.makeText(PrincipalActivity.this, "Bienvenido", Toast.LENGTH_SHORT).show();
 
                     if (checkboxRecordarCuenta.isChecked()) {
@@ -99,13 +97,14 @@ public class PrincipalActivity extends AppCompatActivity {
                         prefs.edit().remove("correoRecordado").apply();
                     }
 
-                    // Lógica para sincronizar la contraseña hasheada en la tabla 'Usuario'
+                    // NUEVO: Iniciar el listener de notificaciones en tiempo real
+                    ((ProyectoAppTeam) getApplication()).iniciarListenerDeNotificaciones();
+
                     sincronizarContrasena(user, clave);
                 }
 
                 @Override
                 public void handleFault(BackendlessFault fault) {
-                    // La autenticación falló. El mensaje de error indica la causa.
                     Toast.makeText(PrincipalActivity.this, "Error de autenticación: " + fault.getMessage(), Toast.LENGTH_LONG).show();
                 }
             });
@@ -120,12 +119,6 @@ public class PrincipalActivity extends AppCompatActivity {
         });
     }
 
-    /**
-     * Sincroniza la contraseña hasheada del usuario en la tabla 'Usuario'
-     * después de un inicio de sesión exitoso.
-     * @param loggedInUser El objeto BackendlessUser del usuario que acaba de iniciar sesión.
-     * @param password La contraseña ingresada por el usuario (sin hashear).
-     */
     private void sincronizarContrasena(BackendlessUser loggedInUser, String password) {
         String whereClause = "ownerId = '" + loggedInUser.getObjectId() + "'";
         DataQueryBuilder queryBuilder = DataQueryBuilder.create();
@@ -137,52 +130,37 @@ public class PrincipalActivity extends AppCompatActivity {
                 if (!usuarioList.isEmpty()) {
                     Map<String, Object> usuarioData = usuarioList.get(0);
                     String claveUsuario = (String) usuarioData.get("clave");
-
-                    // Hashear la contraseña ingresada para comparar y guardar
                     String passwordHash = Seguridad.hashClave(password);
-                    Log.d(TAG, "Contraseña hasheada para sincronización: " + passwordHash);
 
-                    // Verificar si la contraseña en la base de datos es diferente al hash
                     if (!passwordHash.equals(claveUsuario)) {
-                        Log.d(TAG, "Contraseña desactualizada en la tabla Usuario. Actualizando...");
                         usuarioData.put("clave", passwordHash);
 
                         Backendless.Data.of("Usuario").save(usuarioData, new AsyncCallback<Map>() {
                             @Override
                             public void handleResponse(Map updatedUsuario) {
-                                Log.d(TAG, "Tabla Usuario actualizada correctamente.");
-                                // Redirigir a la siguiente actividad
                                 redirigirAMenuPrincipal();
                             }
 
                             @Override
                             public void handleFault(BackendlessFault fault) {
-                                Log.e(TAG, "Error al actualizar la tabla Usuario: " + fault.getMessage());
-                                // Aún si falla la actualización, permitimos el acceso
                                 redirigirAMenuPrincipal();
                             }
                         });
                     } else {
-                        Log.d(TAG, "Contraseña de Usuario ya actualizada o no hay cambios.");
                         redirigirAMenuPrincipal();
                     }
                 } else {
-                    Log.e(TAG, "No se encontraron datos de usuario en la tabla Usuario.");
                     redirigirAMenuPrincipal();
                 }
             }
 
             @Override
             public void handleFault(BackendlessFault fault) {
-                Log.e(TAG, "Error al buscar datos de usuario: " + fault.getMessage());
                 redirigirAMenuPrincipal();
             }
         });
     }
 
-    /**
-     * Redirige al usuario a la actividad del menú principal y finaliza la actividad actual.
-     */
     private void redirigirAMenuPrincipal() {
         Intent intent = new Intent(PrincipalActivity.this, MenuPrincipalActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

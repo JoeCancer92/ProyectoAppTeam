@@ -21,13 +21,14 @@ import com.backendless.Backendless;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.persistence.DataQueryBuilder;
+// CORRECCIÓN DEFINITIVA: Se importa la clase EventHandler desde el paquete correcto 'rt.data'.
+import com.backendless.rt.data.EventHandler;
 import com.example.proyectoappteam.R;
 import com.example.proyectoappteam.clases.NotificacionAdapter;
 import com.example.proyectoappteam.clases.Notificaciones;
 import com.example.proyectoappteam.actividades.DetallePublicacionActivity;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class NotificacionFragment extends Fragment {
@@ -36,21 +37,19 @@ public class NotificacionFragment extends Fragment {
 
     private RecyclerView rvNotificaciones;
     private TextView tvVacio;
-    // Vistas añadidas para la funcionalidad de refresco
     private ImageButton btnRefresh;
     private ProgressBar pbLoading;
 
     private NotificacionAdapter adapter;
     private final List<Notificaciones> listaNotificaciones = new ArrayList<>();
 
-    // paginación
     private static final int PAGE_SIZE = 50;
     private int offset = 0;
     private boolean loading = false;
     private boolean noMore = false;
-
-    // listener para paginar; lo guardamos para removerlo en onDestroyView
     private RecyclerView.OnScrollListener scrollListener;
+
+    private EventHandler<Notificaciones> rtListenerHandler;
 
     @Nullable
     @Override
@@ -60,25 +59,17 @@ public class NotificacionFragment extends Fragment {
 
         rvNotificaciones = view.findViewById(R.id.rv_notificaciones);
         tvVacio = view.findViewById(R.id.tv_notificaciones_vacio);
-        // Inicializar nuevas vistas
         btnRefresh = view.findViewById(R.id.btn_refresh);
         pbLoading = view.findViewById(R.id.pb_loading);
 
-
-        // Configuración de Listener para el botón de refresco
         btnRefresh.setOnClickListener(v -> refrescar());
 
         configurarRecyclerView();
         cargarNotificaciones(true);
 
-        return view;
-    }
+        suscribirANotificacionesEnTiempoReal();
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        // Si quieres refrescar siempre al volver, descomenta:
-        // refrescar();
+        return view;
     }
 
     @Override
@@ -87,7 +78,12 @@ public class NotificacionFragment extends Fragment {
         if (rvNotificaciones != null && scrollListener != null) {
             rvNotificaciones.removeOnScrollListener(scrollListener);
         }
-        // Limpiamos las referencias para evitar fugas de memoria
+
+        if (rtListenerHandler != null) {
+            // CORRECCIÓN: El método correcto para esta clase es 'removeCreateListeners'.
+            rtListenerHandler.removeCreateListeners();
+        }
+
         btnRefresh = null;
         pbLoading = null;
         rvNotificaciones = null;
@@ -96,9 +92,7 @@ public class NotificacionFragment extends Fragment {
         scrollListener = null;
     }
 
-    /** Llamable desde afuera o por el botón para forzar un refresh */
     public void refrescar() {
-        // Muestra el indicador de carga en el encabezado
         if (pbLoading != null && btnRefresh != null) {
             pbLoading.setVisibility(View.VISIBLE);
             btnRefresh.setVisibility(View.GONE);
@@ -108,7 +102,6 @@ public class NotificacionFragment extends Fragment {
 
     private void configurarRecyclerView() {
         adapter = new NotificacionAdapter(requireContext(), listaNotificaciones, n -> {
-            // Al pulsar: marcar como leída (si no lo está) y abrir detalle
             if (Boolean.TRUE.equals(n.getLeida())) {
                 abrirDetalle(n);
                 return;
@@ -118,7 +111,6 @@ public class NotificacionFragment extends Fragment {
                 @Override public void handleResponse(Notificaciones actualizado) {
                     adapter.updateItem(actualizado);
                     abrirDetalle(actualizado);
-                    // TIP: aquí puedes disparar la actualización de badge en tu Activity si la tienes
                 }
                 @Override public void handleFault(BackendlessFault fault) {
                     Log.e(TAG, "No se pudo marcar como leída: " + fault.getMessage());
@@ -148,39 +140,27 @@ public class NotificacionFragment extends Fragment {
         if (Backendless.UserService.CurrentUser() == null) {
             Log.e(TAG, "Usuario no autenticado. No se pueden cargar notificaciones.");
             validarListaVacia();
-            // Asegurarse de ocultar el ProgressBar si falla
             onCargaFinalizada();
             return;
         }
         if (loading) return;
         loading = true;
-        // Solo mostrar el ProgressBar al inicio de una carga completa (por refresh)
         if (reset) {
-            // Se hace la gestión del ProgressBar en refrescar()
             listaNotificaciones.clear();
             adapter.notifyDataSetChanged();
             offset = 0;
             noMore = false;
         }
 
-
         String userId = Backendless.UserService.CurrentUser().getObjectId();
         String whereClause = "userReceptor.objectId = '" + userId + "'";
 
         DataQueryBuilder qb = DataQueryBuilder.create();
         qb.setWhereClause(whereClause);
-
-        // RELACIONES (nombres EXACTOS de la tabla)
         qb.setRelated(new String[]{"publicacionId", "usuarioEmisorId"});
-        // Algunos SDK requieren profundidad de relaciones explícita
         qb.setRelationsDepth(1);
+        qb.setSortBy("timestamposimulado DESC");
 
-        // Orden preferido por timestamp simulado
-        qb.setSortBy(Collections.singletonList("timestamposimulado DESC"));
-        // Si tuvieras registros viejos sin timestamposimulado y quisieras usar created, cambia a:
-        // qb.setSortBy(Collections.singletonList("created DESC"));
-
-        // paginación
         qb.setPageSize(PAGE_SIZE);
         qb.setOffset(offset);
 
@@ -188,7 +168,6 @@ public class NotificacionFragment extends Fragment {
             @Override
             public void handleResponse(List<Notificaciones> found) {
                 loading = false;
-
                 if (found != null && !found.isEmpty()) {
                     int oldSize = listaNotificaciones.size();
                     listaNotificaciones.addAll(found);
@@ -198,10 +177,8 @@ public class NotificacionFragment extends Fragment {
                 } else {
                     noMore = true;
                 }
-
                 validarListaVacia();
                 onCargaFinalizada();
-                Log.i(TAG, "Notificaciones cargadas: " + (found != null ? found.size() : 0));
             }
 
             @Override
@@ -209,14 +186,74 @@ public class NotificacionFragment extends Fragment {
                 loading = false;
                 Log.e(TAG, "Error al cargar notificaciones: " + fault.getMessage());
                 if (isAdded()) Toast.makeText(requireContext(), "Error al cargar notificaciones", Toast.LENGTH_SHORT).show();
-
                 validarListaVacia();
                 onCargaFinalizada();
             }
         });
     }
 
-    /** Gestiona la visibilidad del ProgressBar y el botón de Refresh al finalizar la carga. */
+    private void suscribirANotificacionesEnTiempoReal() {
+        String userId = Backendless.UserService.CurrentUser() != null ? Backendless.UserService.CurrentUser().getObjectId() : null;
+        if (userId == null) {
+            Log.e(TAG, "No se puede suscribir a tiempo real: usuario no logueado.");
+            return;
+        }
+
+        rtListenerHandler = Backendless.Data.of(Notificaciones.class).rt();
+
+        AsyncCallback<Notificaciones> createListener = new AsyncCallback<Notificaciones>() {
+            @Override
+            public void handleResponse(Notificaciones nuevaNotificacion) {
+                if (getActivity() != null) {
+                    // Filtramos en el cliente para asegurarnos que la notificación es para nosotros
+                    String currentUserId = Backendless.UserService.CurrentUser().getObjectId();
+                    if (nuevaNotificacion.getUserReceptor() != null && currentUserId.equals(nuevaNotificacion.getUserReceptor().getObjectId())) {
+                        getActivity().runOnUiThread(() -> {
+                            if (!isAdded()) return;
+                            recargarNotificacionYAnadir(nuevaNotificacion.getObjectId());
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void handleFault(BackendlessFault fault) {
+                Log.e(TAG, "Error en listener de tiempo real (create): " + fault.getMessage());
+            }
+        };
+
+        // CORRECCIÓN: Se usa el método addCreateListener, que es el correcto.
+        String whereClause = "userReceptor.objectId = '" + userId + "'";
+        rtListenerHandler.addCreateListener(whereClause, createListener);
+
+        Log.i(TAG, "Suscrito a notificaciones en tiempo real.");
+    }
+
+    private void recargarNotificacionYAnadir(String notificacionId) {
+        DataQueryBuilder queryBuilder = DataQueryBuilder.create();
+        queryBuilder.addRelated("publicacionId");
+        queryBuilder.addRelated("usuarioEmisorId");
+
+        Backendless.Data.of(Notificaciones.class).findById(notificacionId, queryBuilder, new AsyncCallback<Notificaciones>() {
+            @Override
+            public void handleResponse(Notificaciones notificacionCompleta) {
+                if (isAdded() && adapter != null && rvNotificaciones != null && notificacionCompleta != null) {
+                    listaNotificaciones.add(0, notificacionCompleta);
+                    adapter.notifyItemInserted(0);
+                    rvNotificaciones.scrollToPosition(0);
+                    validarListaVacia();
+
+                    Toast.makeText(getContext(), "¡Tienes una nueva notificación!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void handleFault(BackendlessFault fault) {
+                Log.e(TAG, "Error al recargar la notificación en tiempo real para obtener sus detalles: " + fault.getMessage());
+            }
+        });
+    }
+
     private void onCargaFinalizada() {
         if (pbLoading != null && btnRefresh != null) {
             pbLoading.setVisibility(View.GONE);
@@ -226,28 +263,17 @@ public class NotificacionFragment extends Fragment {
 
     private void validarListaVacia() {
         boolean vacia = listaNotificaciones.isEmpty();
-        // Null checks for safety, though onCreateView should ensure they aren't null
         if (tvVacio != null) tvVacio.setVisibility(vacia ? View.VISIBLE : View.GONE);
         if (rvNotificaciones != null) rvNotificaciones.setVisibility(vacia ? View.GONE : View.VISIBLE);
     }
 
     private void abrirDetalle(Notificaciones n) {
-        // Verificar si la notificación tiene relación con una publicación
         if (n.getPublicacionId() != null && n.getPublicacionId().getObjectId() != null) {
-
-            // Crear Intent para abrir la actividad de detalle
             Intent i = new Intent(requireContext(), DetallePublicacionActivity.class);
-
-            // Pasar el ID de la publicación
             i.putExtra("PUBLICACION_ID", n.getPublicacionId().getObjectId());
-
             startActivity(i);
-
         } else {
-            // Mostrar mensaje si la publicación ya no existe
-            Toast.makeText(requireContext(),
-                    "La publicación ya no está disponible.",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "La publicación ya no está disponible.", Toast.LENGTH_SHORT).show();
         }
     }
 }
