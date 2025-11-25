@@ -51,6 +51,8 @@ dependencies {
 
     // Backendless
     implementation("com.backendless:backendless:6.2.0")
+    // NUEVO: Dependencia requerida para la funcionalidad de tiempo real de Backendless
+    implementation("io.socket:socket.io-client:2.0.0")
 
     // Google Maps & Location
     implementation("com.google.android.gms:play-services-maps:18.2.0")
