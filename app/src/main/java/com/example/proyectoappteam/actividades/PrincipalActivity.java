@@ -97,8 +97,9 @@ public class PrincipalActivity extends AppCompatActivity {
                         prefs.edit().remove("correoRecordado").apply();
                     }
 
-                    // NUEVO: Iniciar el listener de notificaciones en tiempo real
-                    ((ProyectoAppTeam) getApplication()).iniciarListenerDeNotificaciones();
+                    // --- CORRECCIÓN ---
+                    // El nombre correcto del metodo es iniciarListenersDeActividad()
+                    ((ProyectoAppTeam) getApplication()).iniciarListenersDeActividad();
 
                     sincronizarContrasena(user, clave);
                 }

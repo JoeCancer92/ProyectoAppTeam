@@ -29,6 +29,8 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.backendless.Backendless;
 import com.backendless.BackendlessUser;
@@ -38,6 +40,7 @@ import com.backendless.files.BackendlessFile;
 import com.backendless.persistence.DataQueryBuilder;
 import com.example.proyectoappteam.actividades.MapsActivity;
 import com.example.proyectoappteam.R;
+import com.example.proyectoappteam.clases.Menu;
 import com.example.proyectoappteam.clases.Publicaciones;
 
 import java.io.File;
@@ -68,12 +71,10 @@ public class PublicarFragment extends Fragment {
     private String selectedAddressName;
     private Uri currentPhotoUri;
 
-    // Variable persistente para categoría
     private String categoriaSeleccionada = "";
 
     private static final String TAG = "PublicarFragment";
 
-    // Launcher para mapa
     private final ActivityResultLauncher<Intent> mapActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -92,7 +93,6 @@ public class PublicarFragment extends Fragment {
                 }
             });
 
-    // Cámara
     private final ActivityResultLauncher<Uri> takePictureLauncher = registerForActivityResult(
             new ActivityResultContracts.TakePicture(),
             result -> {
@@ -106,7 +106,6 @@ public class PublicarFragment extends Fragment {
                 }
             });
 
-    // Galería
     private final ActivityResultLauncher<Intent> galleryLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -126,7 +125,6 @@ public class PublicarFragment extends Fragment {
                 }
             });
 
-    // Permiso cámara
     private final ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(),
             isGranted -> {
@@ -156,25 +154,21 @@ public class PublicarFragment extends Fragment {
         btnAgregarFotos = view.findViewById(R.id.btnAgregarFotos);
         tipsLayout = view.findViewById(R.id.tips_layout);
 
-        //  Inicializar categoría por defecto con el texto del RadioButton
         RadioButton rbDefault = view.findViewById(R.id.rbReportes);
         if (rbDefault != null) {
             rbDefault.setChecked(true);
             categoriaSeleccionada = rbDefault.getText().toString();
-            Log.d(TAG, "Categoria inicial asignada: " + categoriaSeleccionada);
         }
 
         cargarDatosUsuario();
         cargarConsejos();
 
-        // Listener de categorías
         if (rgCategoria != null) {
             rgCategoria.setOnCheckedChangeListener((group, checkedId) -> {
                 if (checkedId != -1) {
                     View selectedRadioButton = group.findViewById(checkedId);
                     if (selectedRadioButton instanceof RadioButton) {
                         categoriaSeleccionada = ((RadioButton) selectedRadioButton).getText().toString();
-                        Log.d(TAG, "Categoria seleccionada en tiempo real: " + categoriaSeleccionada);
                     }
                 } else {
                     categoriaSeleccionada = "";
@@ -232,7 +226,6 @@ public class PublicarFragment extends Fragment {
         try {
             photoFile = createImageFile();
         } catch (IOException ex) {
-            Log.e(TAG, "Error al crear el archivo de la imagen: " + ex.getMessage());
             Toast.makeText(getContext(), "Error al crear el archivo para la foto.", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -268,13 +261,10 @@ public class PublicarFragment extends Fragment {
                     String apellidos = (String) currentUser.getProperty("apellidos");
                     tvUsuario.setText(String.format("Bienvenido, %s %s", nombre, apellidos));
                 }
-            } else {
-                if (tvUsuario != null) {
-                    tvUsuario.setText("Usuario no autenticado");
-                }
+            } else if (tvUsuario != null) {
+                tvUsuario.setText("Usuario no autenticado");
             }
         } catch (Exception e) {
-            Log.e(TAG, "Error al cargar datos del usuario: " + e.getMessage(), e);
             if (tvUsuario != null) {
                 tvUsuario.setText("Error al cargar usuario");
             }
@@ -283,9 +273,7 @@ public class PublicarFragment extends Fragment {
 
     private void cargarConsejos() {
         if (tipsLayout == null) return;
-
         tipsLayout.removeAllViews();
-
         DataQueryBuilder queryBuilder = DataQueryBuilder.create();
         queryBuilder.setSortBy("orden");
 
@@ -293,7 +281,6 @@ public class PublicarFragment extends Fragment {
             @Override
             public void handleResponse(List<Map> consejosData) {
                 if (tipsLayout == null) return;
-
                 if (consejosData != null && !consejosData.isEmpty()) {
                     for (Map consejoMap : consejosData) {
                         TextView tvConsejo = new TextView(getContext());
@@ -307,7 +294,7 @@ public class PublicarFragment extends Fragment {
                     }
                 } else {
                     TextView tvNoConsejos = new TextView(getContext());
-                    tvNoConsejos.setText("No hay consejos disponibles en este momento.");
+                    tvNoConsejos.setText("No hay consejos disponibles.");
                     tvNoConsejos.setTextColor(ContextCompat.getColor(getContext(), android.R.color.white));
                     tipsLayout.addView(tvNoConsejos);
                 }
@@ -320,14 +307,12 @@ public class PublicarFragment extends Fragment {
                 tvError.setText("Error al cargar consejos: " + fault.getMessage());
                 tvError.setTextColor(ContextCompat.getColor(getContext(), android.R.color.white));
                 tipsLayout.addView(tvError);
-                Log.e(TAG, "Error loading tips: " + fault.getMessage());
             }
         });
     }
 
     private void publicarInformacion() {
         if (etDescripcion == null || switchUrgente == null) {
-            Toast.makeText(getContext(), "Error: No se pueden obtener los elementos de la UI.", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -363,8 +348,6 @@ public class PublicarFragment extends Fragment {
 
                     @Override
                     public void handleFault(BackendlessFault fault) {
-                        Log.e(TAG, "Error al subir la foto: " + fault.getMessage());
-                        Toast.makeText(getContext(), "Error al subir una de las fotos: " + fault.getMessage(), Toast.LENGTH_LONG).show();
                         btnPublicar.setEnabled(true);
                     }
                 });
@@ -397,7 +380,6 @@ public class PublicarFragment extends Fragment {
             });
 
         } catch (IOException e) {
-            Log.e(TAG, "Error al leer el archivo desde la URI: " + e.getMessage());
             callback.handleFault(new BackendlessFault("Error de I/O: " + e.getMessage()));
         }
     }
@@ -451,6 +433,17 @@ public class PublicarFragment extends Fragment {
                 Toast.makeText(getContext(), "Publicación guardada exitosamente.", Toast.LENGTH_SHORT).show();
                 limpiarCampos();
                 btnPublicar.setEnabled(true);
+
+                // --- MEJORA: Enviar señal local y navegar al inicio ---
+                if (getContext() != null) {
+                    Intent intent = new Intent(InicioFragment.ACTION_NUEVA_PUBLICACION);
+                    LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
+                }
+
+                FragmentActivity activity = getActivity();
+                if (activity instanceof Menu) {
+                    ((Menu) activity).onClickMenu(1); // 1 es el ID del fragmento de inicio
+                }
             }
 
             @Override
@@ -472,7 +465,6 @@ public class PublicarFragment extends Fragment {
         selectedLongitud = 0.0;
         selectedAddressName = null;
 
-        //  Re-seleccionamos la categoría por defecto
         RadioButton rbDefault = requireView().findViewById(R.id.rbReportes);
         if (rbDefault != null) {
             rbDefault.setChecked(true);

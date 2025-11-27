@@ -26,7 +26,7 @@ import com.example.proyectoappteam.clases.Usuario;
 import com.example.proyectoappteam.fragmentos.ConfigFragment;
 import com.example.proyectoappteam.fragmentos.InicioFragment;
 import com.example.proyectoappteam.fragmentos.MenuFragment;
-import com.example.proyectoappteam.fragmentos.NotificacionFragment;
+import com.example.proyectoappteam.fragmentos.NotificacionFragment; // CORREGIDO: Import en singular
 import com.example.proyectoappteam.fragmentos.PerfilFragment;
 import com.example.proyectoappteam.fragmentos.PublicarFragment;
 
@@ -38,7 +38,6 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Menu {
     private ImageButton lastSelectedButton = null;
     public static Usuario usuarioActivo;
 
-    // NUEVO: Referencia al punto rojo
     private ImageView notificacionBadge;
     private BroadcastReceiver notificacionReceiver;
 
@@ -60,12 +59,12 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Menu {
         Object recibido = getIntent().getSerializableExtra("usuario");
         if (recibido instanceof Usuario) {
             usuarioActivo = (Usuario) recibido;
+            ((ProyectoAppTeam) getApplication()).iniciarListenersDeActividad();
         } else {
             usuarioActivo = null;
         }
 
         contenedorBotonesInferior = findViewById(R.id.contenedorBotonesInferior);
-        // NUEVO: Obtener referencia al badge
         notificacionBadge = findViewById(R.id.badge_notificacion);
 
         FragmentManager fm = getSupportFragmentManager();
@@ -77,7 +76,7 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Menu {
                 new PerfilFragment(),
                 new InicioFragment(),
                 new PublicarFragment(),
-                new NotificacionFragment(),
+                new NotificacionFragment(), // CORREGIDO: Instancia en singular
                 new ConfigFragment()
         };
 
@@ -94,26 +93,24 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Menu {
         configurarBotonLateral(R.id.lateralBtnNotificaciones, 3);
         configurarBotonLateral(R.id.lateralBtnConfig, 4);
 
-        // NUEVO: Configurar el receptor de notificaciones
         configurarReceptorDeNotificaciones();
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
         LocalBroadcastManager.getInstance(this).registerReceiver(notificacionReceiver, new IntentFilter(ProyectoAppTeam.ACTION_NUEVA_NOTIFICACION));
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onStop() {
+        super.onStop();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(notificacionReceiver);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // Detener el listener de notificaciones al destruir la actividad principal
         ((ProyectoAppTeam) getApplication()).detenerListenerDeNotificaciones();
     }
 
@@ -122,7 +119,6 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Menu {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (ProyectoAppTeam.ACTION_NUEVA_NOTIFICACION.equals(intent.getAction())) {
-                    // Al recibir la señal, mostrar el badge
                     if (notificacionBadge != null) {
                         notificacionBadge.setVisibility(View.VISIBLE);
                     }
@@ -183,8 +179,8 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Menu {
                 return;
             }
 
-            // NUEVO: Si se hace clic en notificaciones (id=3), ocultar el badge
-            if (id == 3 && notificacionBadge != null) {
+            // --- CORRECCIÓN FINAL: usar el índice correcto ---
+            if (id == 3 && notificacionBadge != null) { // el id 3 corresponde a NotificacionFragment
                 notificacionBadge.setVisibility(View.GONE);
             }
 
