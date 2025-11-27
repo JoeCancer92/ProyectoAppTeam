@@ -16,8 +16,8 @@ public class ProyectoAppTeam extends Application {
         // Inicializa Backendless una sola vez aquí
         Backendless.initApp(
                 this,
-                "FF8096CC-3E75-470C-BA38-0B499C3562F5", // Application ID
-                "4EE0AA48-E31D-40E1-8F01-1D147B8699DE"  // Android API Key
+                "57CD6FCB-C7DB-4D73-B0D2-B515A0479C81", // Application ID
+                "EDDA0ED9-002B-4284-B549-CC7A1919DFB7"  // Android API Key
         );
 
         Backendless.Data.mapTableToClass("calificaciones", Calificaciones.class);
