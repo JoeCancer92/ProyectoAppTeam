@@ -7,22 +7,26 @@ import android.util.Log;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.backendless.Backendless;
+import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.rt.data.EventHandler;
 import com.example.proyectoappteam.clases.Calificaciones;
 import com.example.proyectoappteam.clases.Comentarios;
-import com.example.proyectoappteam.clases.Notificaciones;
 import com.example.proyectoappteam.clases.Publicaciones;
 
 public class ProyectoAppTeam extends Application {
 
     private static final String TAG = "ProyectoAppTeam";
-    // Acción para la comunicación interna entre el listener y la Activity
+    
+    // --- Constantes de Acciones para Broadcasts ---
     public static final String ACTION_NUEVA_NOTIFICACION = "com.example.proyectoappteam.NUEVA_NOTIFICACION";
+    public static final String ACTION_RECARGAR_FEED = "com.example.proyectoappteam.RECARGAR_FEED";
 
-    // Guardamos el handler para poder removerlo al cerrar sesión
-    private EventHandler<Notificaciones> rtListenerHandler;
+    private EventHandler<Comentarios> comentariosListenerHandler;
+    private EventHandler<Calificaciones> calificacionesListenerHandler;
+
+    private boolean hayNotificacionesNuevas = false;
 
     @Override
     public void onCreate() {
@@ -30,66 +34,77 @@ public class ProyectoAppTeam extends Application {
 
         Backendless.initApp(
                 this,
-                "2906A990-ECAF-493D-9F00-E932ADACD43B", // Application ID
-                "85E30BE6-D555-4E5D-AF57-DCA6C06FF3A5"  // Android API Key
+                "FF8096CC-3E75-470C-BA38-0B499C3562F5", // Application ID
+                "4EE0AA48-E31D-40E1-8F01-1D147B8699DE"  // Android API Key
         );
 
         Backendless.Data.mapTableToClass("calificaciones", Calificaciones.class);
         Backendless.Data.mapTableToClass("comentarios",    Comentarios.class);
         Backendless.Data.mapTableToClass("publicaciones",  Publicaciones.class);
-        Backendless.Data.mapTableToClass("Notificaciones", Notificaciones.class);
     }
 
-    /**
-     * Inicia el listener de notificaciones en tiempo real para el usuario logueado.
-     * Debe llamarse después de un login exitoso.
-     */
-    public void iniciarListenerDeNotificaciones() {
-        String userId = Backendless.UserService.CurrentUser() != null ? Backendless.UserService.CurrentUser().getObjectId() : null;
-        if (userId == null) {
-            Log.e(TAG, "No se puede iniciar el listener: usuario no logueado.");
-            return;
-        }
+    public void iniciarListenersDeActividad() {
+        BackendlessUser currentUser = Backendless.UserService.CurrentUser();
+        if (currentUser == null) return;
 
-        // Si ya existe un listener, lo detenemos primero para evitar duplicados
-        if (rtListenerHandler != null) {
-            detenerListenerDeNotificaciones();
-        }
+        detenerListenerDeNotificaciones();
 
-        rtListenerHandler = Backendless.Data.of(Notificaciones.class).rt();
+        String userId = currentUser.getObjectId();
 
-        AsyncCallback<Notificaciones> createListener = new AsyncCallback<Notificaciones>() {
+        comentariosListenerHandler = Backendless.Data.of(Comentarios.class).rt();
+        String whereClauseComentarios = "publicacion.ownerId = '" + userId + "' AND ownerId != '" + userId + "'";
+        
+        AsyncCallback<Comentarios> comentarioCallback = new AsyncCallback<Comentarios>() {
             @Override
-            public void handleResponse(Notificaciones nuevaNotificacion) {
-                Log.i(TAG, "¡Nueva notificación recibida en tiempo real!");
-
-                // Enviamos una "señal" a cualquier parte de la app que esté escuchando
-                Intent intent = new Intent(ACTION_NUEVA_NOTIFICACION);
-                LocalBroadcastManager.getInstance(ProyectoAppTeam.this).sendBroadcast(intent);
+            public void handleResponse(Comentarios nuevoComentario) {
+                hayNotificacionesNuevas = true;
+                enviarNotificacionBroadcast();
             }
-
             @Override
             public void handleFault(BackendlessFault fault) {
-                Log.e(TAG, "Error en el listener de notificaciones: " + fault.getMessage());
+                Log.e(TAG, "Error en listener de comentarios: " + fault.getMessage());
             }
         };
+        comentariosListenerHandler.addCreateListener(whereClauseComentarios, comentarioCallback);
 
-        // Condición: solo escuchar notificaciones creadas para el usuario actual.
-        String whereClause = "userReceptor.objectId = '" + userId + "'";
-        rtListenerHandler.addCreateListener(whereClause, createListener);
-
-        Log.i(TAG, "Listener de notificaciones en tiempo real INICIADO para el usuario: " + userId);
+        calificacionesListenerHandler = Backendless.Data.of(Calificaciones.class).rt();
+        String whereClauseCalificaciones = "publicacion.ownerId = '" + userId + "' AND ownerId != '" + userId + "'";
+        
+        AsyncCallback<Calificaciones> calificacionCallback = new AsyncCallback<Calificaciones>() {
+            @Override
+            public void handleResponse(Calificaciones nuevaCalificacion) {
+                hayNotificacionesNuevas = true;
+                enviarNotificacionBroadcast();
+            }
+            @Override
+            public void handleFault(BackendlessFault fault) {
+                Log.e(TAG, "Error en listener de calificaciones: " + fault.getMessage());
+            }
+        };
+        calificacionesListenerHandler.addCreateListener(whereClauseCalificaciones, calificacionCallback);
     }
 
-    /**
-     * Detiene el listener de notificaciones en tiempo real.
-     * Debe llamarse al cerrar sesión para liberar recursos.
-     */
     public void detenerListenerDeNotificaciones() {
-        if (rtListenerHandler != null) {
-            rtListenerHandler.removeCreateListeners();
-            rtListenerHandler = null;
-            Log.i(TAG, "Listener de notificaciones en tiempo real DETENIDO.");
+        if (comentariosListenerHandler != null) {
+            comentariosListenerHandler.removeCreateListeners();
+            comentariosListenerHandler = null;
         }
+        if (calificacionesListenerHandler != null) {
+            calificacionesListenerHandler.removeCreateListeners();
+            calificacionesListenerHandler = null;
+        }
+    }
+
+    private void enviarNotificacionBroadcast() {
+        Intent intent = new Intent(ACTION_NUEVA_NOTIFICACION);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+    }
+
+    public boolean hayNotificacionesNuevas() {
+        return hayNotificacionesNuevas;
+    }
+
+    public void setHayNotificacionesNuevas(boolean hayNotificacionesNuevas) {
+        this.hayNotificacionesNuevas = hayNotificacionesNuevas;
     }
 }

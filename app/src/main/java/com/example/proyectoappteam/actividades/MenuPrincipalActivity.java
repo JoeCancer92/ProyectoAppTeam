@@ -38,7 +38,6 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Menu {
     private ImageButton lastSelectedButton = null;
     public static Usuario usuarioActivo;
 
-    // NUEVO: Referencia al punto rojo
     private ImageView notificacionBadge;
     private BroadcastReceiver notificacionReceiver;
 
@@ -60,12 +59,12 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Menu {
         Object recibido = getIntent().getSerializableExtra("usuario");
         if (recibido instanceof Usuario) {
             usuarioActivo = (Usuario) recibido;
+            ((ProyectoAppTeam) getApplication()).iniciarListenersDeActividad();
         } else {
             usuarioActivo = null;
         }
 
         contenedorBotonesInferior = findViewById(R.id.contenedorBotonesInferior);
-        // NUEVO: Obtener referencia al badge
         notificacionBadge = findViewById(R.id.badge_notificacion);
 
         FragmentManager fm = getSupportFragmentManager();
@@ -94,26 +93,31 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Menu {
         configurarBotonLateral(R.id.lateralBtnNotificaciones, 3);
         configurarBotonLateral(R.id.lateralBtnConfig, 4);
 
-        // NUEVO: Configurar el receptor de notificaciones
         configurarReceptorDeNotificaciones();
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
+        // 1. Registrar el listener para futuras notificaciones
         LocalBroadcastManager.getInstance(this).registerReceiver(notificacionReceiver, new IntentFilter(ProyectoAppTeam.ACTION_NUEVA_NOTIFICACION));
+
+        // 2. Comprobar si ya hay una notificación que llegó "demasiado pronto"
+        ProyectoAppTeam app = (ProyectoAppTeam) getApplication();
+        if (app.hayNotificacionesNuevas()) {
+            mostrarAlertaNotificacion();
+        }
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onStop() {
+        super.onStop();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(notificacionReceiver);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // Detener el listener de notificaciones al destruir la actividad principal
         ((ProyectoAppTeam) getApplication()).detenerListenerDeNotificaciones();
     }
 
@@ -122,13 +126,24 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Menu {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (ProyectoAppTeam.ACTION_NUEVA_NOTIFICACION.equals(intent.getAction())) {
-                    // Al recibir la señal, mostrar el badge
-                    if (notificacionBadge != null) {
-                        notificacionBadge.setVisibility(View.VISIBLE);
-                    }
+                    mostrarAlertaNotificacion();
                 }
             }
         };
+    }
+
+    private void mostrarAlertaNotificacion() {
+        if (notificacionBadge != null) {
+            notificacionBadge.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void ocultarAlertaNotificacion() {
+        if (notificacionBadge != null) {
+            notificacionBadge.setVisibility(View.GONE);
+        }
+        // Reseteamos la bandera global
+        ((ProyectoAppTeam) getApplication()).setHayNotificacionesNuevas(false);
     }
 
     private void configurarBotonLateral(int idBoton, int idFragmento) {
@@ -183,9 +198,8 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Menu {
                 return;
             }
 
-            // NUEVO: Si se hace clic en notificaciones (id=3), ocultar el badge
-            if (id == 3 && notificacionBadge != null) {
-                notificacionBadge.setVisibility(View.GONE);
+            if (id == 3) { // El ID 3 corresponde a NotificacionFragment
+                ocultarAlertaNotificacion();
             }
 
             Fragment target = fragments[id];

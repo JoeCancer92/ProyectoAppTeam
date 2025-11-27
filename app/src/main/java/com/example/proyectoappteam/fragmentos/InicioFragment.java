@@ -35,6 +35,7 @@ public class InicioFragment extends Fragment
     private List<Publicaciones> publicacionesList;
     private ProgressBar progressBar;
 
+    // Listener de Backendless para tiempo real
     private EventHandler<Publicaciones> rtListenerHandler;
 
     private static final String TAG = "InicioFragment";
@@ -58,51 +59,66 @@ public class InicioFragment extends Fragment
         adapter = new PublicacionAdapter(publicacionesList, fragmentManager, this);
         recyclerView.setAdapter(adapter);
 
-        suscribirAPublicacionesEnTiempoReal();
-
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        // Cargamos los datos iniciales y luego nos suscribimos a los cambios.
+        cargarPublicacionesDesdeBackendless();
+        suscribirAPublicacionesEnTiempoReal();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Refrescar al volver a la pantalla es una buena práctica por si algo cambió offline
+        cargarPublicacionesDesdeBackendless();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        // MUY IMPORTANTE: Desuscribirse para evitar fugas de memoria
         if (rtListenerHandler != null) {
-            // CORRECCIÓN: Usar el método correcto para la versión del SDK
             rtListenerHandler.removeCreateListeners();
         }
     }
 
     @Override
     public void onCalificacionEnviada() {
-        Log.d(TAG, "Calificación enviada, refrescando publicaciones.");
-        refreshPosts();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        cargarPublicacionesDesdeBackendless();
-    }
-
-    public void refreshPosts() {
+        // Cuando se envía una calificación, refrescamos por si cambió el promedio
         cargarPublicacionesDesdeBackendless();
     }
 
     private void suscribirAPublicacionesEnTiempoReal() {
+        if (rtListenerHandler != null) return; // Ya estamos suscritos
+
         rtListenerHandler = Backendless.Data.of(Publicaciones.class).rt();
 
         AsyncCallback<Publicaciones> createListener = new AsyncCallback<Publicaciones>() {
             @Override
             public void handleResponse(Publicaciones nuevaPublicacion) {
-                if (getActivity() != null) {
+                // Nos aseguramos de estar en el hilo de la UI y que el fragmento esté vivo
+                if (getActivity() != null && isAdded()) {
                     getActivity().runOnUiThread(() -> {
-                        if (!isAdded() || adapter == null || recyclerView == null) return;
+                        Log.i(TAG, "Nueva publicación recibida en tiempo real: " + nuevaPublicacion.getObjectId());
+                        // Verificamos si la publicación ya existe en la lista para evitar duplicados
+                        boolean yaExiste = false;
+                        for (Publicaciones p : publicacionesList) {
+                            if (p.getObjectId().equals(nuevaPublicacion.getObjectId())) {
+                                yaExiste = true;
+                                break;
+                            }
+                        }
 
-                        publicacionesList.add(0, nuevaPublicacion);
-                        adapter.notifyItemInserted(0);
-                        recyclerView.scrollToPosition(0);
-
-                        Toast.makeText(getContext(), "Nueva publicación recibida", Toast.LENGTH_SHORT).show();
+                        if (!yaExiste) {
+                            publicacionesList.add(0, nuevaPublicacion); // Añadir al principio
+                            adapter.notifyItemInserted(0);
+                            recyclerView.scrollToPosition(0);
+                            Toast.makeText(getContext(), "Hay una nueva publicación", Toast.LENGTH_SHORT).show();
+                        }
                     });
                 }
             }
@@ -113,9 +129,8 @@ public class InicioFragment extends Fragment
             }
         };
 
-        // CORRECCIÓN: Usar el método correcto para la versión del SDK
         rtListenerHandler.addCreateListener(createListener);
-        Log.i(TAG, "Suscrito a publicaciones en tiempo real.");
+        Log.i(TAG, "Suscrito a nuevas publicaciones en tiempo real.");
     }
 
     private void cargarPublicacionesDesdeBackendless() {
@@ -123,28 +138,25 @@ public class InicioFragment extends Fragment
 
         DataQueryBuilder queryBuilder = DataQueryBuilder.create();
         queryBuilder.setSortBy("created DESC");
+        queryBuilder.setRelationsDepth(1); // Para cargar info del usuario de la publicación
 
         Backendless.Data.of(Publicaciones.class).find(queryBuilder, new AsyncCallback<List<Publicaciones>>() {
             @Override
             public void handleResponse(List<Publicaciones> foundPublicaciones) {
                 progressBar.setVisibility(View.GONE);
-
-                if (foundPublicaciones != null && !foundPublicaciones.isEmpty()) {
+                if (isAdded() && foundPublicaciones != null) {
                     publicacionesList.clear();
                     publicacionesList.addAll(foundPublicaciones);
                     adapter.notifyDataSetChanged();
-                } else {
-                    publicacionesList.clear();
-                    adapter.notifyDataSetChanged();
-                    Toast.makeText(getContext(), "No hay publicaciones para mostrar.", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void handleFault(BackendlessFault fault) {
                 progressBar.setVisibility(View.GONE);
-                Log.e(TAG, "Error al cargar publicaciones: " + fault.getMessage());
-                Toast.makeText(getContext(), "Error al cargar las publicaciones: " + fault.getMessage(), Toast.LENGTH_LONG).show();
+                if (isAdded()) {
+                    Toast.makeText(getContext(), "Error al cargar las publicaciones: " + fault.getMessage(), Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
