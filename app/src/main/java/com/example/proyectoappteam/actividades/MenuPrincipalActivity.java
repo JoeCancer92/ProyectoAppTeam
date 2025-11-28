@@ -59,7 +59,8 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Menu {
         Object recibido = getIntent().getSerializableExtra("usuario");
         if (recibido instanceof Usuario) {
             usuarioActivo = (Usuario) recibido;
-            ((ProyectoAppTeam) getApplication()).iniciarListenersDeActividad();
+            // CORRECCIÓN: Se llama al método con el nombre correcto
+            ((ProyectoAppTeam) getApplication()).iniciarListenersEnTiempoReal();
         } else {
             usuarioActivo = null;
         }
@@ -97,28 +98,24 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Menu {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        // 1. Registrar el listener para futuras notificaciones
+    protected void onResume() {
+        super.onResume();
+        // Registrar el receptor para que la Activity pueda recibir la señal
         LocalBroadcastManager.getInstance(this).registerReceiver(notificacionReceiver, new IntentFilter(ProyectoAppTeam.ACTION_NUEVA_NOTIFICACION));
-
-        // 2. Comprobar si ya hay una notificación que llegó "demasiado pronto"
-        ProyectoAppTeam app = (ProyectoAppTeam) getApplication();
-        if (app.hayNotificacionesNuevas()) {
-            mostrarAlertaNotificacion();
-        }
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onPause() {
+        super.onPause();
+        // Anular el registro para no recibir señales si la Activity no está visible
         LocalBroadcastManager.getInstance(this).unregisterReceiver(notificacionReceiver);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ((ProyectoAppTeam) getApplication()).detenerListenerDeNotificaciones();
+        // CORRECCIÓN: Se llama al método con el nombre correcto
+        ((ProyectoAppTeam) getApplication()).detenerListenersEnTiempoReal();
     }
 
     private void configurarReceptorDeNotificaciones() {
@@ -142,8 +139,6 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Menu {
         if (notificacionBadge != null) {
             notificacionBadge.setVisibility(View.GONE);
         }
-        // Reseteamos la bandera global
-        ((ProyectoAppTeam) getApplication()).setHayNotificacionesNuevas(false);
     }
 
     private void configurarBotonLateral(int idBoton, int idFragmento) {
@@ -198,7 +193,8 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Menu {
                 return;
             }
 
-            if (id == 3) { // El ID 3 corresponde a NotificacionFragment
+            // Si se hace clic en notificaciones (id=3), ocultar el badge
+            if (id == 3) {
                 ocultarAlertaNotificacion();
             }
 

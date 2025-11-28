@@ -97,9 +97,8 @@ public class PrincipalActivity extends AppCompatActivity {
                         prefs.edit().remove("correoRecordado").apply();
                     }
 
-                    // --- CORRECCIÓN ---
-                    // El nombre correcto del metodo es iniciarListenersDeActividad()
-                    ((ProyectoAppTeam) getApplication()).iniciarListenersDeActividad();
+                    // CORRECCIÓN: Se llama al método centralizado con el nombre correcto.
+                    ((ProyectoAppTeam) getApplication()).iniciarListenersEnTiempoReal();
 
                     sincronizarContrasena(user, clave);
                 }

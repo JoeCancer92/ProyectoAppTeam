@@ -9,26 +9,25 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.backendless.Backendless;
 import com.backendless.BackendlessUser;
@@ -36,7 +35,6 @@ import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.files.BackendlessFile;
 import com.backendless.persistence.DataQueryBuilder;
-import com.example.proyectoappteam.ProyectoAppTeam;
 import com.example.proyectoappteam.R;
 import com.example.proyectoappteam.actividades.MapsActivity;
 import com.example.proyectoappteam.clases.Menu;
@@ -53,26 +51,20 @@ import java.util.UUID;
 
 public class PublicarFragment extends Fragment {
 
-    private TextView tvUsuario;
+    private TextView tvUsuario, tvUbicacionSeleccionada;
     private RadioGroup rgCategoria;
-    private com.google.android.material.textfield.TextInputEditText etDescripcion;
-    private TextView tvUbicacionSeleccionada;
-    private SwitchCompat switchUrgente;
-    private Button btnPublicar;
-    private Button btnCancelarPublic;
-    private Button btnAbrirMapa;
-    private Button btnAgregarFotos;
+    private EditText etDescripcion;
+    private Switch switchUrgente;
+    private Button btnPublicar, btnCancelarPublic, btnAbrirMapa, btnAgregarFotos;
     private LinearLayout tipsLayout;
 
-    private List<Uri> selectedPhotoUris = new ArrayList<>();
-    private double selectedLatitud = 0.0;
-    private double selectedLongitud = 0.0;
+    private String categoriaSeleccionada;
+    private Double selectedLatitud = 0.0;
+    private Double selectedLongitud = 0.0;
     private String selectedAddressName;
+
+    private final List<Uri> selectedPhotoUris = new ArrayList<>();
     private Uri currentPhotoUri;
-
-    private String categoriaSeleccionada = "";
-
-    private static final String TAG = "PublicarFragment";
 
     private final ActivityResultLauncher<Intent> mapActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -279,7 +271,7 @@ public class PublicarFragment extends Fragment {
         Backendless.Data.of("Consejos").find(queryBuilder, new AsyncCallback<List<Map>>() {
             @Override
             public void handleResponse(List<Map> consejosData) {
-                if (tipsLayout == null) return;
+                if (tipsLayout == null || !isAdded()) return;
                 if (consejosData != null && !consejosData.isEmpty()) {
                     for (Map consejoMap : consejosData) {
                         TextView tvConsejo = new TextView(getContext());
@@ -301,7 +293,7 @@ public class PublicarFragment extends Fragment {
 
             @Override
             public void handleFault(BackendlessFault fault) {
-                if (tipsLayout == null) return;
+                if (tipsLayout == null || !isAdded()) return;
                 TextView tvError = new TextView(getContext());
                 tvError.setText("Error al cargar consejos: " + fault.getMessage());
                 tvError.setTextColor(ContextCompat.getColor(getContext(), android.R.color.white));
@@ -433,11 +425,8 @@ public class PublicarFragment extends Fragment {
                 limpiarCampos();
                 btnPublicar.setEnabled(true);
 
-                // --- CÓDIGO CORREGIDO Y FINAL ---
-                if (getContext() != null) {
-                    Intent intent = new Intent(ProyectoAppTeam.ACTION_RECARGAR_FEED);
-                    LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
-                }
+                // El listener de tiempo real en ProyectoAppTeam se encargará de notificar.
+                // Por lo tanto, el broadcast manual ya no es necesario aquí.
 
                 FragmentActivity activity = getActivity();
                 if (activity instanceof Menu) {
