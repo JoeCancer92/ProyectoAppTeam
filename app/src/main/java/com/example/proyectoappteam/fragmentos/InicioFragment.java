@@ -1,5 +1,9 @@
 package com.example.proyectoappteam.fragmentos;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.fragment.app.FragmentManager;
@@ -19,7 +24,7 @@ import com.backendless.Backendless;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.persistence.DataQueryBuilder;
-import com.backendless.rt.data.EventHandler;
+import com.example.proyectoappteam.ProyectoAppTeam;
 import com.example.proyectoappteam.R;
 import com.example.proyectoappteam.clases.PublicacionAdapter;
 import com.example.proyectoappteam.clases.Publicaciones;
@@ -35,10 +40,9 @@ public class InicioFragment extends Fragment
     private List<Publicaciones> publicacionesList;
     private ProgressBar progressBar;
 
-    // Listener de Backendless para tiempo real
-    private EventHandler<Publicaciones> rtListenerHandler;
-
     private static final String TAG = "InicioFragment";
+
+    private BroadcastReceiver nuevaPublicacionReceiver;
 
     public InicioFragment() {
         // Required empty public constructor
@@ -59,104 +63,108 @@ public class InicioFragment extends Fragment
         adapter = new PublicacionAdapter(publicacionesList, fragmentManager, this);
         recyclerView.setAdapter(adapter);
 
-        return view;
-    }
+        configurarReceptorDePublicaciones();
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        // Cargamos los datos iniciales y luego nos suscribimos a los cambios.
-        cargarPublicacionesDesdeBackendless();
-        suscribirAPublicacionesEnTiempoReal();
+        return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        // Refrescar al volver a la pantalla es una buena práctica por si algo cambió offline
+        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(nuevaPublicacionReceiver, new IntentFilter(ProyectoAppTeam.ACTION_NUEVA_PUBLICACION));
         cargarPublicacionesDesdeBackendless();
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        // MUY IMPORTANTE: Desuscribirse para evitar fugas de memoria
-        if (rtListenerHandler != null) {
-            rtListenerHandler.removeCreateListeners();
-        }
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(nuevaPublicacionReceiver);
     }
 
     @Override
     public void onCalificacionEnviada() {
-        // Cuando se envía una calificación, refrescamos por si cambió el promedio
+        Log.d(TAG, "Calificación enviada, se recargará la lista.");
         cargarPublicacionesDesdeBackendless();
     }
 
-    private void suscribirAPublicacionesEnTiempoReal() {
-        if (rtListenerHandler != null) return; // Ya estamos suscritos
+    public void refreshPosts() {
+        cargarPublicacionesDesdeBackendless();
+    }
 
-        rtListenerHandler = Backendless.Data.of(Publicaciones.class).rt();
+    private void configurarReceptorDePublicaciones() {
+        nuevaPublicacionReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (ProyectoAppTeam.ACTION_NUEVA_PUBLICACION.equals(intent.getAction())) {
+                    String nuevaPublicacionId = intent.getStringExtra("NUEVA_PUBLICACION_ID");
+                    if (nuevaPublicacionId != null) {
+                        Log.d(TAG, "Señal de nueva publicación recibida. ID: " + nuevaPublicacionId);
+                        // Lógica de actualización quirúrgica
+                        anadirNuevaPublicacion(nuevaPublicacionId);
+                    }
+                }
+            }
+        };
+    }
 
-        AsyncCallback<Publicaciones> createListener = new AsyncCallback<Publicaciones>() {
+    // NUEVO: Método para buscar solo la nueva publicación y añadirla al principio
+    private void anadirNuevaPublicacion(String publicacionId) {
+        DataQueryBuilder queryBuilder = DataQueryBuilder.create();
+        // Cargar las relaciones necesarias para mostrar la publicación correctamente
+        queryBuilder.setRelated(new String[]{"ownerId"});
+
+        Backendless.Data.of(Publicaciones.class).findById(publicacionId, queryBuilder, new AsyncCallback<Publicaciones>() {
             @Override
             public void handleResponse(Publicaciones nuevaPublicacion) {
-                // Nos aseguramos de estar en el hilo de la UI y que el fragmento esté vivo
-                if (getActivity() != null && isAdded()) {
-                    getActivity().runOnUiThread(() -> {
-                        Log.i(TAG, "Nueva publicación recibida en tiempo real: " + nuevaPublicacion.getObjectId());
-                        // Verificamos si la publicación ya existe en la lista para evitar duplicados
-                        boolean yaExiste = false;
-                        for (Publicaciones p : publicacionesList) {
-                            if (p.getObjectId().equals(nuevaPublicacion.getObjectId())) {
-                                yaExiste = true;
-                                break;
-                            }
-                        }
-
-                        if (!yaExiste) {
-                            publicacionesList.add(0, nuevaPublicacion); // Añadir al principio
-                            adapter.notifyItemInserted(0);
-                            recyclerView.scrollToPosition(0);
-                            Toast.makeText(getContext(), "Hay una nueva publicación", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                if (isAdded() && adapter != null && recyclerView != null) {
+                    // Evitar duplicados si la publicación ya está en la lista
+                    if (!publicacionesList.contains(nuevaPublicacion)) {
+                        publicacionesList.add(0, nuevaPublicacion);
+                        adapter.notifyItemInserted(0);
+                        recyclerView.scrollToPosition(0);
+                        Toast.makeText(getContext(), "Hay una nueva publicación", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
 
             @Override
             public void handleFault(BackendlessFault fault) {
-                Log.e(TAG, "Error en listener de publicaciones en tiempo real: " + fault.getMessage());
+                Log.e(TAG, "Error al buscar la nueva publicación por ID: " + fault.getMessage());
             }
-        };
-
-        rtListenerHandler.addCreateListener(createListener);
-        Log.i(TAG, "Suscrito a nuevas publicaciones en tiempo real.");
+        });
     }
 
     private void cargarPublicacionesDesdeBackendless() {
+        if (!isAdded()) return;
         progressBar.setVisibility(View.VISIBLE);
 
         DataQueryBuilder queryBuilder = DataQueryBuilder.create();
         queryBuilder.setSortBy("created DESC");
-        queryBuilder.setRelationsDepth(1); // Para cargar info del usuario de la publicación
+        queryBuilder.setRelated(new String[]{"ownerId"}); // Asegurarse de cargar el owner
 
         Backendless.Data.of(Publicaciones.class).find(queryBuilder, new AsyncCallback<List<Publicaciones>>() {
             @Override
             public void handleResponse(List<Publicaciones> foundPublicaciones) {
+                if (!isAdded()) return;
                 progressBar.setVisibility(View.GONE);
-                if (isAdded() && foundPublicaciones != null) {
+
+                if (foundPublicaciones != null && !foundPublicaciones.isEmpty()) {
                     publicacionesList.clear();
                     publicacionesList.addAll(foundPublicaciones);
                     adapter.notifyDataSetChanged();
+                } else {
+                    publicacionesList.clear();
+                    adapter.notifyDataSetChanged();
+                    Toast.makeText(getContext(), "No hay publicaciones para mostrar.", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void handleFault(BackendlessFault fault) {
+                if (!isAdded()) return;
                 progressBar.setVisibility(View.GONE);
-                if (isAdded()) {
-                    Toast.makeText(getContext(), "Error al cargar las publicaciones: " + fault.getMessage(), Toast.LENGTH_LONG).show();
-                }
+                Log.e(TAG, "Error al cargar publicaciones: " + fault.getMessage());
+                Toast.makeText(getContext(), "Error al cargar las publicaciones: " + fault.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }

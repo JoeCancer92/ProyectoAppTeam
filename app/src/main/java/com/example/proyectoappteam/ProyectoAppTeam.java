@@ -13,20 +13,18 @@ import com.backendless.exceptions.BackendlessFault;
 import com.backendless.rt.data.EventHandler;
 import com.example.proyectoappteam.clases.Calificaciones;
 import com.example.proyectoappteam.clases.Comentarios;
+import com.example.proyectoappteam.clases.Notificaciones;
 import com.example.proyectoappteam.clases.Publicaciones;
 
 public class ProyectoAppTeam extends Application {
 
     private static final String TAG = "ProyectoAppTeam";
     
-    // --- Constantes de Acciones para Broadcasts ---
     public static final String ACTION_NUEVA_NOTIFICACION = "com.example.proyectoappteam.NUEVA_NOTIFICACION";
-    public static final String ACTION_RECARGAR_FEED = "com.example.proyectoappteam.RECARGAR_FEED";
+    public static final String ACTION_NUEVA_PUBLICACION = "com.example.proyectoappteam.NUEVA_PUBLICACION";
 
-    private EventHandler<Comentarios> comentariosListenerHandler;
-    private EventHandler<Calificaciones> calificacionesListenerHandler;
-
-    private boolean hayNotificacionesNuevas = false;
+    private EventHandler<Notificaciones> rtNotificacionesHandler;
+    private EventHandler<Publicaciones> rtPublicacionesHandler;
 
     @Override
     public void onCreate() {
@@ -34,77 +32,72 @@ public class ProyectoAppTeam extends Application {
 
         Backendless.initApp(
                 this,
-                "FF8096CC-3E75-470C-BA38-0B499C3562F5", // Application ID
-                "4EE0AA48-E31D-40E1-8F01-1D147B8699DE"  // Android API Key
+                "2906A990-ECAF-493D-9F00-E932ADACD43B", // Application ID
+                "85E30BE6-D555-4E5D-AF57-DCA6C06FF3A5"  // Android API Key
         );
 
         Backendless.Data.mapTableToClass("calificaciones", Calificaciones.class);
         Backendless.Data.mapTableToClass("comentarios",    Comentarios.class);
         Backendless.Data.mapTableToClass("publicaciones",  Publicaciones.class);
+        Backendless.Data.mapTableToClass("Notificaciones", Notificaciones.class);
     }
 
-    public void iniciarListenersDeActividad() {
+    public void iniciarListenersEnTiempoReal() {
         BackendlessUser currentUser = Backendless.UserService.CurrentUser();
         if (currentUser == null) return;
 
-        detenerListenerDeNotificaciones();
+        detenerListenersEnTiempoReal();
 
         String userId = currentUser.getObjectId();
 
-        comentariosListenerHandler = Backendless.Data.of(Comentarios.class).rt();
-        String whereClauseComentarios = "publicacion.ownerId = '" + userId + "' AND ownerId != '" + userId + "'";
-        
-        AsyncCallback<Comentarios> comentarioCallback = new AsyncCallback<Comentarios>() {
+        // Listener para Notificaciones
+        rtNotificacionesHandler = Backendless.Data.of(Notificaciones.class).rt();
+        AsyncCallback<Notificaciones> notifListener = new AsyncCallback<Notificaciones>() {
             @Override
-            public void handleResponse(Comentarios nuevoComentario) {
-                hayNotificacionesNuevas = true;
-                enviarNotificacionBroadcast();
+            public void handleResponse(Notificaciones response) {
+                Log.i(TAG, "Nueva notificación recibida.");
+                Intent intent = new Intent(ACTION_NUEVA_NOTIFICACION);
+                LocalBroadcastManager.getInstance(ProyectoAppTeam.this).sendBroadcast(intent);
             }
             @Override
             public void handleFault(BackendlessFault fault) {
-                Log.e(TAG, "Error en listener de comentarios: " + fault.getMessage());
+                Log.e(TAG, "Error en listener de notificaciones: " + fault.getMessage());
             }
         };
-        comentariosListenerHandler.addCreateListener(whereClauseComentarios, comentarioCallback);
+        String notifWhereClause = "userReceptor.objectId = '" + userId + "'";
+        rtNotificacionesHandler.addCreateListener(notifWhereClause, notifListener);
+        Log.i(TAG, "Listener de NOTIFICACIONES en tiempo real INICIADO.");
 
-        calificacionesListenerHandler = Backendless.Data.of(Calificaciones.class).rt();
-        String whereClauseCalificaciones = "publicacion.ownerId = '" + userId + "' AND ownerId != '" + userId + "'";
-        
-        AsyncCallback<Calificaciones> calificacionCallback = new AsyncCallback<Calificaciones>() {
+        // Listener para Publicaciones
+        rtPublicacionesHandler = Backendless.Data.of(Publicaciones.class).rt();
+        AsyncCallback<Publicaciones> pubListener = new AsyncCallback<Publicaciones>() {
             @Override
-            public void handleResponse(Calificaciones nuevaCalificacion) {
-                hayNotificacionesNuevas = true;
-                enviarNotificacionBroadcast();
+            public void handleResponse(Publicaciones nuevaPublicacion) {
+                Log.i(TAG, "Nueva publicación recibida. ID: " + nuevaPublicacion.getObjectId());
+                Intent intent = new Intent(ACTION_NUEVA_PUBLICACION);
+                // CORRECCIÓN: Se añade el ID de la nueva publicación a la señal
+                intent.putExtra("NUEVA_PUBLICACION_ID", nuevaPublicacion.getObjectId());
+                LocalBroadcastManager.getInstance(ProyectoAppTeam.this).sendBroadcast(intent);
             }
             @Override
             public void handleFault(BackendlessFault fault) {
-                Log.e(TAG, "Error en listener de calificaciones: " + fault.getMessage());
+                Log.e(TAG, "Error en listener de publicaciones: " + fault.getMessage());
             }
         };
-        calificacionesListenerHandler.addCreateListener(whereClauseCalificaciones, calificacionCallback);
+        rtPublicacionesHandler.addCreateListener(pubListener);
+        Log.i(TAG, "Listener de PUBLICACIONES en tiempo real INICIADO.");
     }
 
-    public void detenerListenerDeNotificaciones() {
-        if (comentariosListenerHandler != null) {
-            comentariosListenerHandler.removeCreateListeners();
-            comentariosListenerHandler = null;
+    public void detenerListenersEnTiempoReal() {
+        if (rtNotificacionesHandler != null) {
+            rtNotificacionesHandler.removeCreateListeners();
+            rtNotificacionesHandler = null;
+            Log.i(TAG, "Listener de NOTIFICACIONES en tiempo real DETENIDO.");
         }
-        if (calificacionesListenerHandler != null) {
-            calificacionesListenerHandler.removeCreateListeners();
-            calificacionesListenerHandler = null;
+        if (rtPublicacionesHandler != null) {
+            rtPublicacionesHandler.removeCreateListeners();
+            rtPublicacionesHandler = null;
+            Log.i(TAG, "Listener de PUBLICACIONES en tiempo real DETENIDO.");
         }
-    }
-
-    private void enviarNotificacionBroadcast() {
-        Intent intent = new Intent(ACTION_NUEVA_NOTIFICACION);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-    }
-
-    public boolean hayNotificacionesNuevas() {
-        return hayNotificacionesNuevas;
-    }
-
-    public void setHayNotificacionesNuevas(boolean hayNotificacionesNuevas) {
-        this.hayNotificacionesNuevas = hayNotificacionesNuevas;
     }
 }
