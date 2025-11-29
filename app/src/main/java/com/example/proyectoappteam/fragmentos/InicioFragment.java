@@ -1,21 +1,16 @@
 package com.example.proyectoappteam.fragmentos;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.fragment.app.FragmentManager;
@@ -24,7 +19,6 @@ import com.backendless.Backendless;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.persistence.DataQueryBuilder;
-import com.example.proyectoappteam.ProyectoAppTeam;
 import com.example.proyectoappteam.R;
 import com.example.proyectoappteam.clases.PublicacionAdapter;
 import com.example.proyectoappteam.clases.Publicaciones;
@@ -32,6 +26,7 @@ import com.example.proyectoappteam.clases.Publicaciones;
 import java.util.ArrayList;
 import java.util.List;
 
+// Paso 1: Implementar la interfaz del diálogo
 public class InicioFragment extends Fragment
         implements CrearCalificacionFragment.CalificacionListener {
 
@@ -39,10 +34,9 @@ public class InicioFragment extends Fragment
     private PublicacionAdapter adapter;
     private List<Publicaciones> publicacionesList;
     private ProgressBar progressBar;
+    private ImageButton btnRefresh;
 
     private static final String TAG = "InicioFragment";
-
-    private BroadcastReceiver nuevaPublicacionReceiver;
 
     public InicioFragment() {
         // Required empty public constructor
@@ -57,95 +51,64 @@ public class InicioFragment extends Fragment
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         progressBar = view.findViewById(R.id.progressBar);
 
+        btnRefresh = view.findViewById(R.id.btn_refresh);
+
         publicacionesList = new ArrayList<>();
 
+        // Usamos getChildFragmentManager() para manejar los diálogos dentro de este Fragmento
+        // Es crucial que el FragmentManager se pase junto con el listener 'this'
         FragmentManager fragmentManager = getChildFragmentManager();
-        adapter = new PublicacionAdapter(publicacionesList, fragmentManager, this);
+        adapter = new PublicacionAdapter(publicacionesList, fragmentManager, this); // <-- ¡Modificado!
         recyclerView.setAdapter(adapter);
 
-        configurarReceptorDePublicaciones();
+        // Asignar el listener de click al botón de refrescar
+        if (btnRefresh != null) {
+            btnRefresh.setOnClickListener(v -> {
+                Toast.makeText(getContext(), "Actualizando publicaciones...", Toast.LENGTH_SHORT).show();
+                refreshPosts();
+            });
+        }
 
         return view;
+    }
+
+    // Paso 2: Implementar el metodo del Listener
+    // Este metodo se llama automáticamente desde CrearCalificacionFragment cuando se guarda
+    @Override
+    public void onCalificacionEnviada() {
+        Log.d(TAG, "Calificación enviada, refrescando publicaciones.");
+        // Forzamos la recarga de la lista para ver el promedio actualizado
+        refreshPosts();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(nuevaPublicacionReceiver, new IntentFilter(ProyectoAppTeam.ACTION_NUEVA_PUBLICACION));
+        // Cargar las publicaciones cada vez que el fragmento se hace visible
         cargarPublicacionesDesdeBackendless();
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(nuevaPublicacionReceiver);
-    }
-
-    @Override
-    public void onCalificacionEnviada() {
-        Log.d(TAG, "Calificación enviada, se recargará la lista.");
-        cargarPublicacionesDesdeBackendless();
-    }
-
+    /**
+     * Metodo público para ser llamado desde la Activity o PublicarFragment
+     * para forzar la recarga de la lista.
+     */
     public void refreshPosts() {
         cargarPublicacionesDesdeBackendless();
     }
 
-    private void configurarReceptorDePublicaciones() {
-        nuevaPublicacionReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if (ProyectoAppTeam.ACTION_NUEVA_PUBLICACION.equals(intent.getAction())) {
-                    String nuevaPublicacionId = intent.getStringExtra("NUEVA_PUBLICACION_ID");
-                    if (nuevaPublicacionId != null) {
-                        Log.d(TAG, "Señal de nueva publicación recibida. ID: " + nuevaPublicacionId);
-                        // Lógica de actualización quirúrgica
-                        anadirNuevaPublicacion(nuevaPublicacionId);
-                    }
-                }
-            }
-        };
-    }
-
-    // NUEVO: Método para buscar solo la nueva publicación y añadirla al principio
-    private void anadirNuevaPublicacion(String publicacionId) {
-        DataQueryBuilder queryBuilder = DataQueryBuilder.create();
-        // Cargar las relaciones necesarias para mostrar la publicación correctamente
-        queryBuilder.setRelated(new String[]{"ownerId"});
-
-        Backendless.Data.of(Publicaciones.class).findById(publicacionId, queryBuilder, new AsyncCallback<Publicaciones>() {
-            @Override
-            public void handleResponse(Publicaciones nuevaPublicacion) {
-                if (isAdded() && adapter != null && recyclerView != null) {
-                    // Evitar duplicados si la publicación ya está en la lista
-                    if (!publicacionesList.contains(nuevaPublicacion)) {
-                        publicacionesList.add(0, nuevaPublicacion);
-                        adapter.notifyItemInserted(0);
-                        recyclerView.scrollToPosition(0);
-                        Toast.makeText(getContext(), "Hay una nueva publicación", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-
-            @Override
-            public void handleFault(BackendlessFault fault) {
-                Log.e(TAG, "Error al buscar la nueva publicación por ID: " + fault.getMessage());
-            }
-        });
-    }
-
     private void cargarPublicacionesDesdeBackendless() {
-        if (!isAdded()) return;
+        // Mostrar el ProgressBar mientras se cargan los datos
         progressBar.setVisibility(View.VISIBLE);
 
+        // Crear una consulta para obtener las publicaciones
         DataQueryBuilder queryBuilder = DataQueryBuilder.create();
-        queryBuilder.setSortBy("created DESC");
-        queryBuilder.setRelated(new String[]{"ownerId"}); // Asegurarse de cargar el owner
+        queryBuilder.setSortBy("created DESC"); // Ordenar por fecha de creación descendente
 
+        // Obtener las publicaciones de la tabla "Publicaciones" en Backendless
         Backendless.Data.of(Publicaciones.class).find(queryBuilder, new AsyncCallback<List<Publicaciones>>() {
             @Override
             public void handleResponse(List<Publicaciones> foundPublicaciones) {
-                if (!isAdded()) return;
+                // Ocultar el ProgressBar en caso de éxito
                 progressBar.setVisibility(View.GONE);
 
                 if (foundPublicaciones != null && !foundPublicaciones.isEmpty()) {
@@ -161,7 +124,6 @@ public class InicioFragment extends Fragment
 
             @Override
             public void handleFault(BackendlessFault fault) {
-                if (!isAdded()) return;
                 progressBar.setVisibility(View.GONE);
                 Log.e(TAG, "Error al cargar publicaciones: " + fault.getMessage());
                 Toast.makeText(getContext(), "Error al cargar las publicaciones: " + fault.getMessage(), Toast.LENGTH_LONG).show();

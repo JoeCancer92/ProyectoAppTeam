@@ -1,14 +1,10 @@
 package com.example.proyectoappteam.actividades;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,9 +12,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import com.example.proyectoappteam.ProyectoAppTeam;
 import com.example.proyectoappteam.R;
 import com.example.proyectoappteam.clases.LocaleHelper;
 import com.example.proyectoappteam.clases.Menu;
@@ -38,9 +32,6 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Menu {
     private ImageButton lastSelectedButton = null;
     public static Usuario usuarioActivo;
 
-    private ImageView notificacionBadge;
-    private BroadcastReceiver notificacionReceiver;
-
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(LocaleHelper.onAttach(newBase, "es"));
@@ -50,35 +41,46 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Menu {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Aplicar el tema
         SharedPreferences prefs = getSharedPreferences("AppConfigPrefs", MODE_PRIVATE);
         int tema = prefs.getInt("tema", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
         AppCompatDelegate.setDefaultNightMode(tema);
 
         setContentView(R.layout.activity_menu_principal);
 
+        // Recuperar usuario desde el Intent y validar estructura
         Object recibido = getIntent().getSerializableExtra("usuario");
         if (recibido instanceof Usuario) {
-            usuarioActivo = (Usuario) recibido;
-            // CORRECCIÓN: Se llama al método con el nombre correcto
-            ((ProyectoAppTeam) getApplication()).iniciarListenersEnTiempoReal();
+            Usuario recibidoUsuario = (Usuario) recibido;
+            if (recibidoUsuario.getCorreo() != null && !recibidoUsuario.getCorreo().isEmpty()) {
+                usuarioActivo = recibidoUsuario;
+            } else {
+                usuarioActivo = null; // Usuario inválido para flujos que requieren correo
+            }
         } else {
             usuarioActivo = null;
         }
 
+        // Ocultar botones inferiores al iniciar (AHORA MUESTRA)
         contenedorBotonesInferior = findViewById(R.id.contenedorBotonesInferior);
-        notificacionBadge = findViewById(R.id.badge_notificacion);
+        if (contenedorBotonesInferior != null) {
+            contenedorBotonesInferior.setVisibility(View.VISIBLE);
+        }
 
+        // Inicializar fragmento de menú lateral
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         menuFragment = new MenuFragment();
         ft.add(R.id.priRelContenedor, menuFragment, "menu");
+        // ft.commit();
 
+        // Inicializar fragmentos principales
         fragments = new Fragment[]{
-                new PerfilFragment(),
-                new InicioFragment(),
-                new PublicarFragment(),
-                new NotificacionFragment(),
-                new ConfigFragment()
+                new PerfilFragment(),       // 0
+                new InicioFragment(),       // 1
+                new PublicarFragment(),     // 2
+                new NotificacionFragment(),  // 3
+                new ConfigFragment()        // 4
         };
 
         Fragment inicioFragment = fragments[1];
@@ -88,57 +90,13 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Menu {
 
         updateButtonSelection(1);
 
+
+        // Configurar navegación lateral
         configurarBotonLateral(R.id.lateralBtnMiPerfil, 0);
         configurarBotonLateral(R.id.lateralBtnInicio, 1);
         configurarBotonLateral(R.id.lateralBtnPublicar, 2);
         configurarBotonLateral(R.id.lateralBtnNotificaciones, 3);
         configurarBotonLateral(R.id.lateralBtnConfig, 4);
-
-        configurarReceptorDeNotificaciones();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // Registrar el receptor para que la Activity pueda recibir la señal
-        LocalBroadcastManager.getInstance(this).registerReceiver(notificacionReceiver, new IntentFilter(ProyectoAppTeam.ACTION_NUEVA_NOTIFICACION));
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        // Anular el registro para no recibir señales si la Activity no está visible
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(notificacionReceiver);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        // CORRECCIÓN: Se llama al método con el nombre correcto
-        ((ProyectoAppTeam) getApplication()).detenerListenersEnTiempoReal();
-    }
-
-    private void configurarReceptorDeNotificaciones() {
-        notificacionReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if (ProyectoAppTeam.ACTION_NUEVA_NOTIFICACION.equals(intent.getAction())) {
-                    mostrarAlertaNotificacion();
-                }
-            }
-        };
-    }
-
-    private void mostrarAlertaNotificacion() {
-        if (notificacionBadge != null) {
-            notificacionBadge.setVisibility(View.VISIBLE);
-        }
-    }
-
-    private void ocultarAlertaNotificacion() {
-        if (notificacionBadge != null) {
-            notificacionBadge.setVisibility(View.GONE);
-        }
     }
 
     private void configurarBotonLateral(int idBoton, int idFragmento) {
@@ -148,35 +106,79 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Menu {
         }
     }
 
+    // Metodo para obtener la referencia del boton
     private ImageButton getButtonFromId(int idBoton) {
         return findViewById(idBoton);
     }
 
+    // Metodo para gestionar la seleccion de botones
+//    private void updateButtonSelection(int idFragmento) {
+//        int buttonIds[] = new int[]{
+//                R.id.lateralBtnMiPerfil,
+//                R.id.lateralBtnInicio,
+//                R.id.lateralBtnPublicar,
+//                R.id.lateralBtnNotificaciones,
+//                R.id.lateralBtnConfig
+//        };
+//        if (idFragmento >= 0 && idFragmento <= 4) {
+//            ImageButton currentButton = getButtonFromId(buttonIds[idFragmento]);
+//
+//            if (currentButton != null) {
+//                if (lastSelectedButton != null) {
+//                    lastSelectedButton.setSelected(false);
+//                }
+//                currentButton.setSelected(true);
+//                lastSelectedButton = currentButton;
+//            }
+//        }else if(idFragmento == 4){
+//            // Deselecciona el botón anterior si existe
+//            if (lastSelectedButton != null) {
+//                lastSelectedButton.setSelected(false);
+//                lastSelectedButton = null; // No hay un botón de configuración que mantener seleccionado
+//            }
+//        }
+//    }
+
+    // Metodo para gestionar la seleccion de botones
     private void updateButtonSelection(int idFragmento) {
+        // Array que mapea el ID de fragmento (0-4) al ID del botón (lateralBtn...)
         int buttonIds[] = new int[]{
                 R.id.lateralBtnMiPerfil,
                 R.id.lateralBtnInicio,
                 R.id.lateralBtnPublicar,
                 R.id.lateralBtnNotificaciones,
-                R.id.lateralBtnConfig
+                R.id.lateralBtnConfig // ID del botón de Configuración (posición 4)
         };
+
+        // Aseguramos que el ID del fragmento esté dentro del rango del array (0 a 4)
         if (idFragmento >= 0 && idFragmento < buttonIds.length) {
+
             ImageButton currentButton = getButtonFromId(buttonIds[idFragmento]);
+
             if (currentButton != null) {
+                // 1. Deseleccionar el botón anterior (si existe)
                 if (lastSelectedButton != null) {
                     lastSelectedButton.setSelected(false);
                 }
+
+                // 2. Seleccionar el botón actual (¡Esto lo "pinta"!)
                 currentButton.setSelected(true);
+
+                // 3. Almacenar el botón para la próxima deselección
                 lastSelectedButton = currentButton;
             }
         }
+        // ¡Se elimina el bloque 'else if (idFragmento == 4)' que causaba la deselección!
     }
+
 
     @Override
     public void onClickMenu(int id) {
+
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
 
+//        // Ocultar todos los fragmentos activos
         for (Fragment f : fragments) {
             if (f.isAdded() && f.isVisible()) ft.hide(f);
         }
@@ -184,18 +186,18 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Menu {
         if (menuFragment.isAdded() && menuFragment.isVisible()) ft.hide(menuFragment);
 
         if (id == -1) {
+            // Mostrar menú lateral
             ft.show(menuFragment);
             if (contenedorBotonesInferior != null) {
                 contenedorBotonesInferior.setVisibility(View.GONE);
             }
         } else {
-            if (id < 0 || id >= fragments.length) {
-                return;
-            }
+            // Mostrar fragmento seleccionado (incluye id 4 para ConfigFragment)
 
-            // Si se hace clic en notificaciones (id=3), ocultar el badge
-            if (id == 3) {
-                ocultarAlertaNotificacion();
+            // Verifica que el ID esté dentro del límite del array (0 a 4)
+            if (id < 0 || id >= fragments.length) {
+                // Manejo de error si se presiona un ID fuera de rango
+                return;
             }
 
             Fragment target = fragments[id];
@@ -206,6 +208,11 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Menu {
             }
             ft.hide(menuFragment);
 
+//            if (id==4){
+//                if (contenedorBotonesInferior != null) {
+//                    contenedorBotonesInferior.setVisibility(View.GONE);
+//                }
+//            }else{
             if (contenedorBotonesInferior != null) {
                 contenedorBotonesInferior.setVisibility(View.VISIBLE);
             }
