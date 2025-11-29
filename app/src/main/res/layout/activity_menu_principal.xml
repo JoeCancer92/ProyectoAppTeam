@@ -39,15 +39,33 @@
             android:src="@drawable/home4"
             app:tint="@color/icon_color_selector"/>
 
-        <ImageButton
-            android:id="@+id/lateralBtnNotificaciones"
+        <!-- CONTENEDOR PARA EL BOTÓN DE NOTIFICACIÓN Y SU BADGE -->
+        <FrameLayout
             android:layout_width="49dp"
             android:layout_height="49dp"
-            android:layout_marginEnd="10dp"
-            android:background="#00FFFFFF"
-            android:scaleType="centerInside"
-            android:src="@drawable/notificacion3"
-            app:tint="@color/icon_color_selector"/>
+            android:layout_marginEnd="10dp">
+
+            <ImageButton
+                android:id="@+id/lateralBtnNotificaciones"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#00FFFFFF"
+                android:scaleType="centerInside"
+                android:src="@drawable/notificacion3"
+                app:tint="@color/icon_color_selector"/>
+
+            <ImageView
+                android:id="@+id/badge_notificacion"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_gravity="top|end"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/ic_notification_badge" 
+                android:visibility="gone" 
+                tools:visibility="visible"/>
+
+        </FrameLayout>
 
         <ImageButton
             android:id="@+id/lateralBtnPublicar"
@@ -78,11 +96,6 @@
             android:scaleType="centerInside"
             android:src="@drawable/settings"
             app:tint="@color/icon_color_selector"/>
-
-
-
-
-
 
     </LinearLayout>
 </LinearLayout>
