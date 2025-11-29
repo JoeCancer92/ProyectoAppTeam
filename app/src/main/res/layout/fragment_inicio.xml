@@ -8,7 +8,7 @@
     android:background="?android:colorBackground"
     tools:context=".fragmentos.InicioFragment">
 
-    <!-- Contenedor para el título y el botón de refrescar -->
+    <!-- Contenedor para el título -->
     <LinearLayout
         android:id="@+id/header_layout"
         android:layout_width="0dp"
@@ -33,15 +33,7 @@
             android:textSize="24sp"
             android:textStyle="bold" />
 
-        <ImageButton
-            android:id="@+id/btn_refresh"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:scaleType="centerInside"
-            android:src="@drawable/update_not"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Botón para refrescar las publicaciones"
-            android:layout_marginStart="8dp" />
+        <!-- BOTÓN DE REFRESCAR ELIMINADO -->
 
     </LinearLayout>
 
